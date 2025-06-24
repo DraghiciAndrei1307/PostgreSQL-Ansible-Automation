@@ -1,0 +1,18 @@
+---
+- name: "Stop PostgreSQL service"
+  hosts: postgresql-node3
+  vars_files: 
+    - group_vars/vault.yml
+  vars:
+    pg_version: 13
+  become: yes
+  tasks:
+    - name: "Check Postgresql-{{ pg_version }}"
+      shell: "systemctl status postgresql-{{ pg_version }}"
+      register: check_output
+
+    - name: "Stop service"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        state: stopped
+      when: '"Active: active" in check_output.stdout'
