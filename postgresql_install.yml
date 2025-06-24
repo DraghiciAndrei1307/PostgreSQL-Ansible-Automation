@@ -1,0 +1,51 @@
+---
+- name: "Install, Initialize and Start PostgreSQL service"
+  hosts: postgresql-node3
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    pg_version: 13
+  tasks:
+    - name: "Update all packages (optional)"
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_only: yes
+        nobest: yes
+
+    - name: "Install the repository RPM"
+      ansible.builtin.dnf: 
+        name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+        state: present
+        disable_gpg_check: yes
+
+   # - name: "Disable the built-in PostgreSQL module"
+   #   ansible.builtin.shell: "dnf -qy module disable postgresql"
+   #   register: disable_module
+   #   changed_when: "'Disabled' in disable_module.stdout or 'Nothing to do' in disable_module.stdout"
+
+   # - name: "Install Postgresql"
+   #   ansible.builtin.dnf:
+   #     name: postgresql13-server
+   #     state: present
+ 
+    - name: "Install PostgreSQL version {{ pg_version }}"
+      ansible.builtin.dnf:
+        name: postgresql{{ pg_version }}-server
+        state: present
+
+    - name: "Initialize the database"
+      ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
+      args:
+        creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
+
+    - name: "Enable automatic start"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        enabled: yes
+
+    - name: "Start the PostgreSQL service"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        state: started    
