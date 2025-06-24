@@ -1,0 +1,6 @@
+---
+- name: "Play 1"
+  hosts: dbs
+  tasks:
+    - name: "Task1"
+      shell: 'echo "ANSIBLE POWER" > /home/student/hello.txt'
