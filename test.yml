@@ -1,6 +1,9 @@
 ---
 - name: "Play 1"
   hosts: dbs
+  vars_files:
+    - group_vars/vault.yml
   tasks:
     - name: "Task1"
-      shell: 'echo "ANSIBLE POWER" > /home/student/hello.txt'
+      shell: 'echo "ANSIBLE POWER II" > /home/student/hello2.txt'
+
