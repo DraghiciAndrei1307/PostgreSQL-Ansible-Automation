@@ -1,0 +1,16 @@
+---
+- name: "Register system"
+  hosts: localhost
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - ansible.builtin.shell: >
+        subscription-manager register
+        --username={{ redhat_username }}
+        --password={{ redhat_password }}
+        --auto-attach
+      register: register_output
+      failed_when: "'Invalid username or password' in register_output.stderr"
+    
+    - ansible.builtin.shell: "subscription-manager attach --auto"    
