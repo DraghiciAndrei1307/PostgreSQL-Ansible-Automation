@@ -1,0 +1,76 @@
+---
+- name: "pgBackRest build process"
+  hosts: localhost
+  become: yes
+  vars:
+    dependencies:
+      - meson
+      - gcc
+      - postgresql13-devel
+      - openssl-devel
+      - libxml2-devel
+      - lz4-devel
+      - libzstd-devel
+      - bzip2-devel
+      - libyaml-devel
+      - libssh2-devel
+  
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Create build directory"
+      command: mkdir -p /pgBackRest_build
+    
+    - name: "Download into /pgBackRest_build"
+      ansible.builtin.shell: "wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.55.1.tar.gz | tar zx -C /pgBackRest_build"
+
+    - name: "Update DNF"
+      ansible.builtin.yum:
+        name: "*"
+        state: latest
+        update_only: yes
+        update_cache: true
+        nobest: yes  
+    
+    - name: "Install EPEL repository (RHEL 9)"
+      block:
+        - name: "Download and install EPEL release RPM"
+          ansible.builtin.dnf:
+            name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+            state: present
+            disable_gpg_check: yes
+
+        - name: "Import EPEL GPG key"
+          ansible.builtin.rpm_key:
+            key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"  
+            state: present
+
+    - name: "Add PostgreSQL YUM repository"
+      ansible.builtin.get_url:
+        url: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+        dest: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
+        mode: '0664'
+
+    - name: "Install PostgreSQL repo"
+      ansible.builtin.dnf:
+        name: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
+        state: present
+        disable_gpg_check: yes
+
+    - name: "Install build dependencies"
+      #debug:
+      #  msg: "Installing package {{ item }}"
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ dependencies }}"
+
+    - name: "Configure pgBackRest"
+      ansible.builtin.shell: "meson setup /pgBackRest_build/pgbackrest /pgBackRest_build/pgbackrest-release-2.55.1"
+      args:
+        creates: "/pgBackRest_build/pgbackrest/build.ninja"
+
+
+    - name: "Build pgBackRest"
+      ansible.builtin.shell: "ninja -C /pgBackRest_build/pgbackrest"
+

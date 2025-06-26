@@ -1,18 +1,25 @@
 ---
 - name: "Install, Initialize and Start PostgreSQL service"
-  hosts: postgresql-node3
+  hosts: dbs
   become: yes
   vars_files:
     - group_vars/vault.yml
   vars:
     pg_version: 13
   tasks:
-    - name: "Update all packages (optional)"
+    - name: "DNF: Update all packages (optional)"
       ansible.builtin.dnf:
         name: "*"
         state: latest
         update_only: yes
         nobest: yes
+
+  # - name: "YUM: Update all packages (optional)"
+  #     ansible.builtin.yum:
+  #     name: "*"
+  #     state: latest
+  #     update_only: yes
+  #     nobest: yes
 
     - name: "Install the repository RPM"
       ansible.builtin.dnf: 
@@ -33,6 +40,15 @@
     - name: "Install PostgreSQL version {{ pg_version }}"
       ansible.builtin.dnf:
         name: postgresql{{ pg_version }}-server
+        state: present
+
+   # - name: "Copy PgBackRest build on the slave nodes "
+      
+  
+
+    - name: "Install PgBackRest"
+      ansible.builtin.yum:
+        name: pgbackrest
         state: present
 
     - name: "Initialize the database"
