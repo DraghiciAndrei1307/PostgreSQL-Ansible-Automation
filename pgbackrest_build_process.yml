@@ -32,6 +32,11 @@
         update_cache: true
         nobest: yes  
     
+    - name: "Enable codeready-builder(CRB) repo"
+      ansible.builtin.command: > 
+        subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
+      when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "9"
+
     - name: "Install EPEL repository (RHEL 9)"
       block:
         - name: "Download and install EPEL release RPM"
@@ -45,17 +50,17 @@
             key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"  
             state: present
 
-    - name: "Add PostgreSQL YUM repository"
-      ansible.builtin.get_url:
-        url: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-        dest: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
-        mode: '0664'
+  #  - name: "Add PostgreSQL YUM repository"
+  #    ansible.builtin.get_url:
+  #      url: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+  #      dest: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
+  #      mode: '0664'
 
-    - name: "Install PostgreSQL repo"
-      ansible.builtin.dnf:
-        name: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
-        state: present
-        disable_gpg_check: yes
+  # - name: "Install PostgreSQL repo"
+  #   ansible.builtin.dnf:
+  #     name: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
+  #     state: present
+  #     disable_gpg_check: yes
 
     - name: "Install build dependencies"
       #debug:
@@ -66,7 +71,9 @@
       loop: "{{ dependencies }}"
 
     - name: "Configure pgBackRest"
-      ansible.builtin.shell: "meson setup /pgBackRest_build/pgbackrest /pgBackRest_build/pgbackrest-release-2.55.1"
+      ansible.builtin.shell: >
+        PKG_CONFIG_PATH=/usr/pgsql-13/lib/pkgconfig
+        meson setup /pgBackRest_build/pgbackrest /pgBackRest_build/pgbackrest-release-2.55.1
       args:
         creates: "/pgBackRest_build/pgbackrest/build.ninja"
 
