@@ -1,5 +1,5 @@
 ---
-- name: "Stop PostgreSQL service"
+- name: "Start PostgreSQL service"
   hosts: dbs
   vars_files: 
     - group_vars/vault.yml
@@ -10,10 +10,11 @@
     - name: "Check Postgresql-{{ pg_version }}"
       shell: "systemctl status postgresql-{{ pg_version }}"
       register: check_output
+      failed_when: false
 
-    - name: "Stop service"
+    - name: "Start service"
       ansible.builtin.service:
         name: postgresql-{{ pg_version }}
-        state: stopped
-      when: '"Active: active" in check_output.stdout'
-    #  when: 'check_output.stdout is search("Active: active")'
+        state: started
+      when: '"Active: inactive (dead)" in check_output.stdout'
+    #  when: 'check_output.stdout is search("Active: inactive")'
