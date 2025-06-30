@@ -14,7 +14,7 @@ Playbook used for **installation**, **configuration** and **management** of the 
 
 ## Usage instructions 
 
-First of all, you need an inventory and a vault file for this to work. The inventory file should contain only the aliases for the slave nodes and the ansible_hostname for each of them (e.g. **192.168.xxx.xxx**). You can check that by using **ip a** command on the slave node terminal. The vault file should contain the **ansible_password**, the **ansible_become_password** and the **ansible_user**. The **ansible_user** and the **ansible_password** are needed for the **SSH** connection when ansible plays are being executed. The **ansible_become_password** is used to execute tasks that require sudo privileges. One more thing to add here is that the vault file also contains the RedHat credentials used for checking the **subscritpion-manager** status and, in case it is **unregistered**, to **register** it.   
+**First of all**, you need an inventory and a vault file for this to work. The inventory file should contain only the aliases for the slave nodes and the ansible_hostname for each of them (e.g. **192.168.xxx.xxx**). You can check that by using **ip a** command on the slave node terminal. The vault file should contain the **ansible_password**, the **ansible_become_password** and the **ansible_user**. The **ansible_user** and the **ansible_password** are needed for the **SSH** connection when ansible plays are being executed. The **ansible_become_password** is used to execute tasks that require sudo privileges. One more thing to add here is that the vault file also contains the RedHat credentials used for checking the **subscritpion-manager** status and, in case it is **unregistered**, to **register** it.   
 
 **The structure of the vault file is:**
 
@@ -39,6 +39,11 @@ The project contains the following:
 - group_vars/
     - vault.yml
 
+The `ansible.cfg` file is a configuration file used by Ansible for setting the **"rules"** for the playbooks. There are **3 places** where you can find or create the `ansible.cfg` file:
+
+1. the folder where you run the playbooks: `ansible.cfg`
+2. the home directory of the user: `~/.ansible.cfg`
+3. in the global location of the system: `/etc/ansible/ansible.cfg`
 
 
 
