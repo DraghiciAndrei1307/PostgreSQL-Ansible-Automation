@@ -45,5 +45,11 @@ The `ansible.cfg` file is a configuration file used by Ansible for setting the *
 2. the home directory of the user: `~/.ansible.cfg`
 3. in the global location of the system: `/etc/ansible/ansible.cfg`
 
+The one that has priority is the one inside the folder you are running the playbook. 
+
+Inside 
+
+
+
 
 
