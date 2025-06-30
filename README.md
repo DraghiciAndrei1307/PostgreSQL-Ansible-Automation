@@ -4,6 +4,11 @@
 
 Playbook used for **installation**, **configuration** and **management** of the **PostgreSQL 13** service on the slave nodes. 
 
+## Contents:
+
+- Prerequisites
+- Usage Instructions
+
 ## Prerequisites
 
 :white_check_mark: **Ansible version: core 2.14.18**
@@ -11,6 +16,8 @@ Playbook used for **installation**, **configuration** and **management** of the 
 :white_check_mark: **Operating System: RHEL 9.5**
 
 :white_check_mark: **Access SSH** 
+
+:white_check_mark: **inventory and vault files** 
 
 ## Usage instructions 
 
