@@ -76,6 +76,8 @@ The project contains the following:
 - group_vars/
     - vault.yml
 
+### `ansible.cfg` file
+
 The `ansible.cfg` file is a configuration file used by Ansible for setting the **"rules"** for the playbooks. There are **3 places** where you can find or create the `ansible.cfg` file:
 
 1. the folder where you run the playbooks: `ansible.cfg`
