@@ -6,11 +6,11 @@ Playbook used for **installation**, **configuration** and **management** of the 
 
 ## Prerequisites
 
-:white_check_mark: Ansible version: core 2.14.18
+:white_check_mark: **Ansible version: core 2.14.18**
 
-:white_check_mark: Operating System: RHEL 9.5
+:white_check_mark: **Operating System: RHEL 9.5**
 
-:white_check_mark: Access SSH 
+:white_check_mark: **Access SSH** 
 
 ## Usage instructions 
 
