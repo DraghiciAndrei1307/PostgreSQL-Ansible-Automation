@@ -6,7 +6,7 @@ Playbook used for installation, configuration and management of the PostgreSQL 1
 
 ## Prerequisites
 
-- [X] Ansible version: core 2.14.18
+- :white_check_mark: Ansible version: core 2.14.18
 - [X] Operating System: RHEL 9.5
 - [X] Access SSH 
 
