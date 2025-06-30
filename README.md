@@ -47,9 +47,17 @@ The `ansible.cfg` file is a configuration file used by Ansible for setting the *
 
 The one that has priority is the one inside the folder you are running the playbook, after that comes the one inside the user's home directory and the last, but not the least, is the one from `/etc/ansible/ansible.cfg` 
 
-Inside 
+Inside the `ansible.cfg` file (the one inside our repo), we have the following: 
 
+```bash
+[defaults]
+host_key_checking=False
+```
 
+When we run the playbook, the SSH connection happens. When the SSH connection is established, basically there will be a check of the SSH key of the host we want to connect to. By putting the above inside the ansible.cfg file, we specify that we want to skip this step in order to make the process easier. Why that? Because if the SSH key is changed, the check will return an error and the playbook execution will stop, requiring manual intervention to accept or update the new key. This can be disruptive, especially in dynamic environments like cloud-based infrastructure, where hosts may be frequently recreated or have their SSH keys regenerated. By disabling host key checking, we allow Ansible to proceed without blocking, ensuring smoother and uninterrupted automation. However, note that this reduces SSH security and should be avoided in production environments where host identity verification is important.
 
+## Description / Journal
+
+### July 30 2025
 
 
