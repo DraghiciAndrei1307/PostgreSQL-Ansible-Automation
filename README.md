@@ -25,12 +25,14 @@ After you created yourself a **RedHat 9.5 VM** with **Ansible** and configured t
 
 **The structure of the vault file is:**
 
+```bash
 ansible_user: xxxxxx
 ansible_password: xxxxxx
 ansible_become_password: xxxxxx
 
 redhat_username: "xxxxxx"
 redhat_password: "xxxxxx"
+```
 
 After we ensured the vault and the inventory file, we can move on to talk about the other components of this project.
 
