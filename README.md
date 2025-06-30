@@ -161,3 +161,164 @@ The code of the `postgresql_install.yml` playbook can be observed below:
         state: started
 
 ```
+
+### The `start_postgresql_service.yml` playbook description
+
+This playbook is used for checking the PostgreSQL service status. If the status is **inactive**, the process will be started using systemctl.
+
+The code of the playbook can be view in the code snippet below: 
+
+```bash
+---
+- name: "Start PostgreSQL service"
+  hosts: dbs
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    pg_version: 13
+  become: yes
+  tasks:
+    - name: "Check Postgresql-{{ pg_version }}"
+      shell: "systemctl status postgresql-{{ pg_version }}"
+      register: check_output
+      failed_when: false
+
+    - name: "Start service"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        state: started
+      when: '"Active: inactive (dead)" in check_output.stdout'
+```
+
+### The `stop_postgresql_service.yml` playbook description
+
+This playbook is used for checking the PostgreSQL service status. If the status is **active**, the process will be stopped using `systemctl`.
+
+The code of the playbook can be view in the code snippet below: 
+
+```bash
+---
+- name: "Stop PostgreSQL service"
+  hosts: dbs
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    pg_version: 13
+  become: yes
+  tasks:
+    - name: "Check Postgresql-{{ pg_version }}"
+      shell: "systemctl status postgresql-{{ pg_version }}"
+      register: check_output
+
+    - name: "Stop service"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        state: stopped
+      when: '"Active: active" in check_output.stdout'
+```
+
+### The `register_system.yml` playbook description
+
+This playbook is used to check if the VM has the RedHat subscription enabled. If not, the system will be registered.
+
+The code snippet of the `register_system.yml` can be view below: 
+
+```bash
+---
+- name: "Register system"
+  hosts: localhost
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - ansible.builtin.shell: >
+        subscription-manager register
+        --username={{ redhat_username }}
+        --password={{ redhat_password }}
+        --auto-attach
+      register: register_output
+      failed_when: "'Invalid username or password' in register_output.stderr"
+
+    - ansible.builtin.shell: "subscription-manager attach --auto"
+
+```
+
+### The `pgbackrest_build_process.yml` playbook description
+
+As the RHEL pgBackRest documentation says: "When building from source it is best to use a build host rather than building on production. Many of the tools required for the build should generally not be installed in production. pgBackRest consists of a single executable so it is easy to copy to a new host once it is built." (Link: `[pgBackRest Documentation](https://pgbackrest.org/user-guide-rhel.html#build)`). So, basically, we are using in this case the ansible-master node in order to create the executable that we will copy to the slave-nodes and install the pgBackRest there.
+
+The Ansible code snippet can be observed below: 
+
+```bash
+---
+- name: "pgBackRest build process"
+  hosts: localhost
+  become: yes
+  vars:
+    dependencies:
+      - meson
+      - gcc
+      - postgresql13-devel
+      - openssl-devel
+      - libxml2-devel
+      - lz4-devel
+      - libzstd-devel
+      - bzip2-devel
+      - libyaml-devel
+      - libssh2-devel
+
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Create build directory"
+      command: mkdir -p /pgBackRest_build
+
+    - name: "Download into /pgBackRest_build"
+      ansible.builtin.shell: "wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.55.1.tar.gz | tar zx -C /pgBackRest_build"
+
+    - name: "Update DNF"
+      ansible.builtin.yum:
+        name: "*"
+        state: latest
+        update_only: yes
+        update_cache: true
+        nobest: yes
+
+    - name: "Enable codeready-builder(CRB) repo"
+      ansible.builtin.command: >
+        subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
+      when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "9"
+
+    - name: "Install EPEL repository (RHEL 9)"
+      block:
+        - name: "Download and install EPEL release RPM"
+          ansible.builtin.dnf:
+            name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+            state: present
+            disable_gpg_check: yes
+
+        - name: "Import EPEL GPG key"
+          ansible.builtin.rpm_key:
+            key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"
+            state: present
+
+    - name: "Install build dependencies"
+      #debug:
+      #  msg: "Installing package {{ item }}"
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ dependencies }}"
+
+    - name: "Configure pgBackRest"
+      ansible.builtin.shell: >
+        PKG_CONFIG_PATH=/usr/pgsql-13/lib/pkgconfig
+        meson setup /pgBackRest_build/pgbackrest /pgBackRest_build/pgbackrest-release-2.55.1
+      args:
+        creates: "/pgBackRest_build/pgbackrest/build.ninja"
+
+
+    - name: "Build pgBackRest"
+      ansible.builtin.shell: "ninja -C /pgBackRest_build/pgbackrest"
+
+```
