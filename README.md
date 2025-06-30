@@ -7,9 +7,10 @@ Playbook used for **installation**, **configuration** and **management** of the 
 ## Contents:
 
 - Prerequisites
-- Project/Repo contents
 - Usage Instructions
-- 
+- Project/Repo contents
+    - The `ansible.cfg` configuration file description
+    - The `postgresql_install.yml` playbook description
 
 ## Prerequisites
 
@@ -47,6 +48,12 @@ postgresql-node2
 postgresql-node3
 ```
 
+If you want to modify the vault file, you can use the following: 
+
+```bash
+ansible-vault edit /path/to/vault/file.yml
+```
+
 After we ensured the vault and the inventory file, we can move on to talk about how to use the playbooks inside this project.
 
 ## Usage Instructions
@@ -78,7 +85,7 @@ The project contains the following:
 - group_vars/
     - vault.yml
 
-### The `ansible.cfg` file description
+### The `ansible.cfg` configuration file description
 
 The `ansible.cfg` file is a configuration file used by Ansible for setting the **"rules"** for the playbooks. There are **3 places** where you can find or create the `ansible.cfg` file:
 
@@ -97,9 +104,8 @@ host_key_checking=False
 
 When we run the playbook, the SSH connection happens. When the SSH connection is established, basically there will be a check of the SSH key of the host we want to connect to. By putting the above inside the ansible.cfg file, we specify that we want to skip this step in order to make the process easier. Why that? Because if the SSH key is changed, the check will return an error and the playbook execution will stop, requiring manual intervention to accept or update the new key. This can be disruptive, especially in dynamic environments like cloud-based infrastructure, where hosts may be frequently recreated or have their SSH keys regenerated. By disabling host key checking, we allow Ansible to proceed without blocking, ensuring smoother and uninterrupted automation. However, note that this reduces SSH security and should be avoided in production environments where host identity verification is important.
 
-Now, `postgresql_install.yml` playbook  
+### The `postgresql_install.yml` playbook description
 
-## Description / Journal
-
+Now, `postgresql_install.yml` playbook
 
 
