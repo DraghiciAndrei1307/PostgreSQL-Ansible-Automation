@@ -2,7 +2,7 @@
 
 ## Short Description
 
-Playbook used for installation, configuration and management of the PostgreSQL 13 service on the slave nodes. 
+Playbook used for **installation**, **configuration** and **management** of the **PostgreSQL 13** service on the slave nodes. 
 
 ## Prerequisites
 
