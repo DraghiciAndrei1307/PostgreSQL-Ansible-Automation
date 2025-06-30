@@ -102,10 +102,62 @@ Inside the `ansible.cfg` file (the one inside our repo), we have the following:
 host_key_checking=False
 ```
 
-When we run the playbook, the SSH connection happens. When the SSH connection is established, basically there will be a check of the SSH key of the host we want to connect to. By putting the above inside the ansible.cfg file, we specify that we want to skip this step in order to make the process easier. Why that? Because if the SSH key is changed, the check will return an error and the playbook execution will stop, requiring manual intervention to accept or update the new key. This can be disruptive, especially in dynamic environments like cloud-based infrastructure, where hosts may be frequently recreated or have their SSH keys regenerated. By disabling host key checking, we allow Ansible to proceed without blocking, ensuring smoother and uninterrupted automation. However, note that this reduces SSH security and should be avoided in production environments where host identity verification is important.
+When we run the playbook, the SSH connection happens. When the SSH connection is established, basically there will be a check of the SSH key of the host we want to connect to. By putting the above inside the ansible.cfg file, we specify that we want to skip this step to make the process easier. Why that? If the SSH key is changed, the check will return an error and the playbook execution will stop, requiring manual intervention to accept or update the new key. This can be disruptive, especially in dynamic environments like cloud-based infrastructure, where hosts may be frequently recreated or have their SSH keys regenerated. By disabling host key checking, we allow Ansible to proceed without blocking, ensuring smoother and uninterrupted automation. However, note that this reduces SSH security and should be avoided in production environments where host identity verification is important.
 
 ### The `postgresql_install.yml` playbook description
 
-Now, `postgresql_install.yml` playbook
+As the name file says, this playbook is used for installing PostgreSQL on the slave nodes. 
 
+The code of the `postgresql_install.yml` playbook can be observed below:
 
+```bash
+---
+- name: "Install, Initialize and Start PostgreSQL service"
+  hosts: dbs
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    pg_version: 13
+  tasks:
+    - name: "DNF: Update all packages (optional)"
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_only: yes
+        nobest: yes
+
+    - name: "Install the repository RPM"
+      ansible.builtin.dnf:
+        name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+        state: present
+        disable_gpg_check: yes
+
+    - name: "Install PostgreSQL version {{ pg_version }}"
+      ansible.builtin.dnf:
+        name: postgresql{{ pg_version }}-server
+        state: present
+
+   # - name: "Copy PgBackRest build on the slave nodes "
+
+    - name: "Install PgBackRest"
+      ansible.builtin.yum:
+        name: pgbackrest
+        state: present
+
+    - name: "Initialize the database"
+      ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
+      args:
+        creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
+
+    - name: "Enable automatic start"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        enabled: yes
+
+    - name: "Start the PostgreSQL service"
+      ansible.builtin.service:
+        name: postgresql-{{ pg_version }}
+        state: started
+
+```
