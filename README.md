@@ -14,7 +14,7 @@ Playbook used for **installation**, **configuration** and **management** of the 
 
 ## Usage instructions 
 
-**First of all**, you need an inventory and a vault file for this to work. The inventory file should contain only the aliases for the slave nodes and the ansible_hostname for each of them (e.g. **192.168.xxx.xxx**). You can check that by using **ip a** command on the slave node terminal. The vault file should contain the **ansible_password**, the **ansible_become_password** and the **ansible_user**. The **ansible_user** and the **ansible_password** are needed for the **SSH** connection when ansible plays are being executed. The **ansible_become_password** is used to execute tasks that require sudo privileges. One more thing to add here is that the vault file also contains the RedHat credentials used for checking the **subscritpion-manager** status and, in case it is **unregistered**, to **register** it.   
+**First of all**, you need an **inventory** and a **vault** file for this to work. The inventory file should contain only the aliases for the slave nodes and the ansible_hostname for each of them (e.g. **192.168.xxx.xxx**). You can check that by using **ip a** command on the slave node terminal. The vault file should contain the **ansible_password**, the **ansible_become_password** and the **ansible_user**. The **ansible_user** and the **ansible_password** are needed for the **SSH** connection when ansible plays are being executed. The **ansible_become_password** is used to execute tasks that require sudo privileges. One more thing to add here is that the vault file also contains the RedHat credentials used for checking the **subscritpion-manager** status and, in case it is **unregistered**, to **register** it.   
 
 **The structure of the vault file is:**
 
@@ -45,7 +45,7 @@ The `ansible.cfg` file is a configuration file used by Ansible for setting the *
 2. the home directory of the user: `~/.ansible.cfg`
 3. in the global location of the system: `/etc/ansible/ansible.cfg`
 
-The one that has priority is the one inside the folder you are running the playbook. 
+The one that has priority is the one inside the folder you are running the playbook, after that comes the one inside the user's home directory and the last, but not the least, is the one from `/etc/ansible/ansible.cfg` 
 
 Inside 
 
