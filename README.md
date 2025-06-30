@@ -34,6 +34,19 @@ redhat_username: "xxxxxx"
 redhat_password: "xxxxxx"
 ```
 
+An example of the `inventory` file can be observed below: 
+
+```bash
+postgresql-node1 ansible_host=xxx.xxx.xxx.xxx
+postgresql-node2 ansible_host=xxx.xxx.xxx.xxx
+postgresql-node3 ansible_host=xxx.xxx.xxx.xxx
+
+[dbs]
+postgresql-node1
+postgresql-node2
+postgresql-node3
+```
+
 After we ensured the vault and the inventory file, we can move on to talk about the other components of this project.
 
 ## Project/Repo contents
