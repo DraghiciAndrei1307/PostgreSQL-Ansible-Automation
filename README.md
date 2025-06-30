@@ -56,8 +56,22 @@ host_key_checking=False
 
 When we run the playbook, the SSH connection happens. When the SSH connection is established, basically there will be a check of the SSH key of the host we want to connect to. By putting the above inside the ansible.cfg file, we specify that we want to skip this step in order to make the process easier. Why that? Because if the SSH key is changed, the check will return an error and the playbook execution will stop, requiring manual intervention to accept or update the new key. This can be disruptive, especially in dynamic environments like cloud-based infrastructure, where hosts may be frequently recreated or have their SSH keys regenerated. By disabling host key checking, we allow Ansible to proceed without blocking, ensuring smoother and uninterrupted automation. However, note that this reduces SSH security and should be avoided in production environments where host identity verification is important.
 
+Let's move on to how to run each of the playbooks contained inside this repos (the .yml files). This is how you should run them: 
+
+```bash
+ansible-playbook -i inventory name_of_the_playbook.yml --ask-vault-password
+```
+
+As you can see, the following options were used:
+
+- `-i` option is used for linking the inventory file to this playbook run
+- `--ask-vault-password` option is used in order to provide the password for the vault file the playbook is linked to (check the `vars_files` inside any playbook present inside this repo in order to understand how to link the vault to the playbook)
+
+Another option that you can use is the `--check` option that runs the playbook, but does not make any changes on the slave node.
+
+Now, `postgresql_install.yml` playbook  
+
 ## Description / Journal
 
-### July 30 2025
 
 
