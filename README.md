@@ -140,10 +140,10 @@ The code of the `postgresql_install.yml` playbook can be observed below:
 
    # - name: "Copy PgBackRest build on the slave nodes "
 
-    - name: "Install PgBackRest"
-      ansible.builtin.yum:
-        name: pgbackrest
-        state: present
+   # - name: "Install pgBackRest"
+   #   ansible.builtin.yum:
+   #     name: pgbackrest
+   #     state: present
 
     - name: "Initialize the database"
       ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
@@ -174,6 +174,66 @@ Another way to create and use variables is to create them at the play level. Thi
 - vars:
     - pg_version: 13
 ```
+
+Here we created one variable the **pg_version** variable with the 13 value stored inside it. We are using this variable to specify the **PostgreSQL major version** that we want to install on our slave nodes.
+
+Now, we will talk about tasks. Inside this play, we have several tasks, each with his name: 
+- DNF: Update all packages (optional)
+- Install the repository RPM
+- Install PostgreSQL version {{ pg_version }}
+- Install pgBackRest
+- Initialize the database
+- Enable automatic start
+- Start the PostgreSQL service
+
+Each task from the play above has a terminal command with the same functionality. Basically, if you want to create a play (a sequence of tasks) in Ansible, you just need to know the terminal commands and the order in which they must be executed for the desired outcome.
+
+For the play above, the corresponding terminal commands are: 
+
+```bash
+dnf update --nobest -y
+dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+dnf install postgresql13-server
+postgresql-setup --initdb
+systemctl enable postgresql13-service
+systemctl start postgresql13-service
+```
+Mentions: 
+- In the code snippet above I used `postgresql13-server`. You can use any version of PostgreSQL you want. 
+- Before you write an Ansible script, focus on what the terminal commands are. After you can move on to translating it into YML format.  
+
+We will start addressing each task starting now.
+
+The first task is updating the packages to be up-to-date. Why do we care to have the packages up-to-date? If the packages were not updated for some time:
+- you cannot install the desired package
+- you will install an old version of the package that is not compatible with the system
+- your system will have security vulnerabilities, bugs and exploits - which are solved by the patch  
+
+The syntax of the first task is: 
+
+```bash
+- name: "DNF: Update all packages (optional)"
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_only: yes
+    nobest: yes
+```
+
+For this task, we are using the builtin module of the ansible, module which is called: dnf
+This module has the following arguments: name, state, update_only, nobest. `name: "*"` means that we want to update all the **installed** packages, `state: latest` means that the targeted packages will be updated to the latest version, `update_only: yes` tells Ansible to not install new packages, only update the installed ones, the ones present in the repo. `nobest: yes` means that the dnf will update the focused packages to the last approved version, not the best one, but the one that works. 
+
+The second task is to install the official PostgreSQL repo from which we will install the PostgreSQL. The syntax of the second task is:
+
+```bash
+- name: "Install the repository RPM"
+      ansible.builtin.dnf:
+        name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+        state: present
+        disable_gpg_check: yes
+```
+
+We are using the dnf module to install the rpm file from the PostgreSQL official repo link. `state: present` checks if the `.rpm` file is present on our file system. If it is not, the package will be installed (this is called **idempotency**). When installing from an external source, the **dnf** checks if that the GPG key is present on our system. If you do not have this key, usually the dnf will skip the installation. In order to disable this check, we use: `disable_gpg_check: yes`.   
 
 ### The `start_postgresql_service.yml` playbook description
 
