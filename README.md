@@ -164,8 +164,16 @@ The code of the `postgresql_install.yml` playbook can be observed below:
 
 The playbook above contains one "play" called "Install, Initialize and Start PostgreSQL service". This play is executed only once when you run the playbook using the following command: `ansible-playbook -i inventory postgresql_install.yml --ask-vault-password`. This play has the following options:
 - it is applied to all the hosts in the group called `dbs`. This was set here: `hosts: dbs`. This means that the play will target all the hosts in the group `dbs`. If you do not want to target a **group**, but **only one host**, you can put the alias of that host in there (e.g. `hosts: postgresql-node1`; see the inventory example in the ).
-- can use **sudo** when needed. The option `become: yes` means that the tasks contained by the play can be executed as **sudo** when needed. For this to work, you will need the **sudo password** and the **user** you are targeting in the vault file at `ansible_user`.  
+- can use **sudo** when needed. The option `become: yes` means that the tasks contained by the play can be executed as **sudo** when needed. For this to work, you will need the **sudo password** and the **user** you are targeting in the vault file at `ansible_user`.
 
+To access the variables that we want to keep **hidden** in the **vault file**, we have to include the path to the **vault** file in the `vars_files`. The `vars_files` contains in general all the paths to the files in which we stored important variables needed by the play inside the playbook when executed. In our case, I've included only the path to the vault file which is: `- group_vars/vault.yml`.
+
+Another way to create and use variables is to create them at the play level. This was perfectly exemplified here: 
+
+```bash
+- vars:
+    - pg_version: 13
+```
 
 ### The `start_postgresql_service.yml` playbook description
 
