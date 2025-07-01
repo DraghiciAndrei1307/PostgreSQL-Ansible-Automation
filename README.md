@@ -162,6 +162,10 @@ The code of the `postgresql_install.yml` playbook can be observed below:
 
 ```
 
+The playbook above contains one "play" called "Install, Initialize and Start PostgreSQL service". This play is executed only once when you run the playbook using the following command: `ansible-playbook -i inventory postgresql_install.yml --ask-vault-password`. This play has the following options:
+- it is applied to all the hosts in the group called `dbs`. This was set here: `hosts: dbs` which means that the play will target all the hosts in the group dbs. If you do not want to target a group, but only one host, you can put the alias of that host in there (e.g. `hosts: postgresql-node1`). 
+
+
 ### The `start_postgresql_service.yml` playbook description
 
 This playbook is used for checking the PostgreSQL service status. If the status is **inactive**, the process will be started using systemctl.
