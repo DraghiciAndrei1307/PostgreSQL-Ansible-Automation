@@ -200,7 +200,7 @@ dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_6
 # Install the PostgreSQL from the official repo we installed above
 dnf install postgresql13-server
 
-#Init the PostgreSQL database
+# Init the PostgreSQL database
 postgresql-setup --initdb
 
 # Enable and Start the PostgreSQL service
@@ -243,6 +243,39 @@ The second task is to install the official PostgreSQL repo from which we will in
 ```
 
 We are using the dnf module to install the rpm file from the PostgreSQL official repo link. `state: present` checks if the `.rpm` file is present on our file system. If it is not, the package will be installed (this is called **idempotency**). When installing from an external source, the **dnf** checks if that the GPG key is present on our system. If you do not have this key, usually the dnf will skip the installation. In order to disable this check, we use: `disable_gpg_check: yes`.   
+
+The third task installs the PostgreSQL from the official repo only if it wasn't already installed (`state: present`):
+
+```bash
+- name: "Install PostgreSQL version {{ pg_version }}"
+  ansible.builtin.dnf:
+    name: postgresql{{ pg_version }}-server
+    state: present
+```
+
+The fourth task initializes the database. The syntax of the task is displayed below:
+
+```bash
+- name: "Initialize the database"
+  ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
+  args:
+    creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
+```
+
+We are using here the `command` module of the Ansible to run the following command: 
+
+```bash
+/usr/pgsql-13/bin/postgresql-13-setup initdb
+```
+
+After we run this command, the `/var/lib/pgsql/13/data` folder is created. 
+
+The following code snippet ensures that if the file PG_VERSION already exists on our file system, the database was already initialized, which means this task can be skipped (idempotency).  
+
+```bash
+  args:
+    creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
+```
 
 ### The `start_postgresql_service.yml` playbook description
 
