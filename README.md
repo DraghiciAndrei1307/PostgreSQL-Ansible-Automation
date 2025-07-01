@@ -277,6 +277,8 @@ The following code snippet ensures that if the file PG_VERSION already exists on
     creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
 ```
 
+The last two tasks ensure that the service is enabled and started. For these tasks, we are using the service Ansible module to work with processes. `enabled: true` checks if the service is enabled or not. If it was already enabled, this task is skipped. If not, the service is enabled. `state: started` checks if the process is running (active) or not (inactive). If the service was already started, the task is skipped. If not, the service is started.
+
 ### The `start_postgresql_service.yml` playbook description
 
 This playbook is used for checking the PostgreSQL service status. If the status is **inactive**, the process will be started using systemctl.
