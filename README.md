@@ -307,6 +307,10 @@ The code of the playbook can be view in the code snippet below:
       when: '"Active: inactive (dead)" in check_output.stdout'
 ```
 
+Mentions: 
+- `failed_when: false` is used in this case because when we run the command: `systemctl status postgresql-{{ pg_version }}`, if the service is down, this will return a code different from 0 (e.g. "rc: 3" or "rc: 4" can be seen in the output of the task - these are error codes that say that the process does not exist and the command was not successfully finished).
+- `register: check_output` created a variable with the output of the command executed. This output is used in the second task to see if the service is active or not. If the service is inactive, we will start it.
+
 ### The `stop_postgresql_service.yml` playbook description
 
 This playbook is used for checking the PostgreSQL service status. If the status is **active**, the process will be stopped using `systemctl`.
