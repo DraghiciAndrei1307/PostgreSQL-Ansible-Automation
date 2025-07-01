@@ -191,10 +191,19 @@ Each task from the play above has a terminal command with the same functionality
 For the play above, the corresponding terminal commands are: 
 
 ```bash
+# Update the  dnf repos
 dnf update --nobest -y
+
+# Install the official PostgreSQL repo
 dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+# Install the PostgreSQL from the official repo we installed above
 dnf install postgresql13-server
+
+#Init the PostgreSQL database
 postgresql-setup --initdb
+
+# Enable and Start the PostgreSQL service
 systemctl enable postgresql13-service
 systemctl start postgresql13-service
 ```
