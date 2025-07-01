@@ -67,7 +67,7 @@ ansible-playbook -i inventory name_of_the_playbook.yml --ask-vault-password
 As you can see, the following options were used:
 
 - `-i` option is used for linking the inventory file to this playbook run
-- `--ask-vault-password` option is used in order to provide the password for the vault file the playbook is linked to (check the `vars_files` inside any playbook present inside this repo in order to understand how to link the vault to the playbook)
+- `--ask-vault-password` option is used in order to provide the password for the vault file the playbook is linked to (check the `vars_files` inside any playbook present inside this repo to understand how to link the vault to the playbook)
 
 Another option that you can use is the `--check` option. What this does is that it lets you run the playbook without making any changes on the slave node.
 
@@ -163,7 +163,8 @@ The code of the `postgresql_install.yml` playbook can be observed below:
 ```
 
 The playbook above contains one "play" called "Install, Initialize and Start PostgreSQL service". This play is executed only once when you run the playbook using the following command: `ansible-playbook -i inventory postgresql_install.yml --ask-vault-password`. This play has the following options:
-- it is applied to all the hosts in the group called `dbs`. This was set here: `hosts: dbs` which means that the play will target all the hosts in the group dbs. If you do not want to target a group, but only one host, you can put the alias of that host in there (e.g. `hosts: postgresql-node1`). 
+- it is applied to all the hosts in the group called `dbs`. This was set here: `hosts: dbs`. This means that the play will target all the hosts in the group `dbs`. If you do not want to target a **group**, but **only one host**, you can put the alias of that host in there (e.g. `hosts: postgresql-node1`; see the inventory example in the ).
+- can use **sudo** when needed. The option `become: yes` means that the tasks contained by the play can be executed as **sudo** when needed. For this to work, you will need the **sudo password** and the **user** you are targeting in the vault file at `ansible_user`.  
 
 
 ### The `start_postgresql_service.yml` playbook description
