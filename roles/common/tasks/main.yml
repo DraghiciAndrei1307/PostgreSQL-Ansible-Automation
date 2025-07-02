@@ -1,4 +1,5 @@
 # Configure the subscription-manager
+
 - name: "Configure the subscription-manager"
   ansible.builtin.shell: >
     subscription-manager register
