@@ -24,31 +24,9 @@
     - name: "Download into /pgBackRest_build"
       ansible.builtin.shell: "wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.55.1.tar.gz | tar zx -C /pgBackRest_build"
 
-    - name: "Update DNF"
-      ansible.builtin.yum:
-        name: "*"
-        state: latest
-        update_only: yes
-        update_cache: true
-        nobest: yes  
-    
-    - name: "Enable codeready-builder(CRB) repo"
-      ansible.builtin.command: > 
-        subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
-      when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "9"
-
-    - name: "Install EPEL repository (RHEL 9)"
-      block:
-        - name: "Download and install EPEL release RPM"
-          ansible.builtin.dnf:
-            name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
-            state: present
-            disable_gpg_check: yes
-
-        - name: "Import EPEL GPG key"
-          ansible.builtin.rpm_key:
-            key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"  
-            state: present
+    - name: "Run the common role"
+      import_role:
+        name: common
 
   #  - name: "Add PostgreSQL YUM repository"
   #    ansible.builtin.get_url:
