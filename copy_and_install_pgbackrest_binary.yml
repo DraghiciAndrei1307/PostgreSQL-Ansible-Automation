@@ -1,0 +1,126 @@
+---
+- name: "Copy and Install pgBackRest Binary"
+  hosts: dbs
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    - pg_version: 13
+  become: true
+  tasks:
+
+    # Cinfigure the subscription-manager 
+    - ansible.builtin.shell: >
+        subscription-manager register
+        --username={{ redhat_username }}
+        --password={{ redhat_password }}
+        --auto-attach
+      register: register_output
+      failed_when: "'Invalid username or password' in register_output.stderr"
+
+    - ansible.builtin.shell: "subscription-manager attach --auto"
+
+    # UPDATE YUM ?? - i can remove this
+
+    - name: "Update DNF"
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+        update_only: yes
+        update_cache: true
+        nobest: yes
+
+    # enable the codeready repo
+
+    - name: "Enable codeready-builder(CRB) repo"
+      ansible.builtin.command: >
+        subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
+      when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "9"
+
+    - name: "Install EPEL repository (RHEL 9)"
+      block:
+        - name: "Download and install EPEL release RPM"
+          ansible.builtin.dnf:
+            name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+            state: present
+            disable_gpg_check: yes
+
+        - name: "Import EPEL GPG key"
+          ansible.builtin.rpm_key:
+            key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"
+            state: present
+
+    - name: "Copy the pgbackrest binary from the master node"
+      ansible.builtin.copy:
+        src: /pgBackRest_build/pgbackrest/src/pgbackrest
+        dest: /usr/bin/pgbackrest
+        mode: '0755'
+
+    # Equivalent terminal commands:
+    # sudo scp build:/build/pgbackrest/src/pgbackrest /usr/bin
+    # sudo chmod 755 /usr/bin/pgbackrest
+
+    # In the task below we will use the package module instead of dnf and yum because the package is a more generic
+    # module and the main advantage is that we can run this playbook on other distributions
+    # dnf and yum work on RHEL/CentOS 8+ 
+    # package works everywhere
+
+    - name: "Install pgBackRest configuration dependencies"
+      ansible.builtin.package:
+        name:
+          - postgresql-libs
+          - libssh2
+        state: present
+
+    # Equivalent terminal command:
+    # sudo yum install postgresql-libs libssh2
+
+    - name: "Create pgbackrest configuration directory"
+      ansible.builtin.file:
+        path: /var/log/pgbackrest
+        state: directory
+        mode: '770'
+        owner: postgres
+        group: postgres
+        
+    # Equivalent terminal commands: 
+    # sudo mkdir -p -m 770 /var/log/pgbackrest
+    # sudo chown postgres:postgres /var/log/pgbackrest
+
+    - name: "Create pgBackRest configuration directories in /etc"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root  
+      with_items:
+        - /etc/pgbackrest
+        - /etc/pgbackrest/conf.d
+    
+    # Equivalent terminal commands:
+    # sudo mkdir -p /etc/pgbackrest
+    # sudo mkdir -p /etc/pgbackrest/conf.d
+          
+    - name: "Create pgbackrest.conf file"
+      ansible.builtin.file:
+        path: /etc/pgbackrest/pgbackrest.conf
+        state: touch
+        mode: '0640'
+        owner: postgres
+        group: postgres
+   
+    # Equivalent terminal commands:
+    # sudo touch /etc/pgbackrest/pgbackrest.conf
+    # sudo chmod 640 /etc/pgbackrest/pgbackrest.conf
+    # sudo chown postgres:postgres /etc/pgbackrest/pgbackrest.conf
+
+    - name: "Check pgBackRest version"
+      ansible.builtin.command: pgbackrest version
+      register: version_output
+
+
+    - name: "Print pgBackRest version"
+      ansible.builtin.debug:
+        var: version_output.stdout
+
+
