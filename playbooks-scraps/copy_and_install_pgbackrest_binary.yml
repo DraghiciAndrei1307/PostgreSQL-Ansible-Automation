@@ -2,7 +2,7 @@
 - name: "Copy and Install pgBackRest Binary"
   hosts: dbs
   vars_files:
-    - group_vars/vault.yml
+    - ../group_vars/vault.yml
   vars:
     - pg_version: 13
   become: true

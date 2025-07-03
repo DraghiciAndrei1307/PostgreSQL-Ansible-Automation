@@ -16,7 +16,7 @@
       - libssh2-devel
   
   vars_files:
-    - group_vars/vault.yml
+    - ../group_vars/vault.yml
   roles:
     - pgbackrest_build
 
