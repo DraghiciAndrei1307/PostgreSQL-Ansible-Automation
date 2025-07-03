@@ -17,3 +17,16 @@
   ansible.builtin.service:
     name: postgresql-{{ pg_version }}
     state: started
+
+- name: "Upload postgresql.conf config file from template"
+  ansible.builtin.template:
+    src: postgresql.conf.j2
+    dest: /var/lib/pgsql/{{ pg_version }}/data/postgresql.conf
+    owner: postgres
+    group: postgres
+    mode: '0644'
+  notify: "Restart PostgreSQL"
+
+
+
+
