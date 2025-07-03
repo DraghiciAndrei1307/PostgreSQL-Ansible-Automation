@@ -1,1 +1,2 @@
+arch_command: 'pgbackrest --stanza=demo archive-push %p'
 log_file: 'postgresql.log'

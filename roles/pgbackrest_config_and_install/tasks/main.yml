@@ -50,18 +50,18 @@
     # sudo mkdir -p /etc/pgbackrest
     # sudo mkdir -p /etc/pgbackrest/conf.d
 
-- name: "Create pgbackrest.conf file"
+- name: "Create pgbackrest.conf.j2 file"
   ansible.builtin.file:
-    path: /etc/pgbackrest/pgbackrest.conf
+    path: /etc/pgbackrest/pgbackrest.conf.j2
     state: touch
     mode: '0640'
     owner: postgres
     group: postgres
 
     # Equivalent terminal commands:
-    # sudo touch /etc/pgbackrest/pgbackrest.conf
-    # sudo chmod 640 /etc/pgbackrest/pgbackrest.conf
-    # sudo chown postgres:postgres /etc/pgbackrest/pgbackrest.conf
+    # sudo touch /etc/pgbackrest/pgbackrest.conf.j2
+    # sudo chmod 640 /etc/pgbackrest/pgbackrest.conf.j2
+    # sudo chown postgres:postgres /etc/pgbackrest/pgbackrest.conf.j2
 
 - name: "Check pgBackRest version"
   ansible.builtin.command: pgbackrest version

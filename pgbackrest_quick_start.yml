@@ -6,8 +6,9 @@
     - group_vars/vault.yml
   vars:
     - pg_version: 13
-  tasks:
-    # no need to create a demo cluster
-    # we have to change the postgresql.conf
+  roles:
+    - pgbackrest_quick_start
+
+
 
 

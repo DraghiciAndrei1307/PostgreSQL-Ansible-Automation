@@ -1,0 +1,59 @@
+# no need to create a demo cluster
+# we have to change the postgresql.conf
+
+# Configure the PostgreSQL cluster data directory task
+
+- name: "Configure the PostgreSQL data directory"
+  ansible.builtin.template:
+    src: pgbackrest.conf.j2
+    dest: /etc/pgbackrest/pgbackrest.conf
+    owner: postgres
+    group: postgres
+    mode: '0640'
+
+# CONFIGURE THE LOGGING - if you want other path than the default one
+
+- name: "Create custom path for logging"
+  ansible.builtin.file:
+    path: /var/lib/pgsql/13/pgbackrest_logs
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0640'
+
+- name: "Configure log-path using the environment"
+  ansible.builtin.command: >
+    sudo -u postgres bash -c ' \
+         export PGBACKREST_LOG_PATH=/var/lib/pgsql/13/pgbackrest_logs && \
+         pgbackrest --log-level-console=error help backup log-path'
+    
+
+# CONFIGURE THE PGBACKREST REPOSITORY
+
+- name: "Create the pgBackRest repository"
+  ansible.builtin.file:
+    path: /var/lib/pgbackrest
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0750'
+
+- name: "Create the Stanza"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest 
+    --stanza=demo
+    --log-level-console=info
+    stanza-create
+
+- name: "Check Configuration"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest 
+    --stanza=demo
+    --log-level-console=info
+    check
+  register: check_pgbackrest_config
+
+
+- name: "Print pgbackrest configuration"
+  ansible.builtin.debug:
+  var: check_pgbackrest_config.stdout
