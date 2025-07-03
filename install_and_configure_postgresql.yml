@@ -1,0 +1,42 @@
+---
+  - name: "Install and Configure PostgreSQL"
+    hosts: dbs
+    become: yes
+    vars_files:
+      - group_vars/vault.yml
+    vars:
+      - pg_version: 13
+    roles:
+      - postgresql_config_and_install
+
+  - name: "Build and Compile pgBackRest"
+    hosts: localhost
+    become: yes
+    vars_files:
+        - group_vars/vault.yml
+    vars:
+      dependencies:
+        - meson
+        - gcc
+        - postgresql13-devel
+        - openssl-devel
+        - libxml2-devel
+        - lz4-devel
+        - libzstd-devel
+        - bzip2-devel
+        - libyaml-devel
+        - libssh2-devel
+    roles:
+      - pgbackrest_build
+
+  - name: "Copy the compiled file to the slave nodes"
+    hosts: dbs
+    become: yes
+    vars_files:
+      - group_vars/vault.yml
+    vars:
+      - pg_version: 13
+    roles:
+      - common # run all the tasks from common/tasks/main.yml
+      - pgbackrest_config_and_install
+      - pgbackrest_quick_start
