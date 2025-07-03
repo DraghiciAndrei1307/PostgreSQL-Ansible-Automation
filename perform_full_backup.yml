@@ -1,0 +1,15 @@
+---
+- name: "Perform full backup"
+  hosts: dbs
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    - pg_version: 13
+  tasks:
+    - name: "Perform full backup"
+      ansible.builtin.command: >
+        sudo -u postgres pgbackrest
+        --stanza=demo
+        --type=full
+        --log-level-console=info backup

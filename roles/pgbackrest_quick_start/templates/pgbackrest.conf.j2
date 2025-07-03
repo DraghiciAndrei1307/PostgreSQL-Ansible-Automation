@@ -1,11 +1,12 @@
 [demo]
-pg1-path=/var/lib/pgsql/'{{ pg_version }}'/data
+pg1-path=/var/lib/pgsql/{{ pg_version }}/data
 
 [global]
 repo1-cipher-pass=zWaf6XtpjIVZC5444yXB+cgFDFl7MxGlgkZSaoPvTGirhPygu4jOKOXf9LO4vjfO
 repo1-cipher-type=aes-256-cbc
 repo1-path=/var/lib/pgbackrest
 repo1-retention-full=2
+start-fast=y
 
 [global:archive-push]
 compress-level=3

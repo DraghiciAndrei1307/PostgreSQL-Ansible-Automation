@@ -15,7 +15,7 @@
 
 - name: "Create custom path for logging"
   ansible.builtin.file:
-    path: /var/lib/pgsql/13/pgbackrest_logs
+    path: /var/lib/pgsql/{{ pg_version }}/pgbackrest_logs
     state: directory
     owner: postgres
     group: postgres
@@ -56,4 +56,4 @@
 
 - name: "Print pgbackrest configuration"
   ansible.builtin.debug:
-  var: check_pgbackrest_config.stdout
+    var: check_pgbackrest_config.stdout
