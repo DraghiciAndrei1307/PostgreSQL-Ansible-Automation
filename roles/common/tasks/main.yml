@@ -21,6 +21,14 @@
     update_cache: true
     nobest: yes
 
+# Install the official PostgreSQL Repo - we will use it later to install PostgreSQL on the slave nodes
+
+- name: "Install the repository RPM"
+  ansible.builtin.dnf:
+    name: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
+    state: present
+    disable_gpg_check: yes
+
 # enable the codeready repo
 
 - name: "Enable codeready-builder(CRB) repo"

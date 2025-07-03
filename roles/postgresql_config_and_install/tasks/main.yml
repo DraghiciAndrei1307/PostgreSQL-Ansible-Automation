@@ -1,0 +1,19 @@
+- name: "Install PostgreSQL version {{ pg_version }}"
+  ansible.builtin.dnf:
+    name: postgresql{{ pg_version }}-server
+    state: present
+
+- name: "Initialize the database"
+  ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
+  args:
+    creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
+
+- name: "Enable automatic start"
+  ansible.builtin.service:
+    name: postgresql-{{ pg_version }}
+    enabled: yes
+
+- name: "Start the PostgreSQL service"
+  ansible.builtin.service:
+    name: postgresql-{{ pg_version }}
+    state: started

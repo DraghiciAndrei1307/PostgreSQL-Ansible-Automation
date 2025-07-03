@@ -1,0 +1,73 @@
+- name: "Copy the pgbackrest binary from the master node"
+  ansible.builtin.copy:
+    src: /pgBackRest_build/pgbackrest/src/pgbackrest
+    dest: /usr/bin/pgbackrest
+    mode: '0755'
+
+    # Equivalent terminal commands:
+    # sudo scp build:/build/pgbackrest/src/pgbackrest /usr/bin
+    # sudo chmod 755 /usr/bin/pgbackrest
+
+    # In the task below we will use the package module instead of dnf and yum because the package is a more generic
+    # module and the main advantage is that we can run this playbook on other distributions
+    # dnf and yum work on RHEL/CentOS 8+
+    # package works everywhere
+
+- name: "Install pgBackRest configuration dependencies"
+  ansible.builtin.package:
+    name:
+      - postgresql-libs
+      - libssh2
+    state: present
+
+    # Equivalent terminal command:
+    # sudo yum install postgresql-libs libssh2
+
+- name: "Create pgbackrest configuration directory"
+  ansible.builtin.file:
+    path: /var/log/pgbackrest
+    state: directory
+    mode: '770'
+    owner: postgres
+    group: postgres
+
+    # Equivalent terminal commands:
+    # sudo mkdir -p -m 770 /var/log/pgbackrest
+    # sudo chown postgres:postgres /var/log/pgbackrest
+
+- name: "Create pgBackRest configuration directories in /etc"
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  with_items:
+    - /etc/pgbackrest
+    - /etc/pgbackrest/conf.d
+
+    # Equivalent terminal commands:
+    # sudo mkdir -p /etc/pgbackrest
+    # sudo mkdir -p /etc/pgbackrest/conf.d
+
+- name: "Create pgbackrest.conf file"
+  ansible.builtin.file:
+    path: /etc/pgbackrest/pgbackrest.conf
+    state: touch
+    mode: '0640'
+    owner: postgres
+    group: postgres
+
+    # Equivalent terminal commands:
+    # sudo touch /etc/pgbackrest/pgbackrest.conf
+    # sudo chmod 640 /etc/pgbackrest/pgbackrest.conf
+    # sudo chown postgres:postgres /etc/pgbackrest/pgbackrest.conf
+
+- name: "Check pgBackRest version"
+  ansible.builtin.command: pgbackrest version
+  register: version_output
+
+
+- name: "Print pgBackRest version"
+  ansible.builtin.debug:
+    var: version_output.stdout
