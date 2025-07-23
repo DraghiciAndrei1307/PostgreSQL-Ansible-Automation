@@ -23,3 +23,12 @@
         job: "sudo -u postgres pgbackrest
         --stanza=demo
         --log-level-console=info backup"
+
+    - name: "Schedule incremental backup"
+      ansible.builtin.cron:
+        name: "Incremental Backup"
+        minute: "*/30"
+        job: "sudo -u postgres pgbackrest
+        --stanza=demo
+        --log-level-console=info backup"
+        state: absent
