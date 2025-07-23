@@ -1,5 +1,6 @@
 ---
 - name: "Backup info"
+  hosts: dbs
   gather_facts: yes
   become: yes
   vars_files:
