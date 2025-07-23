@@ -1,0 +1,11 @@
+---
+- name: "Update pgbackrest.conf"
+  hosts: dbs
+  vars_files:
+    - group_vars/vault.yml
+  become: yes
+  tasks:
+    - name: "Update pgbackrest configuration"
+      ansible.builtin.import_role:
+        name: pgbackrest_actions
+        tasks_from: update_pgbackrest_configuration
