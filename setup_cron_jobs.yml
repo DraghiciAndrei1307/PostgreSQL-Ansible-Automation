@@ -18,7 +18,7 @@
     - name: "Schedule incremental backup"
       ansible.builtin.cron:
         name: "Incremental Backup"
-        minute: "*/30"
+        minute: "*/10"
         job: "sudo -u postgres pgbackrest
         --stanza=demo
         --log-level-console=info backup"

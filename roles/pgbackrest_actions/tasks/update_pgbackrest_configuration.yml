@@ -1,0 +1,28 @@
+- name: "Perform full backup"
+  ansible.builtin.command: > 
+    sudo -u postgres pgbackrest
+    --stanza=demo
+    --type=full
+    --log-level-console=info backup
+
+- name: "Update pgbackrest configurations"
+  ansible.builtin.template:
+    src: pgbackrest.conf.j2
+    dest: /etc/pgbackrest/pgbackrest.conf
+    mode: '0640'
+    owner: postgres
+    group: postgres
+
+- name: "Check the stanza"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest info --stanza=demo
+  register: stanza_check_output
+  failed_when: false # avoid task failure if `info` returns an error
+
+- name: "Perform full backup if stanza OK"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest
+    --stanza=demo
+    --type=full
+    --log-level-console=info backup
+  when: "'status: ok' in stanza_check_output.stdout"
