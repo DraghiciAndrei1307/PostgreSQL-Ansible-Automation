@@ -7,6 +7,13 @@
     pg_version: 13
   become: yes
   tasks:
+    - name: "Perform full backup"
+      ansible.builtin.command: >
+        sudo -u postgres pgbackrest
+        --stanza=demo 
+        --type=full 
+        --log-level-console=info backup
+
     - name: "Check Postgresql-{{ pg_version }}"
       shell: "systemctl status postgresql-{{ pg_version }}"
       register: check_output
