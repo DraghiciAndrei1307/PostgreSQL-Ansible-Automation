@@ -12,11 +12,11 @@
         user: postgres
         minute: "*/10"
         hour: "*"
-        job: "sudo -u postgres pgbackrest
+        job: "pgbackrest
         --stanza=demo
         --type=diff
         --log-level-console=info backup"
-        state: absent
+        state: present
 
     - name: "Schedule incremental backup"
       ansible.builtin.cron:
@@ -24,10 +24,10 @@
         user: postgres
         minute: "*/5"
         hour: "*"
-        job: "sudo -u postgres pgbackrest
+        job: "pgbackrest
         --stanza=demo
         --log-level-console=info backup"
-        state: absent
+        state: present
 
 #    - name: "Schedule incremental backup"
 #      ansible.builtin.cron:
