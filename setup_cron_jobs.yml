@@ -9,8 +9,9 @@
     - name: "Schedule Full Backup"
       ansible.builtin.cron:
         name: "Full backup"
-        minute: "30"
-        hour: "6"
+        user: postgres
+        minute: "*/10"
+        hour: "*"
         job: "sudo -u postgres pgbackrest
         --stanza=demo
         --type=diff
@@ -19,16 +20,18 @@
     - name: "Schedule incremental backup"
       ansible.builtin.cron:
         name: "Incremental Backup"
-        minute: "*/10"
+        user: postgres
+        minute: "*/5"
+        hour: "*"
         job: "sudo -u postgres pgbackrest
         --stanza=demo
         --log-level-console=info backup"
 
-    - name: "Schedule incremental backup"
-      ansible.builtin.cron:
-        name: "Incremental Backup"
-        minute: "*/30"
-        job: "sudo -u postgres pgbackrest
-        --stanza=demo
-        --log-level-console=info backup"
-        state: absent
+#    - name: "Schedule incremental backup"
+#      ansible.builtin.cron:
+#        name: "Incremental Backup"
+#        minute: "*/30"
+#        job: "sudo -u postgres pgbackrest
+#        --stanza=demo
+#        --log-level-console=info backup"
+#        state: absent
