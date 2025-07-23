@@ -14,9 +14,9 @@
         hour: "*"
         job: "pgbackrest
         --stanza=demo
-        --type=diff
+        --type=full
         --log-level-console=info backup"
-        state: absent
+        state: present
 
     - name: "Schedule incremental backup"
       ansible.builtin.cron:
