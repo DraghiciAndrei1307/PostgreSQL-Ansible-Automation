@@ -4,12 +4,8 @@
   become: yes
   vars_files:
     - group_vars/vault.yml
-  vars:
-    - pg_version: 13
   tasks:
     - name: "Perform differential backup"
-      ansible.builtin.command: >
-        sudo -u postgres pgbackrest
-        --stanza=demo
-        --type=diff
-        --log-level-console=info backup
+      ansible.builtin.import_role:
+        name: pgbackrest_actions
+        tasks_from: diff_backup

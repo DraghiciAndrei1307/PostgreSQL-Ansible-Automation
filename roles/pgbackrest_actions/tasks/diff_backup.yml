@@ -1,0 +1,6 @@
+- name: "Differential backup"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest
+    --stanza=demo
+    --type=diff
+    --log-level-console=info backup

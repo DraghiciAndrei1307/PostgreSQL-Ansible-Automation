@@ -1,0 +1,6 @@
+- name: "Full backup"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest
+    --stanza=demo
+    --type=full
+    --log-level-console=info backup
