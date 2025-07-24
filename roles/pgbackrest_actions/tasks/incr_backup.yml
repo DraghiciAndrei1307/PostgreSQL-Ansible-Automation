@@ -1,0 +1,5 @@
+- name: "Incremental backup"
+  ansible.builtin.command: >
+    sudo -u postgres pgbackrest
+    --stanza=demo
+    --log-level-console=info backup
