@@ -10,7 +10,7 @@
       ansible.builtin.cron:
         name: "Full backup"
         user: postgres
-        minute: "*/10"
+        minute: "1-59/10"
         hour: "*"
         job: "pgbackrest
         --stanza=demo
