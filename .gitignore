@@ -1,5 +1,5 @@
-./ansible/inventory
+ansible/inventory
 group_vars/vault.yml
-./ansible/group_vars/vault.yml
+ansible/group_vars/vault.yml
 *.vault
 .idea/
