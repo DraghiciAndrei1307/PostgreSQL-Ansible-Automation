@@ -1,0 +1,9 @@
+postgresql-node1 ansible_host=192.168.1.189
+postgresql-node2 ansible_host=192.168.1.193 
+postgresql-node3 ansible_host=192.168.1.141 
+
+[dbs]
+postgresql-node1
+postgresql-node2
+postgresql-node3
+
