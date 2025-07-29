@@ -10,7 +10,7 @@
 - [x] Jobs in cron via Ansible
 - [x] Manual restore tested (full) -> see the `RESTORE.md`
 - [x] Delta restore manually tested -> see the `RESTORE.md`
-- [ ] Restore a specific database (manual intervention) -> see the `RESTORE.md`
+- [x] Restore a specific database (manual intervention) -> see the `RESTORE.md`
 - [ ] PITR (Point-In-Time Recovery) manually tested -> see the `RESTORE.md`
 
 ## 🧩 Phase 2: Expansion and Refinement
