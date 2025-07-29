@@ -9,7 +9,8 @@
 - [x] Ansible tasks for backup full/incremental/differential
 - [x] Jobs in cron via Ansible
 - [x] Manual restore tested (full)
-- [x] Delta restore manually tested 
+- [x] Delta restore manually tested
+- [] PITR (Point-In-Time Recovery) manually tested
 
 ## 🧩 Phase 2: Expansion and Refinement
 - [ ] Restore via Ansible
