@@ -22,4 +22,5 @@ This is an enterprise-level project focused on automating PostgreSQL administrat
 
 👉 For full documentation, see [docs/index.md](./docs/index.md)
 
-## 🗺️ Check the roadmap of this project [docs/ROADMAP.md](./docs/ROADMAP.md) 
+## 🗺️ Project roadmap 
+- Check the roadmap here: [docs/ROADMAP.md](./docs/ROADMAP.md) 
