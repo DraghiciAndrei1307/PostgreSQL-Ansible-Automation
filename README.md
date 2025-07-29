@@ -15,7 +15,7 @@ This is an enterprise-level project focused on automating PostgreSQL administrat
 ## 📁 Project structure
 
 - `ansible/` – inventory, playbooks, configurations
-- `scripts` – will contain the python scripts and packages    
+- `scripts/` – will contain the python scripts and packages    
 - `docs/` – detailed documentation, roadmap, REST API (coming soon)
 - `README.md` – this overview
 - `ansible.cfg` – Ansible configuration
