@@ -1,3 +1,5 @@
+# RESTORE DOCUMENTATION
+
 ## MANUAL RESTORE PROCEDURE
 
 Until now I tested the default/basic restore which is based on the last full backup. 
