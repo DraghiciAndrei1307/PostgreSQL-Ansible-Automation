@@ -5,7 +5,7 @@
     vars_files:
       - group_vars/vault.yml
     vars:
-      - pg_version: 13
+      - pg_version: 14
     roles:
       - common # run all the tasks from common/tasks/main.yml
       - postgresql_config_and_install
@@ -36,7 +36,7 @@
     vars_files:
       - group_vars/vault.yml
     vars:
-      - pg_version: 13
+      - pg_version: 14
     roles:
       - pgbackrest_config_and_install
       - pgbackrest_quick_start
