@@ -24,7 +24,7 @@
 - name: "Configure log-path using the environment"
   ansible.builtin.command: >
     sudo -u postgres bash -c ' \
-         export PGBACKREST_LOG_PATH=/var/lib/pgsql/13/pgbackrest_logs && \
+         export PGBACKREST_LOG_PATH=/var/lib/pgsql/14/pgbackrest_logs && \
          pgbackrest --log-level-console=error help backup log-path'
     
 

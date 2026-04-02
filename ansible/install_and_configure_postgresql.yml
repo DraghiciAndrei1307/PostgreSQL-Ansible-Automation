@@ -19,7 +19,7 @@
       dependencies:
         - meson
         - gcc
-        - postgresql13-devel
+        - postgresql14-devel
         - openssl-devel
         - libxml2-devel
         - lz4-devel
