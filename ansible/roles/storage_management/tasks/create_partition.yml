@@ -1,0 +1,7 @@
+- name: "Create Partition"
+  community.general.parted:
+    device: /dev/sdb
+    number: 2
+    state: present
+    fs_type: xfs
+    part_end: 1GiB

@@ -1,0 +1,11 @@
+---
+- name: Create Partition
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Create Partition"
+      ansible.builtin.include_role:
+        name: storage_management
+        tasks_from: create_partition.yml
