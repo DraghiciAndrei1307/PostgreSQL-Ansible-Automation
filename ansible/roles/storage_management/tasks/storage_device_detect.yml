@@ -5,8 +5,15 @@
 
 - name: Create empty_disks list
   ansible.builtin.set_fact:
-    empty_disks: {{ ansible_facts.devices | dict2items }}
+    empty_disks: >- 
+      {{ 
+        ansible_facts.devices 
+        | dict2items
+        | selectattr('value.partitions', 'equalto', {})
+        | map(attribute='key')
+        | list 
+      }}
 
-- name: List the empty_disks_list
+- name: List the empty_disks list
   ansible.builtin.debug:
     var: empty_disks
