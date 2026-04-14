@@ -1,0 +1,9 @@
+---
+- name: Storage Tasks
+  hosts: postgresql-node1
+  gather_facts: true
+  tasks:
+    - name: Check ansible_facts
+      ansible.builtin.import_role:
+        name: storage_management
+        tasks_from: storage_device_detect
