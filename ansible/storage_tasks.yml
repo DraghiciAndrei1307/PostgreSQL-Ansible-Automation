@@ -2,6 +2,7 @@
 - name: Storage Tasks
   hosts: postgresql-node1
   gather_facts: true
+  become: true
   tasks:
     - name: Check ansible_facts
       ansible.builtin.import_role:
