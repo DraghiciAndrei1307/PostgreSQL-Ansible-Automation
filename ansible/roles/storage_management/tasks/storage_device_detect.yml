@@ -25,4 +25,4 @@
     number: 1
     state: present
     fs_type: xfs
-  loop: {{ empty_disks }}
+  loop: "{{ empty_disks }}"
