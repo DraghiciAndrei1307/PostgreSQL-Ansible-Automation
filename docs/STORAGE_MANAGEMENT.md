@@ -685,6 +685,62 @@ You extend the FS at the same time with the LVM
 lvextend -r -l +100%FREE /dev/vg01/data
 ```
 
+## Auto mount persist (fstab)
+
+Check if the lvm you created was mounted
+
+```commandline
+[student@localhost mnt]$ sudo blkid
+/dev/mapper/rhel-swap: UUID="0244f69f-ec32-4e03-ab56-d6000928c351" TYPE="swap"
+/dev/sdb2: UUID="en0TM2-dSjo-tUf0-b1ek-xnym-uK3r-kPUdQO" TYPE="LVM2_member" PARTUUID="aacf4936-02"
+/dev/sdb1: UUID="XRG2VV-tV28-1I1C-kPtN-Y8g9-lBGx-LHA0cL" TYPE="LVM2_member" PARTUUID="aacf4936-01"
+/dev/mapper/vg01-data: UUID="0a76074b-b9f1-471f-bd3b-f702bf1fc359" TYPE="xfs"
+/dev/mapper/rhel-root: UUID="0c3fc86f-5cf6-4729-be2f-136aaee4d049" TYPE="xfs"
+/dev/sda2: UUID="FqwVxV-MDPD-QZpB-hSLd-0Q7L-x8A8-cUEl2r" TYPE="LVM2_member" PARTUUID="cead329a-02"
+/dev/sda1: UUID="43bc7732-0a4c-4ed7-a914-0459adaeef1e" TYPE="xfs" PARTUUID="cead329a-01"
+```
+
+Get the UUID of `/dev/mapper/vg01-data` LVM, which is `0a76074b-b9f1-471f-bd3b-f702bf1fc359` 
+
+Open fstab `sudo cat /etc/fstab` and add the following line:
+
+```commandline
+UUID="0a76074b-b9f1-471f-bd3b-f702bf1fc359" /mnt/data xfs defaults,noatime 0 0
+```
+
+After you inserted that line into the `/etc/fstab`, use the following to reload the configuration:
+```commandline
+[student@localhost mnt]$ sudo mount -a
+mount: (hint) your fstab has been modified, but systemd still uses
+       the old version; use 'systemctl daemon-reload' to reload.
+[student@localhost mnt]$ sudo systemctl daemon-reload
+[student@localhost mnt]$
+```
+
+## Create snapshots 
+
+## Detect new disk (Ansible)
+
+We use the facts collected by Ansible when a playbook is executed. One particular fact that is of interest to us is 
+`ansible_devices`
+
+We can use it like this in order to extract the disk with no partitions:
+
+```
+ansible_devices:
+  sda:
+    size: "20.00 GB"
+    partitions:
+      sda1: {}
+      sda2: {}
+  sdb:
+    size: "20.00 GB"
+    partitions: {}
+```
+
+We run this Ansible playbook when we add a new disk. This approach (state-driven) is apparently more secure at the
+moment than the event-driven approach that uses the `udev`.
+
 # Ansible Automated Procedures for PostgreSQL 
 
 
@@ -695,4 +751,5 @@ https://medium.com/@kalyanbtech08/creating-logical-volume-management-lvm-file-sy
 https://docs.ansible.com/projects/ansible/latest/collections/community/general/parted_module.html#parameter-part_type
 https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/include_role_module.html
 https://kodekloud.com/blog/linux-list-disks/
+https://www.baeldung.com/linux/etc-fstab-mount-options
 

@@ -1,0 +1,4 @@
+---
+- name: Check the storage devices
+  hosts:
+  gather_facts: true
