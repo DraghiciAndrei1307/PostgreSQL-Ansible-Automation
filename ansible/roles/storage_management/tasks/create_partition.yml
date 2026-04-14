@@ -1,7 +1,7 @@
-- name: "Create Partition"
+- name: Create a new xfs primary partition
   community.general.parted:
-    device: /dev/sdb
-    number: 2
+    device: /dev/{{ item }}
+    number: 1
     state: present
     fs_type: xfs
-    part_end: 1GiB
+  loop: "{{ empty_disks }}"

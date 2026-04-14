@@ -19,10 +19,14 @@
   ansible.builtin.debug:
     var: empty_disks
 
-- name: Create a new xfs primary partition
-  community.general.parted:
-    device: /dev/{{ item }}
-    number: 1
-    state: present
-    fs_type: xfs
-  loop: "{{ empty_disks }}"
+- name: Create XFS partition
+  ansible.builtin.import_role:
+    name: storage_management
+    tasks_from: create_partition
+  when: empty_disks is defined and empty_disks | length > 0
+
+- name: Delete XFS partition
+  ansible.builtin.import_role:
+    name: storage_management
+    tasks_from: delete_partition
+  when: empty_disks is defined and empty_disks | length == 0

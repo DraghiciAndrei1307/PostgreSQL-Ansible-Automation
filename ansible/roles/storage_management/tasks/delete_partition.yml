@@ -1,0 +1,5 @@
+- name: Delete XFS partition from /dev/sdb disk
+  community.general.parted:
+    device: /dev/sdb
+    number: 1
+    state: absent
