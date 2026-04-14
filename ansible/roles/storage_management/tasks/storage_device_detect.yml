@@ -9,7 +9,8 @@
       {{ 
         ansible_facts.devices 
         | dict2items
-        | selectattr('value.partitions', 'equalto', {})
+        | selectattr('value.partitions', 'equalto', {}) 
+        | selectattr('value.model', 'equalto', "VBOX HARDDISK")
         | map(attribute='key')
         | list 
       }}
