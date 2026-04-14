@@ -1,4 +1,4 @@
 ---
 - name: Check the storage devices
   ansible.builtin.debug:
-    var: ansible_facts
+    var: ansible_facts.devices
