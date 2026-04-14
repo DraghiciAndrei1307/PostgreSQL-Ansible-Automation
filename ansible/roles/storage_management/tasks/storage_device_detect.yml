@@ -18,3 +18,11 @@
 - name: List the empty_disks list
   ansible.builtin.debug:
     var: empty_disks
+
+- name: Create a new xfs primary partition
+  community.general.parted:
+    device: /dev/{{ item }}
+    number: 1
+    state: present
+    fs_type: xfs
+  loop: {{ empty_disks }}
