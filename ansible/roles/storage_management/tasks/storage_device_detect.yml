@@ -2,3 +2,11 @@
 - name: Check the storage devices
   ansible.builtin.debug:
     var: ansible_facts.devices
+
+- name: Create empty_disks list
+  ansible.builtin.set_fact:
+    empty_disks: {{ ansible_facts.devices | dict2items }}
+
+- name: List the empty_disks_list
+  ansible.builtin.debug:
+    var: empty_disks
