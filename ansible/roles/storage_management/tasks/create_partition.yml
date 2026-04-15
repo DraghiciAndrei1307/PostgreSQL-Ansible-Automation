@@ -1,3 +1,6 @@
+
+# Need to configure the creation of multiple partitions
+
 - name: Create_New_XFS_Primary_Partition
   community.general.parted:
     device: /dev/{{ item }}
@@ -7,6 +10,13 @@
   register: create_partition_output
   loop: "{{ empty_disks }}"
 
-- name: Output of 'Create_New_XFS_Primary_Partition' task
+# After creating multiple partitions, use set_fact to save them inside a list
+
+- name: Output partition number task
   ansible.builtin.debug:
     var: create_partition_output['results'][0]['partitions'][0]['num']
+
+- name: Output disk where partition was created
+  ansible.builtin.debug:
+    var: create_partition_output['results'][0]['disk']['dev']
+
