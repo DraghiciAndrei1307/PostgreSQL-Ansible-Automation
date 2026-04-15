@@ -12,6 +12,64 @@
 
 # After creating multiple partitions, use set_fact to save them inside a list
 
+# The output based on which the following tasks were created is:
+
+#ok: [postgresql-node1] => {
+#    "create_partition_output": {
+#        "changed": true,
+#        "msg": "All items completed",
+#        "results": [
+#            {
+#                "ansible_loop_var": "item",
+#                "changed": true,
+#                "disk": {
+#                    "dev": "/dev/sdb",
+#                    "logical_block": 512,
+#                    "model": "ATA VBOX HARDDISK",
+#                    "physical_block": 512,
+#                    "size": 10485760.0,
+#                    "table": "msdos",
+#                    "unit": "kib"
+#                },
+#                "failed": false,
+#                "invocation": {
+#                    "module_args": {
+#                        "align": "optimal",
+#                        "device": "/dev/sdb",
+#                        "flags": null,
+#                        "fs_type": "xfs",
+#                        "label": "msdos",
+#                        "name": null,
+#                        "number": 1,
+#                        "part_end": "100%",
+#                        "part_start": "0%",
+#                        "part_type": "primary",
+#                        "resize": false,
+#                        "state": "present",
+#                        "unit": "KiB"
+#                    }
+#                },
+#                "item": "sdb",
+#                "partitions": [
+#                    {
+#                        "begin": 1024.0,
+#                        "end": 10485760.0,
+#                        "flags": [],
+#                        "fstype": "",
+#                        "name": "",
+#                        "num": 1,
+#                        "size": 10484736.0,
+#                        "unit": "kib"
+#                    }
+#                ],
+#                "script": "unit KiB mkpart primary xfs 0% 100%"
+#            }
+#        ],
+#        "skipped": false
+#    }
+#}
+
+
 - name: Output partition number task
   ansible.builtin.debug:
     var: create_partition_output['results'][0]['partitions'][0]['num']
@@ -23,3 +81,7 @@
 - name: Output the recently created partition
   ansible.builtin.debug:
     msg: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
+
+- name: Create a fact that contains the newly created partition name
+  ansible.builtin.set_fact:
+    new_partition: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
