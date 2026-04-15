@@ -30,17 +30,16 @@
   ansible.builtin.import_role:
     name: storage_management
     tasks_from: delete_partition
-  register: create_xfs_partition_output
+  register: delete_xfs_partition_output
   when: empty_disks is defined and empty_disks | length == 0
 
 - name: Output of 'Create XFS partition' task
   ansible.builtin.debug:
-    var: create_xfs_partition_output
-
+    var: create_xfs_partition_output.stdout
 
 - name: Output of 'Delete XFS partition' task
   ansible.builtin.debug:
-    var: delete_xfs_partition_output
+    var: delete_xfs_partition_output.stdout
 
 
 #- name: Create Physical Volume (PV)
