@@ -68,7 +68,7 @@
 # task of the storage_management role.
 
 - name: Create XFS partition
-  ansible.builtin.iclude_role:
+  ansible.builtin.include_role:
     name: storage_management
     tasks_from: create_partition
   vars:
