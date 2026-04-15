@@ -36,12 +36,12 @@
 - name: Output of 'Create XFS partition' task
   ansible.builtin.debug:
     var: create_xfs_partition_output
-  when: create_xfs_partition_output is defined
+
 
 - name: Output of 'Delete XFS partition' task
   ansible.builtin.debug:
     var: delete_xfs_partition_output
-  when: delete_xfs_partition_output is defined
+
 
 #- name: Create Physical Volume (PV)
 #  ansible.builtin.shell: sudo pvcreate /dev/sdb1
