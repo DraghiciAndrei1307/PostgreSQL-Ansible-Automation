@@ -1,6 +1,8 @@
 - name: Remove all partitions from disk
   community.general.parted:
     device: {{ disk }}
-    number: '{{ item.num }}'
+    number: '{{ part.num }}'
     state: absent
   loop: '{{ sdb_info.partitions }}'
+  loop_control:
+    loop_var: part
