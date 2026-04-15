@@ -7,4 +7,4 @@
 
 - name: Output of 'Delete_XFS_partition_from_/dev/sdb_disk' task
   ansible.builtin.debug:
-    var: delete_xfs_partition_output.stdout
+    var: delete_xfs_partition_output
