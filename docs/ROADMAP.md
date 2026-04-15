@@ -10,7 +10,7 @@
   - [ ] Auto mount persist (fstab)
 - [ ] Remove LVMs, VGs, PVs, primary partitions
   - [ ] Remove primary partitions
-    - [ ] All partitions
+    - [x] All partitions
     - [ ] Specific partitions
   - [ ] Remove PVs
     - [ ] All PVs
