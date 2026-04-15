@@ -1,5 +1,37 @@
 # ROADMAP - PostgreSQL Backup Automation
 
+## 🌱 Phase 0: Storage Management
+- [ ] Auto-detect when new disks are added
+- [ ] Auto-configure the disks to create/extend LVMs for PostgreSQL: data, logs, backups, wal
+  - [x] Create n equal-sized primary partitions when new disk detected
+  - [ ] Create PVs based on the new partitions
+  - [ ] Create VGs (1 main and 1 snapshots)
+  - [ ] Create LVMs
+  - [ ] Auto mount persist (fstab)
+- [ ] Remove LVMs, VGs, PVs, primary partitions
+  - [ ] Remove primary partitions
+    - [ ] All partitions
+    - [ ] Specific partitions
+  - [ ] Remove PVs
+    - [ ] All PVs
+    - [ ] Specific PVs 
+  - [ ] Remove VGs
+    - [ ] All VGs
+    - [ ] Specific VGs
+  - [ ] Remove LVMs 
+    - [ ] All LVMs
+    - [ ] Specific LVMs
+- [ ] Create snapshots
+- [ ] Extend PVs, VGs and LVMs
+  - [ ] Extend PVs
+  - [ ] Extend VGs
+  - [ ] Extend LVMs
+- [ ] Shrink PVs, VGs, LVMs
+  - [ ] Shrink PVs
+  - [ ] Shrink VGs
+  - [ ] Shrink LVMs
+
+
 ## ✅ Phase 1: Solid base
 - [x] PostgreSQL Install
 - [x] Start/Stop PostgreSQL service using the best practices 
