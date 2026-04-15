@@ -1,7 +1,12 @@
-- name: Create a new xfs primary partition
+- name: Create_New_XFS_Primary_Partition
   community.general.parted:
     device: /dev/{{ item }}
     number: 1
     state: present
     fs_type: xfs
+  register: create_partition_output
   loop: "{{ empty_disks }}"
+
+- name: Output of 'Create_New_XFS_Primary_Partition' task
+  ansible.builtin.debug:
+    var: create_partition_output.stdout
