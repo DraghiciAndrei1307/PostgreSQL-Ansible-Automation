@@ -1,3 +1,7 @@
+- name: Read device information (always use unit when probing)
+  community.general.parted: device=/dev/sdb unit=MiB
+  register: sdb_info
+
 - name: Remove all partitions from disk
   community.general.parted:
     device: '{{ disk }}'
