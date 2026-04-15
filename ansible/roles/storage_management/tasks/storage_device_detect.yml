@@ -170,6 +170,8 @@
     tasks_from: delete_partitions
   vars:
     disk: '/dev/{{ item }}'
-  loop: "{{ empty_disks }}"
+  loop:
+    - sdb
+    - sdc
   when: empty_disks is defined and empty_disks | length == 0
 
