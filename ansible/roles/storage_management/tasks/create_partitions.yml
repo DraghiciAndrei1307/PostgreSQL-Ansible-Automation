@@ -5,14 +5,16 @@
 - name: Create_New_XFS_Primary_Partition
   community.general.parted:
     device: /dev/{{ disk_name }}
-    number: "{{ item }}"
+    number: "{{ part_number }}"
     flags: [lvm]
     state: present
     fs_type: xfs
-    part_start: "{{ ((item - 1) * 100 / number_of_partitions_per_disk) | round(2, 'floor') }}%"
-    part_end: "{{ (item * 100 / number_of_partitions_per_disk) | round(2, 'floor') }}%"
+    part_start: "{{ ((part_number - 1) * 100 / number_of_partitions_per_disk) }}%"
+    part_end: "{{ (part_number * 100 / number_of_partitions_per_disk) }}%"
   register: create_partition_output
   loop: "{{ range(1, number_of_partitions_per_disk + 1) | list }}"
+  loop_control:
+    loop_var: part_number
 
 # After creating multiple partitions, use set_fact to save them inside a list
 
