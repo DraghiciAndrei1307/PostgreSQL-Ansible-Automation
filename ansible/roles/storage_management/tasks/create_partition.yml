@@ -1,14 +1,16 @@
 
 # Need to configure the creation of multiple partitions
 
+
 - name: Create_New_XFS_Primary_Partition
   community.general.parted:
     device: /dev/{{ item }}
     number: 1
+    flags: [lvm]
     state: present
     fs_type: xfs
   register: create_partition_output
-  loop: "{{ empty_disks }}"
+  loop: "{{ disks }}"
 
 # After creating multiple partitions, use set_fact to save them inside a list
 

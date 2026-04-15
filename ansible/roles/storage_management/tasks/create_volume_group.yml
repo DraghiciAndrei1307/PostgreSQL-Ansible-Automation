@@ -1,0 +1,5 @@
+# This task creates a Volume Group (VG)
+
+- name: Create Volume Group (VG
+  ansible.builtin.command: vgcreate vg01 new_partition
+

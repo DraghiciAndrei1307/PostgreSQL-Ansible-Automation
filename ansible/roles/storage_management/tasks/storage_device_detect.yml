@@ -1,7 +1,18 @@
----
+
+# -------------------- CHECK THE STORAGE DEVICES ------------- #
+
+# We are checking the facts that the target contains regarding
+# the available storage devices.
+
 - name: Check the storage devices
   ansible.builtin.debug:
     var: ansible_facts.devices
+
+# ------------------------------------------------------------ #
+
+# -------------------- CREATE LIST OF EMPTY DISKS ------------ #
+
+# We are using set_fact module to create the empty_disks list.
 
 - name: Create empty_disks list
   ansible.builtin.set_fact:
@@ -15,31 +26,115 @@
         | list 
       }}
 
+# ------------------------------------------------------------ #
+
+# -------------------- CHECK LIST OF EMPTY DISKS ------------- #
+
+# We are using debug module to list the contents of the
+# 'empty_disks' list.
+
 - name: List the empty_disks list
   ansible.builtin.debug:
     var: empty_disks
 
+# ------------------------------------------------------------ #
+
+# -------------------- CHECK LIST OF EMPTY DISKS WITH SIZES -- #
+
+- name: Create 'empty_disks_sizes' list
+  ansible.builtin.set_fact:
+    empty_disks_sizes: "{{ empty_disks_sizes | default([]) + [ {
+      'name': item,
+      'size': ansible_facts.devices[item].size 
+    } ] }}"
+  loop: "{{ empty_disks }}"
+
+# ------------------------------------------------------------ #
+
+# -------------------- CHECK LIST OF EMPTY DISKS WITH SIZES -- #
+
+# We are using debug module to list the contents of the
+# 'empty_disks' list.
+
+- name: List the 'empty_disks_sizes' list
+  ansible.builtin.debug:
+    var: empty_disks_sizes
+
+# ------------------------------------------------------------ #
+
+# -------------------- CREATE XFS PARTITIONS ----------------- #
+
+# We are using import_role module to use the create_partition
+# task of the storage_management role.
+
 - name: Create XFS partition
-  ansible.builtin.import_role:
+  ansible.builtin.iclude_role:
     name: storage_management
     tasks_from: create_partition
+  vars:
+    number_of_partitions_per_disk: 2
+    disks: "{{ empty_disks }}"
   when: empty_disks is defined and empty_disks | length > 0
+
+# ------------------------------------------------------------ #
+
+# -------------------- CHECK THE NEW PARTITION --------------- #
+
+# The variable new_partition is a variable resulted from the
+# create_partition task file execution.
 
 - name: Output New XFS Partition Name
   ansible.builtin.debug:
     var: new_partition
   when: empty_disks is defined and empty_disks | length > 0
 
-- name: Create new_partition_fact fact
+# ------------------------------------------------------------ #
+
+# -------------------- CREATE 'new_partition_name' FACT ------ #
+
+# We are using the set_fact module to create a global variable
+# named 'new_partition_name', based on the 'new_partition'
+# variable. The 'new_partition' variable is not visible if we
+# are going to use the import_role again in the future.
+
+# Previously, we created the new_partition variable inside the
+# create_partition task, using set_fact. That action will grant
+# the creation of a global variable. That is why we are creating
+# here a new global variable.
+
+- name: Create 'new_partition_name' fact
   ansible.builtin.set_fact:
-    new_partition_fact: "{{ new_partition }}"
+    new_partition_name: "{{ new_partition }}"
   when: empty_disks is defined and empty_disks | length > 0
+
+# ------------------------------------------------------------ #
+
+# -------------------- CREATE PHYSICAL VOLUME ---------------- #
+
+# Related to the description above, the usage of the import_role
+# here will not grant us the access to the new_partition variable.
+# It is good that we already created another variable named
+# 'new_partition_name', based on 'new_partition'.
+
+# In this task, we are creating a Physical Volume (PV) based on
+# the newly created partition. Check the 'create_physical_volume'
+# task file of the current role (storage_management).
 
 - name: Create Physical Volume (PV)
   ansible.builtin.import_role:
     name: storage_management
     tasks_from: create_physical_volume
   when: empty_disks is defined and empty_disks | length > 0
+
+# ----------------------------------------------------------- #
+
+# -------------------- CREATE VOLUME GROUP ------------------ #
+
+# ----------------------------------------------------------- #
+
+# -------------------- CREATE SNAPSHOT VOLUME GROUP --------- #
+
+# ----------------------------------------------------------- #
 
 # We will remove or repurpose the following tasks in the future
 # Their only purpose is to help speed up the development process
