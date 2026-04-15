@@ -51,7 +51,7 @@
 
 - name: Debug pvs_output variable
   ansible.builtin.debug:
-    var: pv_output
+    var: pvs_output
 
 - name: Remove the Physical Volume (if exists)
   ansible.builtin.command: pvremove /dev/sdb1
