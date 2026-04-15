@@ -164,7 +164,9 @@
 #    - empty_disks | length == 0
 #    - "'/dev/sdb1' in pvs_output.stdout"
 
-- name: Delete XFS partition
+# -------------------- DELETE PARTITIONS -------------------- #
+
+- name: Delete XFS partitions
   ansible.builtin.include_role:
     name: storage_management
     tasks_from: delete_partitions
@@ -175,3 +177,4 @@
     - sdc
   when: empty_disks is defined and empty_disks | length == 0
 
+# ----------------------------------------------------------- #

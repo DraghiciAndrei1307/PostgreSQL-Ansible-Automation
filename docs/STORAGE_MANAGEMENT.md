@@ -238,6 +238,65 @@ partition table once again so that the changes to be in place. To do that, use:
 sudo partprobe /dev/sdb
 ```
 
+## ❌ Remove the partition(s) 
+
+```commandline
+[student@localhost ~]$ lsblk
+NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+sda             8:0    0  20G  0 disk
+├─sda1          8:1    0   1G  0 part /boot
+└─sda2          8:2    0  19G  0 part
+  ├─rhel-root 253:0    0  17G  0 lvm  /
+  └─rhel-swap 253:1    0   2G  0 lvm  [SWAP]
+sdb             8:16   0  10G  0 disk
+sdc             8:32   0  10G  0 disk
+├─sdc1          8:33   0   5G  0 part
+└─sdc2          8:34   0   5G  0 part
+
+```
+
+As you can see in the code snippet above, we have 2 partitions named `/dev/sdc1` and `/dev/sdc2`. We will delete those
+partitions using the `fdisk` utility. Follow the steps below: 
+
+```commandline
+[student@localhost ~]$ sudo fdisk /dev/sdc
+
+Welcome to fdisk (util-linux 2.37.4).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): d
+Partition number (1,2, default 2):
+
+Partition 2 has been deleted.
+
+Command (m for help): d
+Selected partition 1
+Partition 1 has been deleted.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+```
+
+We deleted the partitions. To check the  result, use the `lsblk` command as follows:
+
+```commandline
+[student@localhost ~]$ lsblk
+NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+sda             8:0    0  20G  0 disk
+├─sda1          8:1    0   1G  0 part /boot
+└─sda2          8:2    0  19G  0 part
+  ├─rhel-root 253:0    0  17G  0 lvm  /
+  └─rhel-swap 253:1    0   2G  0 lvm  [SWAP]
+sdb             8:16   0  10G  0 disk
+sdc             8:32   0  10G  0 disk
+
+```
+
 # 💽Creating a Physical Volume (PV)
 
 Now that we created ourselves a 1G partition inside the /dev/sdb disk, it is time to create a Physical 

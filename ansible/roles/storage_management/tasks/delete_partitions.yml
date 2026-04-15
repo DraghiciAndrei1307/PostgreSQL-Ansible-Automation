@@ -1,8 +1,21 @@
+
+# -------------------- READ DEVICE INFO ---------------------- #
+
+# We use the parted module to get the device (disks) info.
+
 - name: Read device information (always use unit when probing)
   community.general.parted:
     device: '{{ disk }}'
     unit: MiB
   register: sdb_info
+
+# ------------------------------------------------------------ #
+
+# -------------------- REMOVE ALL PARTITIONS ----------------- #
+
+# We get through the device partitions (sdb_info.partitions)
+# and make all we have there 'absent'. This means we are removing
+# them.
 
 - name: Remove all partitions from disk
   community.general.parted:
@@ -12,3 +25,5 @@
   loop: '{{ sdb_info.partitions }}'
   loop_control:
     loop_var: part
+
+# ------------------------------------------------------------ #

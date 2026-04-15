@@ -1,8 +1,15 @@
 
-# Need to configure the creation of multiple partitions
+# -------------------- CREATE XFS PARTITIONS ---------------- #
 
+# This task creates 'number_of_partitions_per_disk' partitions
+# for each 'empty' disk.
 
-- name: Create_New_XFS_Primary_Partition
+# One important thing to mention here is the use of 'loop_control'
+# option. We use this option because we have nested loops and when
+# we want to use the {{ item }} Jinja2 syntax, the item from the
+# task below will shadow the item from the upper loop.
+
+- name: Create XFS Primary Partitions
   community.general.parted:
     device: /dev/{{ disk_name }}
     number: "{{ part_number }}"
@@ -15,6 +22,8 @@
   loop: "{{ range(1, number_of_partitions_per_disk + 1) | list }}"
   loop_control:
     loop_var: part_number
+
+# ----------------------------------------------------------- #
 
 # After creating multiple partitions, use set_fact to save them inside a list
 
@@ -75,8 +84,13 @@
 #    }
 #}
 
+# -------------------- CREATE 'partitions_created' FACT ----- #
 
-- name: Create fact that contains the new partions
+# We create the 'partitions_created' fact.
+# We will use this fact when we will create the Physical
+# Volumes (PV).
+
+- name: Create fact that contains the new partitions
   ansible.builtin.set_fact:
     partitions_created: "{{ partitions_created | default([]) + [ {
       'disk': disk_name,
@@ -86,18 +100,8 @@
   loop_control:
     loop_var: part_number
 
-#- name: Output partition number task
-#  ansible.builtin.debug:
-#    var: create_partition_output['results'][0]['partitions'][0]['num']
-#
-#- name: Output disk where partition was created
-#  ansible.builtin.debug:
-#    var: create_partition_output['results'][0]['disk']['dev']
-#
-#- name: Output the recently created partition
-#  ansible.builtin.debug:
-#    msg: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
-#
-#- name: Create a fact that contains the newly created partition name
-#  ansible.builtin.set_fact:
-#    new_partition: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
+# ----------------------------------------------------------- #
+
+# We have to use 'partprobe' to reload the partition table from the disk
+
+
