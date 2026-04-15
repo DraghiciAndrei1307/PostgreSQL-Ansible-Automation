@@ -70,7 +70,7 @@
 - name: Create XFS partitions
   ansible.builtin.include_role:
     name: storage_management
-    tasks_from: create_partition
+    tasks_from: create_partitions
   vars:
     number_of_partitions_per_disk: 2
     disk_name: "{{ item }}"
