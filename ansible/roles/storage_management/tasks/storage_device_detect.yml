@@ -30,6 +30,10 @@
     var: new_partition
   when: empty_disks is defined and empty_disks | length > 0
 
+- name: Create new_partition_fact fact
+  ansible.builtin.set_fact:
+    new_partition_fact: "{{ new_partition }}"
+
 - name: Create Physical Volume (PV)
   ansible.builtin.import_role:
     name: storage_management
