@@ -9,4 +9,4 @@
 
 - name: Output of 'Create_New_XFS_Primary_Partition' task
   ansible.builtin.debug:
-    var: create_partition_output.stdout
+    var: create_partition_output
