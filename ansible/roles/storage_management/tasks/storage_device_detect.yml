@@ -39,53 +39,57 @@
 
 # ------------------------------------------------------------ #
 
-# -------------------- CHECK LIST OF EMPTY DISKS WITH SIZES -- #
+## -------------------- CREATE LIST OF EMPTY DISKS WITH SIZES -- #
+#
+#- name: Create 'empty_disks_sizes' list
+#  ansible.builtin.set_fact:
+#    empty_disks_sizes: "{{ empty_disks_sizes | default([]) + [ {
+#      'name': item,
+#      'size': ansible_facts.devices[item].size
+#    } ] }}"
+#  loop: "{{ empty_disks }}"
+#
+## ------------------------------------------------------------ #
+#
+## -------------------- CHECK LIST OF EMPTY DISKS WITH SIZES -- #
+#
+## We are using debug module to list the contents of the
+## 'empty_disks_sizes' list.
+#
+#- name: List the 'empty_disks_sizes' list
+#  ansible.builtin.debug:
+#    var: empty_disks_sizes
+#
+## ------------------------------------------------------------ #
 
-- name: Create 'empty_disks_sizes' list
-  ansible.builtin.set_fact:
-    empty_disks_sizes: "{{ empty_disks_sizes | default([]) + [ {
-      'name': item,
-      'size': ansible_facts.devices[item].size 
-    } ] }}"
-  loop: "{{ empty_disks }}"
-
-# ------------------------------------------------------------ #
-
-# -------------------- CHECK LIST OF EMPTY DISKS WITH SIZES -- #
-
-# We are using debug module to list the contents of the
-# 'empty_disks' list.
-
-- name: List the 'empty_disks_sizes' list
-  ansible.builtin.debug:
-    var: empty_disks_sizes
-
-# ------------------------------------------------------------ #
-
-# -------------------- CREATE XFS PARTITIONS ----------------- #
+# -------------------- CREATE XFS PARTITIONS FOR EACH DISK---- #
 
 # We are using import_role module to use the create_partition
 # task of the storage_management role.
 
-- name: Create XFS partition
+- name: Create XFS partitions
   ansible.builtin.include_role:
     name: storage_management
     tasks_from: create_partition
   vars:
     number_of_partitions_per_disk: 2
-    disks: "{{ empty_disks }}"
+    disk_name: "{{ item }}"
+    disk_size: "{{ ansible_facts.devices[item].size }}"
+  loop: "{{ empty_disks }}"
   when: empty_disks is defined and empty_disks | length > 0
 
 # ------------------------------------------------------------ #
+
+# We will have to update the new_partition with a list of newly_created partitions
 
 # -------------------- CHECK THE NEW PARTITION --------------- #
 
 # The variable new_partition is a variable resulted from the
 # create_partition task file execution.
 
-- name: Output New XFS Partition Name
+- name: Output New XFS Partitions Names
   ansible.builtin.debug:
-    var: new_partition
+    var: partitions_created
   when: empty_disks is defined and empty_disks | length > 0
 
 # ------------------------------------------------------------ #
@@ -102,9 +106,9 @@
 # the creation of a global variable. That is why we are creating
 # here a new global variable.
 
-- name: Create 'new_partition_name' fact
+- name: Create 'created_partitions' fact
   ansible.builtin.set_fact:
-    new_partition_name: "{{ new_partition }}"
+    created_partitions_names: "{{ partitions_created }}"
   when: empty_disks is defined and empty_disks | length > 0
 
 # ------------------------------------------------------------ #
@@ -120,11 +124,11 @@
 # the newly created partition. Check the 'create_physical_volume'
 # task file of the current role (storage_management).
 
-- name: Create Physical Volume (PV)
-  ansible.builtin.import_role:
-    name: storage_management
-    tasks_from: create_physical_volume
-  when: empty_disks is defined and empty_disks | length > 0
+#- name: Create Physical Volume (PV)
+#  ansible.builtin.import_role:
+#    name: storage_management
+#    tasks_from: create_physical_volume
+#  when: empty_disks is defined and empty_disks | length > 0
 
 # ----------------------------------------------------------- #
 
@@ -145,24 +149,27 @@
 # remove the PV, this can result in: pvs shows “stale” devices, LVM warnings,
 # slow scans or errors, confusion when re-using disk
 
-- name: Check the Physical Volumes
-  ansible.builtin.command: pvs
-  register: pvs_output
+#- name: Check the Physical Volumes
+#  ansible.builtin.command: pvs
+#  register: pvs_output
 
-- name: Debug pvs_output variable
-  ansible.builtin.debug:
-    var: pvs_output["stdout"]
+#- name: Debug pvs_output variable
+#  ansible.builtin.debug:
+#    var: pvs_output["stdout"]
 
-- name: Remove the Physical Volume (if exists)
-  ansible.builtin.command: pvremove /dev/sdb1
-  when:
-    - empty_disks is defined
-    - empty_disks | length == 0
-    - "'/dev/sdb1' in pvs_output.stdout"
+#- name: Remove the Physical Volume (if exists)
+#  ansible.builtin.command: pvremove /dev/sdb1
+#  when:
+#    - empty_disks is defined
+#    - empty_disks | length == 0
+#    - "'/dev/sdb1' in pvs_output.stdout"
 
 - name: Delete XFS partition
-  ansible.builtin.import_role:
+  ansible.builtin.include_role:
     name: storage_management
-    tasks_from: delete_partition
+    tasks_from: delete_partitions
+  vars:
+    disk: '/dev/{{ item }}'
+  loop: "{{ empty_disks }}"
   when: empty_disks is defined and empty_disks | length == 0
 

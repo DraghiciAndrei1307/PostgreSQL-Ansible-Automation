@@ -4,13 +4,15 @@
 
 - name: Create_New_XFS_Primary_Partition
   community.general.parted:
-    device: /dev/{{ item }}
-    number: 1
+    device: /dev/{{ disk_name }}
+    number: "{{ item }}"
     flags: [lvm]
     state: present
     fs_type: xfs
+    part_start: "{{ ((item - 1) * 100 / number_of_partitions_per_disk) | round(2, 'floor') }}%"
+    part_end: "{{ (item * 100 / number_of_partitions_per_disk) | round(2, 'floor') }}%"
   register: create_partition_output
-  loop: "{{ disks }}"
+  loop: "{{ range(1, number_of_partitions_per_disk + 1) | list }}"
 
 # After creating multiple partitions, use set_fact to save them inside a list
 
@@ -72,18 +74,26 @@
 #}
 
 
-- name: Output partition number task
-  ansible.builtin.debug:
-    var: create_partition_output['results'][0]['partitions'][0]['num']
-
-- name: Output disk where partition was created
-  ansible.builtin.debug:
-    var: create_partition_output['results'][0]['disk']['dev']
-
-- name: Output the recently created partition
-  ansible.builtin.debug:
-    msg: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
-
-- name: Create a fact that contains the newly created partition name
+- name: Create fact that contains the new partiions
   ansible.builtin.set_fact:
-    new_partition: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
+    partitions_created: "{{ partitions_created | default([]) + [ {
+      'disk': disk_name,
+      'partition': '/dev/{{ disk_name }}{{ item }}'
+    } ] }}"
+  loop: "{{ range(1, number_of_partitions_per_disk + 1) | list }}"
+
+#- name: Output partition number task
+#  ansible.builtin.debug:
+#    var: create_partition_output['results'][0]['partitions'][0]['num']
+#
+#- name: Output disk where partition was created
+#  ansible.builtin.debug:
+#    var: create_partition_output['results'][0]['disk']['dev']
+#
+#- name: Output the recently created partition
+#  ansible.builtin.debug:
+#    msg: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"
+#
+#- name: Create a fact that contains the newly created partition name
+#  ansible.builtin.set_fact:
+#    new_partition: "{{ create_partition_output['results'][0]['disk']['dev'] }}{{ create_partition_output['results'][0]['partitions'][0]['num'] }}"

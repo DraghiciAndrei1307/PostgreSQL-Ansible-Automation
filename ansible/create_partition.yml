@@ -8,4 +8,4 @@
     - name: "Create Partition"
       ansible.builtin.include_role:
         name: storage_management
-        tasks_from: create_partition.yml
+        tasks_from: create_partitions.yml
