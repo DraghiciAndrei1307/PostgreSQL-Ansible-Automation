@@ -60,7 +60,10 @@
 
 - name: Remove the Physical Volume (if exists)
   ansible.builtin.command: pvremove /dev/sdb1
-  when: "'/dev/sdb1' in pvs_output['stdout']" and empty_disks is defined and empty_disks | length == 0
+  when: >- 
+    - "'/dev/sdb1' in pvs_output['stdout']" 
+    - empty_disks is defined 
+    - empty_disks | length == 0
 
 - name: Delete XFS partition
   ansible.builtin.import_role:
