@@ -51,12 +51,11 @@
 
 - name: Debug pvs_output variable
   ansible.builtin.debug:
-    var: pvs_output
+    var: pvs_output["stdout"]
 
 - name: Remove the Physical Volume (if exists)
   ansible.builtin.command: pvremove /dev/sdb1
-  when: empty_disks is defined and empty_disks | length == 0
-
+  when: new_partition in pvs_output["stdout"]
 
 - name: Delete XFS partition
   ansible.builtin.import_role:
