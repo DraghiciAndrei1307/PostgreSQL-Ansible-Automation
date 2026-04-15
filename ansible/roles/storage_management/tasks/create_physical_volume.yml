@@ -1,0 +1,11 @@
+# This task creates a Physical Volume (PV)
+
+- name: Create Physical Volume (PV)
+  ansible.builtin.shell: sudo pvcreate {{ new_partition }}
+  register: create_physical_volume_output
+  when: {{ new_partition }} is defined
+
+- name: Output of the 'Create Physical Volume (PV)' task
+  ansible.builtin.debug:
+    var: create_physical_volume_output
+  when: {{ new_partition }} is defined

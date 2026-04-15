@@ -30,11 +30,28 @@
     var: new_partition
   when: empty_disks is defined and empty_disks | length > 0
 
+- name: Create Physical Volume (PV)
+  ansible.builtin.import_role:
+    name: storage_management
+    tasks_from: create_physical_volume
+  when: empty_disks is defined and empty_disks | length > 0
+
+# We will remove or repurpose the following tasks in the future
+# Their only purpose is to help speed up the development process
+
+# The 'Remove the Physical Volume' task aims to remove the physical volume
+# we created above. The thing is that if we create a PV and then we delete
+# the XFS partition, the PV will remain orphan on the disk. IF we do not
+# remove the PV, this can result in: pvs shows “stale” devices, LVM warnings,
+# slow scans or errors, confusion when re-using disk
+
+- name: Remove the Physical Volume
+  ansible.builtin.command: pvremove /dev/sdb1
+
+
 - name: Delete XFS partition
   ansible.builtin.import_role:
     name: storage_management
     tasks_from: delete_partition
   when: empty_disks is defined and empty_disks | length == 0
 
-#- name: Create Physical Volume (PV)
-#  ansible.builtin.shell: sudo pvcreate /dev/sdb1
