@@ -45,7 +45,15 @@
 # remove the PV, this can result in: pvs shows “stale” devices, LVM warnings,
 # slow scans or errors, confusion when re-using disk
 
-- name: Remove the Physical Volume
+- name: Check the Physical Volumes
+  ansible.builtin.command: pvs
+  register: pvs_output
+
+- name: Debug pvs_output variable
+  ansible.builtin.debug:
+    var: pv_output
+
+- name: Remove the Physical Volume (if exists)
   ansible.builtin.command: pvremove /dev/sdb1
   when: empty_disks is defined and empty_disks | length == 0
 
