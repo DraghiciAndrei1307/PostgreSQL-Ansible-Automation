@@ -158,6 +158,9 @@
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
   when: empty_disks is defined and empty_disks | length > 0
 
+# We will use the Free PE later when we will develop the extend LVM logic
+# For now, we will divide the total free space into 8 LVMS: 4 LVMS and 4 snapshots for the LVMs
+
 - name: Debug Total PE and Free PE
   ansible.builtin.debug:
     msg:
@@ -165,20 +168,19 @@
       - "Free PE: {{ free_PE }}"
   when: empty_disks is defined and empty_disks | length > 0
 
-#- name: Debug the size for the VG (the PE approach)
-#  ansible.builtin.debug:
-#    var: vgdisplay_output
-#  when: empty_disks is defined and empty_disks | length > 0
+- name: Calculate the size for one LVM (the PE approach)
+  ansible.builtin.set_fact:
+    lvm_size: "{{ free_PE / 8 | int }}"
+  when:
+    - empty_disks is defined
+    - empty_disks | length > 0
+    - total_PE == free_PE
 
-#- name: Calculate the size for one LVM (the PE approach)
-#  ansible.builtin.command: vgdisplay vg_postgres
-#  register: vgdisplay_output
-#  when: empty_disks is defined and empty_disks | length > 0
-
-#- name: Debug the size for one LVM (the PE approach)
-#  ansible.builtin.command: vgdisplay vg_postgres
-#  register: vgdisplay_output
-#  when: empty_disks is defined and empty_disks | length > 0
+- name: Debug LVM PE size
+  ansible.builtin.debug:
+    msg:
+      - "The LVM size is: {{ lvm_size }}"
+  when: empty_disks is defined and empty_disks | length > 0
 
 #- name: Create Logical Volumes
 
