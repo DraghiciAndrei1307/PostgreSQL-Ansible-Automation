@@ -104,7 +104,3 @@
     loop_var: part_number
 
 # ----------------------------------------------------------- #
-
-# We have to use 'partprobe' to reload the partition table from the disk
-
-

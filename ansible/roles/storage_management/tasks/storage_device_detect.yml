@@ -106,10 +106,10 @@
 # the creation of a global variable. That is why we are creating
 # here a new global variable.
 
-- name: Create 'created_partitions' fact
-  ansible.builtin.set_fact:
-    created_partitions_names: "{{ partitions_created }}"
-  when: empty_disks is defined and empty_disks | length > 0
+#- name: Create 'created_partitions' fact
+#  ansible.builtin.set_fact:
+#    created_partitions_names: "{{ partitions_created }}"
+#  when: empty_disks is defined and empty_disks | length > 0
 
 # ------------------------------------------------------------ #
 
@@ -124,11 +124,14 @@
 # the newly created partition. Check the 'create_physical_volume'
 # task file of the current role (storage_management).
 
-#- name: Create Physical Volume (PV)
-#  ansible.builtin.import_role:
-#    name: storage_management
-#    tasks_from: create_physical_volume
-#  when: empty_disks is defined and empty_disks | length > 0
+- name: Create Physical Volumes (PV)
+  ansible.builtin.include_role:
+    name: storage_management
+    tasks_from: create_physical_volumes
+  vars:
+    partition: "{{ item.partition }}"
+  loop: "{{ partitions_created }}"
+  when: empty_disks is defined and empty_disks | length > 0
 
 # ----------------------------------------------------------- #
 
