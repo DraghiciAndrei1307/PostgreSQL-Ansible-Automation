@@ -152,20 +152,33 @@
 # remove the PV, this can result in: pvs shows “stale” devices, LVM warnings,
 # slow scans or errors, confusion when re-using disk
 
-#- name: Check the Physical Volumes
-#  ansible.builtin.command: pvs
-#  register: pvs_output
+# -------------------- CHECK PHYSICAL VOLUMES --------------- #
 
-#- name: Debug pvs_output variable
-#  ansible.builtin.debug:
-#    var: pvs_output["stdout"]
+- name: Check the Physical Volumes
+  ansible.builtin.command: pvs
+  register: pvs_output
 
-#- name: Remove the Physical Volume (if exists)
-#  ansible.builtin.command: pvremove /dev/sdb1
-#  when:
-#    - empty_disks is defined
-#    - empty_disks | length == 0
-#    - "'/dev/sdb1' in pvs_output.stdout"
+- name: Debug pvs_output variable
+  ansible.builtin.debug:
+    var: pvs_output["stdout"]
+
+# ----------------------------------------------------------- #
+
+# -------------------- REMOVE PHYSICAL VOLUMES -------------- #
+
+- name: Remove the Physical Volume (if exists)
+  ansible.builtin.command: 'pvremove /dev/{{ item }}'
+  loop:
+    - sdb1
+    - sdb2
+    - sdc1
+    - sdc2
+  when:
+    - empty_disks is defined
+    - empty_disks | length == 0
+    - "'/dev/sdb1' in pvs_output.stdout"
+
+# ----------------------------------------------------------- #
 
 # -------------------- DELETE PARTITIONS -------------------- #
 
