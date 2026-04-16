@@ -163,6 +163,7 @@
     msg:
       - "Total PE: {{ total_PE }}"
       - "Free PE: {{ free_PE }}"
+  when: empty_disks is defined and empty_disks | length > 0
 
 #- name: Debug the size for the VG (the PE approach)
 #  ansible.builtin.debug:
