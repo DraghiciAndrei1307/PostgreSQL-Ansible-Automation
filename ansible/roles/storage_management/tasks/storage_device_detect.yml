@@ -144,7 +144,7 @@
 
 - name: Debug the line that contains the Total PE
   ansible.builtin.debug:
-    var: '{{ result[0] | split }}'
+    msg: '{{ result[0] | split }}'
   vars:
     search_string: 'Total PE'
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
@@ -152,7 +152,7 @@
 
 - name: Debug the line that contains the Free PE
   ansible.builtin.debug:
-    var: '{{ result[0] | split }}'
+    msg: '{{ result[0] | split }}'
   vars:
     search_string: 'Free  PE / Size'
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
