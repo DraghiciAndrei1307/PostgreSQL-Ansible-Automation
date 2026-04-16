@@ -142,7 +142,7 @@
   register: vgdisplay_output
   when: empty_disks is defined and empty_disks | length > 0
 
-- name: Debug the line out of vgdisplay_output.stdout_lines that contains
+- name: Debug the lines that contain a substring
   ansible.builtin.debug: result
   vars:
     search_string: 'Free  PE / Size'
