@@ -147,6 +147,7 @@
   vars:
     search_string: 'Free  PE / Size'
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
+  when: empty_disks is defined and empty_disks | length > 0
 
 #- name: Debug the size for the VG (the PE approach)
 #  ansible.builtin.debug:
