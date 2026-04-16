@@ -170,7 +170,7 @@
 
 - name: Calculate the size for one LVM (the PE approach)
   ansible.builtin.set_fact:
-    lvm_size: "{{ free_PE // 8 }}"
+    lvm_size: "{{ (free_PE | int) // 8 }}"
   when:
     - empty_disks is defined
     - empty_disks | length > 0
