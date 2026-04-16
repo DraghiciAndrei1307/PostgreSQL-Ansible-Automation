@@ -113,7 +113,7 @@
 
 # ------------------------------------------------------------ #
 
-# -------------------- CREATE PHYSICAL VOLUME ---------------- #
+# -------------------- CREATE PHYSICAL VOLUMES ---------------- #
 
 # Related to the description above, the usage of the import_role
 # here will not grant us the access to the new_partition variable.
@@ -127,7 +127,7 @@
 - name: Create Physical Volumes (PV)
   ansible.builtin.include_role:
     name: storage_management
-    tasks_from: create_physical_volumes
+    tasks_from: create_physical_volume
   vars:
     partition: "{{ item.partition }}"
   loop: "{{ partitions_created }}"
