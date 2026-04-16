@@ -94,25 +94,6 @@
 
 # ------------------------------------------------------------ #
 
-# -------------------- CREATE 'new_partition_name' FACT ------ #
-
-# We are using the set_fact module to create a global variable
-# named 'new_partition_name', based on the 'new_partition'
-# variable. The 'new_partition' variable is not visible if we
-# are going to use the import_role again in the future.
-
-# Previously, we created the new_partition variable inside the
-# create_partition task, using set_fact. That action will grant
-# the creation of a global variable. That is why we are creating
-# here a new global variable.
-
-#- name: Create 'created_partitions' fact
-#  ansible.builtin.set_fact:
-#    created_partitions_names: "{{ partitions_created }}"
-#  when: empty_disks is defined and empty_disks | length > 0
-
-# ------------------------------------------------------------ #
-
 # -------------------- CREATE PHYSICAL VOLUMES ---------------- #
 
 # Related to the description above, the usage of the import_role
@@ -135,7 +116,16 @@
 
 # ----------------------------------------------------------- #
 
-# -------------------- CREATE VOLUME GROUP ------------------ #
+# -------------------- CONFIGURE VOLUME GROUP ------------------ #
+
+- name: Configure Volume Group
+  ansible.builtin.include_role:
+    name: storage_management
+    tasks_from: configure_volume_group
+  vars:
+    physical_volume: '{{ item.partition }}'
+  loop: '{{ partitions_created }}'
+  when: empty_disks is defined and empty_disks | length > 0
 
 # ----------------------------------------------------------- #
 

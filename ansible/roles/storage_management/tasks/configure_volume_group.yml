@@ -1,0 +1,16 @@
+# This task creates a Volume Group (VG)
+
+# Our purpose for the moment is to create only one VG from which
+# we will create the LVMs for the PostgreSQL database.
+
+- name: Check if a Volume Groups
+  ansible.builtin.command: vgs
+  register: vgs_output
+
+- name: Create Volume Group (VG) if not exists
+  ansible.builtin.command: 'vgcreate vg_postgres {{ physical_volume }}'
+  when: 'vg_postres' not in vgs_output.stdout
+
+- name: Extend 'vg_postgres' volume group if exists
+  ansible.builtin.command: 'vgextend vg_postgres {{ physical_volume }}'
+  when: 'vg_postgres' in vgs_output.stdout
