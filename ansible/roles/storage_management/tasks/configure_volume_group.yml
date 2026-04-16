@@ -9,8 +9,8 @@
 
 - name: Create Volume Group (VG) if not exists
   ansible.builtin.command: 'vgcreate vg_postgres {{ physical_volume }}'
-  when: 'vg_postres' not in vgs_output.stdout
+  when: "'vg_postgres' not in vgs_output.stdout"
 
 - name: Extend 'vg_postgres' volume group if exists
   ansible.builtin.command: 'vgextend vg_postgres {{ physical_volume }}'
-  when: 'vg_postgres' in vgs_output.stdout
+  when: "'vg_postgres' in vgs_output.stdout"
