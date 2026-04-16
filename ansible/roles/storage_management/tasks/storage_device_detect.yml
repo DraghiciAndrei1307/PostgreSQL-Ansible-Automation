@@ -137,15 +137,21 @@
 
 # We will use Physical Extents (PE) to divide the space.
 
-- name: Get the size of the VG (the PE approach)
+- name: Get the output of the vgdisplay
   ansible.builtin.command: vgdisplay vg_postgres
   register: vgdisplay_output
   when: empty_disks is defined and empty_disks | length > 0
 
-- name: Debug the size for the VG (the PE approach)
-  ansible.builtin.debug:
-    var: vgdisplay_output
-  when: empty_disks is defined and empty_disks | length > 0
+- name: Debug the line out of vgdisplay_output.stdout_lines that contains
+  ansible.builtin.debug: result
+  vars:
+    search_string: 'Free  PE / Size'
+    result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
+
+#- name: Debug the size for the VG (the PE approach)
+#  ansible.builtin.debug:
+#    var: vgdisplay_output
+#  when: empty_disks is defined and empty_disks | length > 0
 
 #- name: Calculate the size for one LVM (the PE approach)
 #  ansible.builtin.command: vgdisplay vg_postgres
