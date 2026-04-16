@@ -329,6 +329,32 @@ To create a Physical Volume (PV) use the `sudo pvcreate /dev/sdb1` command:
 To list all the PVs, use `pvs` command. If you want to get into details of the recently created PV,
 use `sudo pvdisplay /dev/sdb1`
  
+## ❌ Remove a Physical Volume
+
+Check the physical volumes (PVs).
+
+```commandline
+[student@localhost ~]$ sudo pvs
+  PV         VG   Fmt  Attr PSize   PFree
+  /dev/sda2  rhel lvm2 a--  <19.00g      0
+  /dev/sdb1       lvm2 ---  <10.00g <10.00g
+```
+
+Remove the `/dev/sdb1` physical volume.
+
+```commandline
+[student@localhost ~]$ sudo pvremove /dev/sdb1
+  Labels on physical volume "/dev/sdb1" successfully wiped.
+```
+
+Check the physical volumes (PVs) again.
+
+```commandline
+[student@localhost ~]$ sudo pvs
+  PV         VG   Fmt  Attr PSize   PFree
+  /dev/sda2  rhel lvm2 a--  <19.00g    0
+```
+
 # 🧱Creating a Volume Group (VG)
 
 Now that we created ourselves a `PV` on the `/dev/sdb1`, it is time to create a Volume Group (VG).  
