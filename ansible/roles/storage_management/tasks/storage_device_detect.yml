@@ -142,6 +142,28 @@
 # remove the PV, this can result in: pvs shows “stale” devices, LVM warnings,
 # slow scans or errors, confusion when re-using disk
 
+# -------------------- CHECK VOLUME GROUPS --------------- #
+
+- name: Check Volume Groups
+  ansible.builtin.command: vgs
+  register: vgs_output
+
+# ----------------------------------------------------------- #
+
+# -------------------- REMOVE VOLUME GROUP --------------- #
+
+# This task will be later updated...we use it at the moment
+# to speed up the development process.
+
+- name: Remove 'vg_postgres' Volume Group (VG)
+  ansible.builtin.command: vgremove vg_postgres
+  when:
+    - empty_disks is defined
+    - empty_disks | length == 0
+    - "'vg_postgres' in vgs_output.stdout"
+
+# ----------------------------------------------------------- #
+
 # -------------------- CHECK PHYSICAL VOLUMES --------------- #
 
 - name: Check the Physical Volumes
@@ -155,6 +177,8 @@
 # ----------------------------------------------------------- #
 
 # -------------------- REMOVE PHYSICAL VOLUMES -------------- #
+
+# The condition is not perfect, but we will work on that later.
 
 - name: Remove the Physical Volume (if exists)
   ansible.builtin.command: 'pvremove /dev/{{ item }}'

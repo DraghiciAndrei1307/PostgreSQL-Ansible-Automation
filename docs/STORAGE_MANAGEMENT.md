@@ -409,6 +409,62 @@ We can also create a VG using multiple PVs:
 vgcreate vg02 /dev/sdb2 /dev/sdb3 /dev/sdb4 ...
 ```
 
+## Remove a Volume Group (no LVMs contained)
+
+Check the current status
+
+```commandline
+[student@localhost ~]$ lsblk
+NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+sda             8:0    0  20G  0 disk
+├─sda1          8:1    0   1G  0 part /boot
+└─sda2          8:2    0  19G  0 part
+  ├─rhel-root 253:0    0  17G  0 lvm  /
+  └─rhel-swap 253:1    0   2G  0 lvm  [SWAP]
+sdb             8:16   0  10G  0 disk
+├─sdb1          8:17   0   5G  0 part
+└─sdb2          8:18   0   5G  0 part
+sdc             8:32   0  10G  0 disk
+├─sdc1          8:33   0   5G  0 part
+└─sdc2          8:34   0   5G  0 part
+[student@localhost ~]$ sudo pvs
+  PV         VG          Fmt  Attr PSize   PFree
+  /dev/sda2  rhel        lvm2 a--  <19.00g     0
+  /dev/sdb1  vg_postgres lvm2 a--   <5.00g <5.00g
+  /dev/sdb2  vg_postgres lvm2 a--   <5.00g <5.00g
+  /dev/sdc1  vg_postgres lvm2 a--   <5.00g <5.00g
+  /dev/sdc2  vg_postgres lvm2 a--   <5.00g <5.00g
+[student@localhost ~]$ sudo vgs
+  VG          #PV #LV #SN Attr   VSize   VFree
+  rhel          1   2   0 wz--n- <19.00g     0
+  vg_postgres   4   0   0 wz--n-  19.98g 19.98g
+```
+
+Simply use the `vgremove` command like this
+
+```commandline
+[student@localhost ~]$ sudo vgremove vg_postgres
+[sudo] password for student:
+  Volume group "vg_postgres" successfully removed
+```
+
+Check the status again: 
+
+```commandline
+[student@localhost ~]$ sudo vgs
+  VG   #PV #LV #SN Attr   VSize   VFree
+  rhel   1   2   0 wz--n- <19.00g    0
+[student@localhost ~]$ sudo pvs
+  PV         VG   Fmt  Attr PSize   PFree
+  /dev/sda2  rhel lvm2 a--  <19.00g     0
+  /dev/sdb1       lvm2 ---   <5.00g <5.00g
+  /dev/sdb2       lvm2 ---    5.00g  5.00g
+  /dev/sdc1       lvm2 ---   <5.00g <5.00g
+  /dev/sdc2       lvm2 ---    5.00g  5.00g
+```
+
+As you can see, the VG was successfully removed.
+
 # 📁Creating a Logical Volume (LVM)
 
 After we created the Volume Group (VG), we are basically able to create Logical Volumes (LVMs) by taking space from 
