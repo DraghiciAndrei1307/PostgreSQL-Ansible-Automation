@@ -142,21 +142,27 @@
   register: vgdisplay_output
   when: empty_disks is defined and empty_disks | length > 0
 
-- name: Debug the line that contains the Total PE
-  ansible.builtin.debug:
-    msg: '{{ result[0] | split }}'
+- name: Set fact that contains Total PE
+  ansible.builtin.set_fact:
+    total_PE: '{{ (result[0] | split)[2] }}'
   vars:
     search_string: 'Total PE'
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
   when: empty_disks is defined and empty_disks | length > 0
 
-- name: Debug the line that contains the Free PE
-  ansible.builtin.debug:
-    msg: '{{ result[0] | split }}'
+- name: Set fact that contains Free PE
+  ansible.builtin.set_fact:
+    free_PE: '{{ (result[0] | split)[4] }}'
   vars:
     search_string: 'Free  PE / Size'
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
   when: empty_disks is defined and empty_disks | length > 0
+
+- name: Debug Total PE and Free PE
+  ansible.builtin.debug:
+    msg:
+      - "Total PE: {{ total_PE }}"
+      - "Free PE: {{ free_PE }}"
 
 #- name: Debug the size for the VG (the PE approach)
 #  ansible.builtin.debug:
