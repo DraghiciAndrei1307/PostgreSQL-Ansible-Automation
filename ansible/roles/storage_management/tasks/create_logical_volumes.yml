@@ -1,0 +1,8 @@
+# Check if provided VG has enough space
+
+# Check the
+
+# Create LVM
+
+#- name: Create Logical Volume (LVM)
+#  ansible.builtin.command: something
