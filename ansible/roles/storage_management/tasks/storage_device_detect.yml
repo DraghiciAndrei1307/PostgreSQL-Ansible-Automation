@@ -272,17 +272,6 @@
     - empty_disks is defined
     - empty_disks | length == 0
 
-- name: Kill processes using mount
-  ansible.builtin.command: "fuser -km {{ item }}"
-  failed_when: false
-  loop: "{{ postgresql_dirs }}"
-
-- name: Unmount again (safe double pass)
-  ansible.posix.mount:
-    path: "{{ item }}"
-    state: unmounted
-  loop: "{{ postgresql_dirs }}"
-
 # ----------------------------------------------------------- #
 
 # -------------------- REMOVE THE LVMS ---------------------- #
@@ -299,6 +288,7 @@
     vg: vg_postgres
     lv: "{{ item }}"
     state: absent
+    force: true
   loop: "{{ postgresql_lvms }}"
   when:
     - empty_disks is defined
