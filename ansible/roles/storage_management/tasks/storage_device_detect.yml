@@ -174,7 +174,7 @@
   when:
     - empty_disks is defined
     - empty_disks | length > 0
-    - total_PE == free_PE
+    - (free_PE | int) > 0
 
 - name: Debug LVM PE size
   ansible.builtin.debug:
@@ -200,6 +200,12 @@
     vg_name: vg_postgres
   loop: '{{ postgresql_lvms }}'
   when: empty_disks is defined and empty_disks | length > 0
+
+# needed checks:
+# if LV exists
+# if already formatted
+# if already mounted
+
 
 - name: Create XFS file systems on the LVMs
   ansible.builtin.command: "mkfs.xfs /dev/vg_postgres/{{ item }}"
