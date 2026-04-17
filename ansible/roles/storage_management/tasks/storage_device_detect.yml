@@ -236,13 +236,13 @@
     mode: '0755'
   loop: '{{ postgresql_dirs }}'
 
-- name: Mount the LVMs to the previously created dirs
-  vars:
-    list_one: '{{ postgresql_lvms }}'
-    list_two: '{{ postgresql_dirs }}'
-  ansible.builtin.command: "mount {{ item.0 }} {{ item.1 }} "
-  loop: "{{ list_one | zip(list_two) | list }}"
-  when: empty_disks is defined and empty_disks | length > 0
+- name: Mount LVM filesystems
+  ansible.posix.mount:
+    path: "{{ item.1 }}"
+    src: "/dev/vg_postgres/{{ item.0 }}"
+    fstype: xfs
+    state: mounted
+  loop: "{{ postgresql_lvms | zip(postgresql_dirs) | list }}"
 
 # We will remove or repurpose the following tasks in the future
 # Their only purpose is to help speed up the development process
@@ -262,13 +262,14 @@
 #umount /opt/postgresql/data
 
 
-- name: Unmount the LVMs from the VG
-  ansible.builtin.command: "umount '{{ item }}'"
-  loop: '{{ postgresql_dirs }}'
+- name: Unmount filesystems
+  ansible.posix.mount:
+    path: "{{ item }}"
+    state: unmounted
+  loop: "{{ postgresql_dirs }}"
   when:
     - empty_disks is defined
     - empty_disks | length == 0
-  failed_when: false
 
 # ----------------------------------------------------------- #
 
@@ -278,13 +279,15 @@
 
 #lvremove /dev/main/lvol0
 
-- name: Remove the LVMs
-  ansible.builtin.command: "lvremove '{{ item }}'"
-  loop: '{{ postgresql_lvms }}'
+- name: Remove Logical Volumes
+  community.general.lvol:
+    vg: vg_postgres
+    lv: "{{ item }}"
+    state: absent
+  loop: "{{ postgresql_lvms }}"
   when:
     - empty_disks is defined
     - empty_disks | length == 0
-  failed_when: false
 
 # ----------------------------------------------------------- #
 
