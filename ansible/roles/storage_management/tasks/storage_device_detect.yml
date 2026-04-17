@@ -248,12 +248,14 @@
 
 #umount /opt/postgresql/data
 
+
 - name: Unmount the LVMs from the VG
   ansible.builtin.command: "umount '{{ item }}'"
   loop: '{{ postgresql_dirs }}'
   when:
     - empty_disks is defined
     - empty_disks | length == 0
+  failed_when: false
 
 # ----------------------------------------------------------- #
 
