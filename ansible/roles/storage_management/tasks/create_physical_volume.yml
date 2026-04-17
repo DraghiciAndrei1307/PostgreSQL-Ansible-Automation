@@ -6,6 +6,8 @@
   when: partition is defined
 
 - name: Output of the 'Create Physical Volume (PV)' task
-  ansible.builtin.debug:
-    var: create_physical_volume_output
+  ansible.builtin.set_fact:
+    create_pvs_status: "{{ create_pvs_status | default([]) + [
+      create_physical_volume_output['rc']
+    ] }}"
   when: partition is defined
