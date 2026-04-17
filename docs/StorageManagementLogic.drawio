@@ -10,41 +10,35 @@
         <mxCell id="fsZdGyX77WSTbEBEOBk0-7" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="fsZdGyX77WSTbEBEOBk0-3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-8" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="fsZdGyX77WSTbEBEOBk0-4">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-9" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-5">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda" vertex="1">
-          <mxGeometry height="60" width="120" x="320" y="190" as="geometry" />
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdb" vertex="1">
+          <mxGeometry height="60" width="120" x="300" y="190" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-16" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="fsZdGyX77WSTbEBEOBk0-12">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda1" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdb1" vertex="1">
           <mxGeometry height="60" width="120" x="160" y="320" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-17" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-13">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda2" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdb2" vertex="1">
           <mxGeometry height="60" width="120" x="294" y="320" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-18" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-14">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda3" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdc1" vertex="1">
           <mxGeometry height="60" width="120" x="430" y="320" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-19" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-15">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda4" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdc2" vertex="1">
           <mxGeometry height="60" width="120" x="560" y="320" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;DISK&lt;/font&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="490" y="205" as="geometry" />
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-10" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;EMPTY DISKS&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="660" y="205" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;PARTITIONS&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="70" x="730" y="335" as="geometry" />
@@ -52,25 +46,25 @@
         <mxCell id="fsZdGyX77WSTbEBEOBk0-22" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="fsZdGyX77WSTbEBEOBk0-21">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda1" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdb1" vertex="1">
           <mxGeometry height="60" width="120" x="160" y="420" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-24" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-21">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda2" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdb2" vertex="1">
           <mxGeometry height="60" width="120" x="294" y="420" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-25" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-21">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda3" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdc1" vertex="1">
           <mxGeometry height="60" width="120" x="430" y="420" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-26" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-21">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sda4" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdc2" vertex="1">
           <mxGeometry height="60" width="120" x="560" y="420" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-20" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;PVs&lt;/font&gt;" vertex="1">
@@ -88,26 +82,35 @@
         <mxCell id="fsZdGyX77WSTbEBEOBk0-36" edge="1" parent="1" source="fsZdGyX77WSTbEBEOBk0-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-32">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="vg01" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-21" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="vg_postgres" vertex="1">
           <mxGeometry height="60" width="520" x="160" y="525" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-27" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;VG&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="70" x="730" y="540" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="pg_data" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-29" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="lvm_pg_data" vertex="1">
           <mxGeometry height="60" width="120" x="160" y="630" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-30" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="pg_logs" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-30" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="lvm_pg_logs" vertex="1">
           <mxGeometry height="60" width="120" x="294" y="630" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="pg_wal" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="lvm_pg_wal" vertex="1">
           <mxGeometry height="60" width="120" x="430" y="630" as="geometry" />
         </mxCell>
-        <mxCell id="fsZdGyX77WSTbEBEOBk0-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="backups" vertex="1">
+        <mxCell id="fsZdGyX77WSTbEBEOBk0-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="lvm_pg_backups" vertex="1">
           <mxGeometry height="60" width="120" x="560" y="630" as="geometry" />
         </mxCell>
         <mxCell id="fsZdGyX77WSTbEBEOBk0-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: light-dark(rgb(0, 0, 0), rgb(255, 255, 0));&quot;&gt;LVMS&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="70" x="730" y="645" as="geometry" />
+        </mxCell>
+        <mxCell id="wF2krh_7oIwooSWtEE1P-2" edge="1" parent="1" source="wF2krh_7oIwooSWtEE1P-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wF2krh_7oIwooSWtEE1P-3" edge="1" parent="1" source="wF2krh_7oIwooSWtEE1P-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="fsZdGyX77WSTbEBEOBk0-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="wF2krh_7oIwooSWtEE1P-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="/dev/sdc" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="190" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
