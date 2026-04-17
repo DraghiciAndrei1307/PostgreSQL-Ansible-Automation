@@ -262,6 +262,7 @@
 #umount /opt/postgresql/data
 
 
+
 - name: Unmount filesystems
   ansible.posix.mount:
     path: "{{ item }}"
@@ -270,6 +271,17 @@
   when:
     - empty_disks is defined
     - empty_disks | length == 0
+
+- name: Kill processes using mount
+  ansible.builtin.command: "fuser -km {{ item }}"
+  failed_when: false
+  loop: "{{ postgresql_dirs }}"
+
+- name: Unmount again (safe double pass)
+  ansible.posix.mount:
+    path: "{{ item }}"
+    state: unmounted
+  loop: "{{ postgresql_dirs }}"
 
 # ----------------------------------------------------------- #
 
