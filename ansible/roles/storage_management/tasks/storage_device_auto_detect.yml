@@ -90,7 +90,9 @@
 - name: Output New XFS Partitions Names
   ansible.builtin.debug:
     var: partitions_created
-  when: empty_disks is defined and empty_disks | length > 0
+  when:
+    - partitions_created is defined
+    - partitions_created | length > 0
 
 # ------------------------------------------------------------ #
 
@@ -110,9 +112,11 @@
     name: storage_management
     tasks_from: create_physical_volume
   vars:
-    partition: "{{ item.partition }}"
+    partition: "{{ item }}"
   loop: "{{ partitions_created }}"
-  when: empty_disks is defined and empty_disks | length > 0
+  when:
+    - partitions_created is defined
+    - partitions_created | length > 0
 
 # ----------------------------------------------------------- #
 

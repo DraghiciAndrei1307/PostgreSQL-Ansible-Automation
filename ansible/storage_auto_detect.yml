@@ -1,10 +1,10 @@
 ---
-- name: Storage Tasks
+- name: Storage Auto-Detect
   hosts: postgresql-node1
   gather_facts: true
   become: true
   tasks:
-    - name: Check ansible_facts
+    - name: Storage Auto-Detect
       ansible.builtin.import_role:
         name: storage_management
-        tasks_from: storage_device_detect
+        tasks_from: storage_device_auto_detect

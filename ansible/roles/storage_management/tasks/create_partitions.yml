@@ -95,10 +95,9 @@
 
 - name: Create fact that contains the new partitions
   ansible.builtin.set_fact:
-    partitions_created: "{{ partitions_created | default([]) + [ {
-      'disk': disk_name,
-      'partition': '/dev/' ~ disk_name ~ part_number
-    } ] }}"
+    partitions_created: "{{ partitions_created | default([]) + [
+      '/dev/' ~ disk_name ~ part_number
+    ] }}"
   loop: "{{ range(1, number_of_partitions_per_disk + 1) | list }}"
   loop_control:
     loop_var: part_number
