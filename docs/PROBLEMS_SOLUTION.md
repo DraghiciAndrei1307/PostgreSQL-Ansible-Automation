@@ -135,3 +135,16 @@ umount -R /mnt
 
 reboot -f
 
+
+## TO-DO 
+
+Style the steps above and learn and document the process of boot. 
+
+Learn about initramfs and emergency mode. 
+
+Why we need to mount the rhel lvm to /mnt in order to edit /etc/fstab ? 
+
+Reproduce the problem and try to solve it again. Enter in details. 
+
+Try to solve similar boot problems. 
+
