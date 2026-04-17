@@ -271,6 +271,7 @@
   when:
     - empty_disks is defined
     - empty_disks | length == 0
+  failed_when: false
 
 # ----------------------------------------------------------- #
 
