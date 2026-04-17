@@ -2,7 +2,8 @@
 
 - name: Create Logical Volume (LVM)
   ansible.builtin.command: >
-    lvcreate -l {{ lvm_PE_size }} -n {{ lvm_name }} {{ vg_name }}
+    lvcreate -l {{ lvm_PE_size }} -n {{ item }} {{ vg_name }}
+  loop: '{{ postgresql_lvms }}'
   register: lvcreate_output
 
 - name: Debug lvcreate output

@@ -196,9 +196,7 @@
     tasks_from: create_logical_volumes
   vars:
     lvm_PE_size: '{{ lvm_size }}'
-    lvm_name: '{{ item }}'
     vg_name: vg_postgres
-  loop: '{{ postgresql_lvms }}'
   when: empty_disks is defined and empty_disks | length > 0
 
 # needed checks:
