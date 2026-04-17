@@ -192,6 +192,7 @@
 
 - name: Test lvcreate direct
   ansible.builtin.command: lvcreate -l 100 -n test2 vg_postgres
+  when: empty_disks is defined and empty_disks | length > 0
 
 - name: Create Logical Volumes
   ansible.builtin.include_role:
