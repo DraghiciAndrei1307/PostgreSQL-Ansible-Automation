@@ -182,6 +182,14 @@
       - "The LVM size is: {{ lvm_size }}"
   when: empty_disks is defined and empty_disks | length > 0
 
+- name: Create PostgreSQL LVM name list
+  ansible.builtin.set_fact:
+    postgresql_lvms:
+      - lvm_pg_data
+      - lvm_pg_wal
+      - lvm_pg_logs
+      - lvm_pg_backups
+
 - name: Create Logical Volumes
   ansible.builtin.include_role:
     name: storage_management
@@ -190,15 +198,38 @@
     lvm_PE_size: '{{ lvm_size }}'
     lvm_name: '{{ item }}'
     vg_name: vg_postgres
-  loop:
-    - lvm_pg_data
-    - lvm_pg_wal
-    - lvm_pg_logs
-    - lvm_pg_backups
+  loop: '{{ postgresql_lvms }}'
   when: empty_disks is defined and empty_disks | length > 0
 
+- name: Create XFS file systems on the LVMs
+  ansible.builtin.command: "mkfs.xfs /dev/vg_postgres/{{ item }}"
+  loop: '{{ postgresql_lvms }}'
+  when: empty_disks is defined and empty_disks | length > 0
 
 # ----------------------------------------------------------- #
+
+- name: Create PostgreSQL dir list
+  ansible.builtin.set_fact:
+    postgresql_dirs:
+      - /opt/postgresql/data
+      - /opt/postgresql/wal
+      - /opt/postgresql/logs
+      - /opt/postgresql/backups
+
+- name: Create PostgreSQL directories if it does not exist
+  ansible.builtin.file:
+    path: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop: '{{ postgresql_dirs }}'
+
+- name: Mount the LVMs to the previously created dirs
+  vars:
+    list_one: '{{ postgresql_lvms }}'
+    list_two: '{{ postgresql_dirs }}'
+  ansible.builtin.command: "mount {{ item.0 }} {{ item.1 }} "
+  loop: "{{ list_one | zip(list_two) | list }}"
+  when: empty_disks is defined and empty_disks | length > 0
 
 # We will remove or repurpose the following tasks in the future
 # Their only purpose is to help speed up the development process
@@ -208,6 +239,38 @@
 # the XFS partition, the PV will remain orphan on the disk. IF we do not
 # remove the PV, this can result in: pvs shows “stale” devices, LVM warnings,
 # slow scans or errors, confusion when re-using disk
+
+# -------------------- UNMOUNT THE LVMS --------------------- #
+
+# Before you unmount and remove the LVMs, make sure you
+# save (if needed) the data contained by the file system you
+# want to delete.
+
+#umount /opt/postgresql/data
+
+- name: Unmount the LVMs from the VG
+  ansible.builtin.command: "umount '{{ item }}'"
+  loop: '{{ postgresql_dirs }}'
+  when:
+    - empty_disks is defined
+    - empty_disks | length == 0
+
+# ----------------------------------------------------------- #
+
+# -------------------- REMOVE THE LVMS ---------------------- #
+
+# lvremove the lvms
+
+#lvremove /dev/main/lvol0
+
+- name: Remove the LVMs
+  ansible.builtin.command: "lvremove '{{ item }}'"
+  loop: '{{ postgresql_lvms }}'
+  when:
+    - empty_disks is defined
+    - empty_disks | length == 0
+
+# ----------------------------------------------------------- #
 
 # -------------------- CHECK VOLUME GROUPS --------------- #
 
