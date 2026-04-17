@@ -190,6 +190,9 @@
       - lvm_pg_logs
       - lvm_pg_backups
 
+- name: Test lvcreate direct
+  ansible.builtin.command: lvcreate -l 100 -n test2 vg_postgres
+
 - name: Create Logical Volumes
   ansible.builtin.include_role:
     name: storage_management
