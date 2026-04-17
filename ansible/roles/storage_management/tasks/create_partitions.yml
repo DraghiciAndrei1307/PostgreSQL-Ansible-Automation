@@ -86,6 +86,7 @@
 
 - name: Reload the partition table
   ansible.builtin.command: 'partprobe /dev/{{ disk_name }}'
+  changed_when: false
 
 # -------------------- CREATE 'partitions_created' FACT ----- #
 

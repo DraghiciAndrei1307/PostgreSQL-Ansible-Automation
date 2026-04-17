@@ -1,7 +1,9 @@
 # This task creates a Physical Volume (PV)
 
 - name: Create Physical Volumes (PV)
-  ansible.builtin.command: pvcreate {{ partition }}
+  community.general.lvm_pv:
+    device: '{{ partition }}'
+    state: present
   register: create_physical_volume_output
   when: partition is defined
 

@@ -112,8 +112,7 @@
     name: storage_management
     tasks_from: create_physical_volume
   vars:
-    partition: "{{ item }}"
-  loop: "{{ partitions_created }}"
+    partition: "{{ partitions_created }}"
   when:
     - partitions_created is defined
     - partitions_created | length > 0
@@ -121,15 +120,6 @@
 # ----------------------------------------------------------- #
 
 # -------------------- CONFIGURE VOLUME GROUP --------------- #
-
-# Check if the pvs were created
-# - create a list from the pvs --reportformat json command
-# - check the list against the partitions_created list
-# use boolean from this comparison to get to the next step
-
-#- name: Check the physical volumes creation status
-#  ansible.builtin.debug:
-#    var: create_pvs_status
 
 - name: Configure Volume Group
   ansible.builtin.include_role:
