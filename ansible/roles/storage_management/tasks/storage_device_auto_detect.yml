@@ -127,9 +127,9 @@
 # - check the list against the partitions_created list
 # use boolean from this comparison to get to the next step
 
-- name: Check the physical volumes creation status
-  ansible.builtin.debug:
-    var: create_pvs_status
+#- name: Check the physical volumes creation status
+#  ansible.builtin.debug:
+#    var: create_pvs_status
 
 - name: Configure Volume Group
   ansible.builtin.include_role:
@@ -138,7 +138,7 @@
   vars:
     physical_volume: '{{ partitions_created }}'
     vg_name: vg_postgres
-  when: empty_disks is defined and empty_disks | length > 0
+  when: create_pvs_status | map(attribute='rc') | sum == 0
 
 # ----------------------------------------------------------- #
 

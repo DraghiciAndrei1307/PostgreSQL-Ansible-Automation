@@ -8,6 +8,6 @@
 - name: Output of the 'Create Physical Volume (PV)' task
   ansible.builtin.set_fact:
     create_pvs_status: "{{ create_pvs_status | default([]) + [
-      create_physical_volume_output['rc']
+      create_physical_volume_output
     ] }}"
   when: partition is defined
