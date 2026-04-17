@@ -179,7 +179,7 @@
 - name: Debug LVM PE size
   ansible.builtin.debug:
     msg:
-      - "The LVM size is: {{ lvm_size }}"
+      - "The LVM size is: {{ lvm_size_mb }}"
   when: empty_disks is defined and empty_disks | length > 0
 
 - name: Create PostgreSQL LVM name list
