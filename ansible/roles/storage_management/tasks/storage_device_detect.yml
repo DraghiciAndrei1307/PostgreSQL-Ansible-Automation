@@ -170,7 +170,7 @@
 
 - name: Calculate the size for one LVM (the PE approach)
   ansible.builtin.set_fact:
-    lvm_size: "{{ (free_PE | int) // 8 }}"
+    lvm_size_mb: "{{ (free_PE | int * 4) // 8 }}"
   when:
     - empty_disks is defined
     - empty_disks | length > 0
@@ -194,7 +194,7 @@
   community.general.lvol:
     vg: vg_postgres
     lv: "{{ item }}"
-    size: "{{ lvm_size }}P"
+    size: "{{ lvm_size_mb }}M"
   loop: '{{ postgresql_lvms }}'
   when: empty_disks is defined and empty_disks | length > 0
 
