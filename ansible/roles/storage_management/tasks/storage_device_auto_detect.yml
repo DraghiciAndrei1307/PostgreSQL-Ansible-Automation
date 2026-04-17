@@ -112,7 +112,8 @@
     name: storage_management
     tasks_from: create_physical_volume
   vars:
-    partition: "{{ partitions_created }}"
+    partition: "{{ item }}"
+  loop: "{{ partitions_created }}"
   when:
     - partitions_created is defined
     - partitions_created | length > 0
