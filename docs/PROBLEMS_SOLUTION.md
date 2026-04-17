@@ -144,7 +144,8 @@ Learn about initramfs and emergency mode.
 
 Why we need to mount the rhel lvm to /mnt in order to edit /etc/fstab ? 
 
-Reproduce the problem and try to solve it again. Enter in details. 
+Reproduce the problem and try to solve it again. Enter in details. Create post on Linkedin with screenshots and try
+to explain the solution. 
 
 Try to solve similar boot problems. 
 
