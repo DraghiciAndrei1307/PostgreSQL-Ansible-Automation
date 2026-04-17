@@ -275,6 +275,9 @@
 
 # -------------------- REMOVE THE LVMS ---------------------- #
 
+- name: Sync
+  ansible.builtin.command: sync
+
 # lvremove the lvms
 
 #lvremove /dev/main/lvol0
