@@ -182,7 +182,20 @@
       - "The LVM size is: {{ lvm_size }}"
   when: empty_disks is defined and empty_disks | length > 0
 
-#- name: Create Logical Volumes
+- name: Create Logical Volumes
+  ansible.builtin.include_role:
+    name: storage_management
+    tasks_from: create_logical_volumes
+  vars:
+    lvm_PE_size: '{{ lvm_size }}'
+    lvm_name: '{{ item }}'
+    vg_name: vg_postgres
+  loop:
+    - lvm_pg_data
+    - lvm_pg_wal
+    - lvm_pg_logs
+    - lvm_pg_backups
+  when: empty_disks is defined and empty_disks | length > 0
 
 
 # ----------------------------------------------------------- #

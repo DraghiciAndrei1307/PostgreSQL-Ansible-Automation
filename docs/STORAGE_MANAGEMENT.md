@@ -894,3 +894,8 @@ https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/inc
 https://kodekloud.com/blog/linux-list-disks/
 https://www.baeldung.com/linux/etc-fstab-mount-options
 
+# Interesting things found
+
+When scripting, instead of simply using the commands like `pvs`, use them with the `--reportformat json` option. 
+It will be much easier to parse the output when developing scripts. 
+
