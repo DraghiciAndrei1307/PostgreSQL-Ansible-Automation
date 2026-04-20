@@ -1,3 +1,9 @@
+# -------------------- CREATE/RESIZE VG --------------------- #
+
+# DOCS:
+# https://docs.ansible.com/projects/ansible/latest/collections/community/general/lvg_module.html
+
+# DESCRIPTION:
 # This task creates a Volume Group (VG)
 
 # Our purpose for the moment is to create only one VG from which
@@ -9,23 +15,4 @@
     pvs: '{{ physical_volume }}'
     state: present
 
-#- name: Check Volume Groups
-#  ansible.builtin.command: vgs
-#  register: vgs_output
-#
-#- name: Debug vgs output
-#  ansible.builtin.debug:
-#    var: vgs_output
-#
-#- name: Create Volume Group (VG) if not exists
-#  ansible.builtin.command: 'vgcreate vg_postgres {{ physical_volume }}'
-#  when: "'vg_postgres' not in vgs_output.stdout"
-#
-#- name: Extend 'vg_postgres' volume group if exists
-#  ansible.builtin.command: 'vgextend vg_postgres {{ physical_volume }}'
-#  register: extend_output
-#  when: "'vg_postgres' in vgs_output.stdout"
-#
-#- name: Debug extend output
-#  ansible.builtin.debug:
-#    var: extend_output
+# ----------------------------------------------------------- #

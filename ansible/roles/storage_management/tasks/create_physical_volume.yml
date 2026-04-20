@@ -1,4 +1,11 @@
-# This task creates a Physical Volume (PV)
+
+# -------------------- CREATE PHYSICAL VOLUME --------------- #
+
+# DOCS:
+# https://docs.ansible.com/projects/ansible/latest/collections/community/general/lvm_pv_module.html
+
+# DESCRIPTION:
+# This task creates ONE Physical Volume (PV)
 
 - name: Create Physical Volumes (PV)
   community.general.lvm_pv:
@@ -13,3 +20,5 @@
       create_physical_volume_output
     ] }}"
   when: partition is defined
+
+# ----------------------------------------------------------- #

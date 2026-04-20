@@ -1,6 +1,7 @@
 
 # -------------------- CHECK THE STORAGE DEVICES ------------- #
 
+# DESCRIPTION:
 # We are checking the facts that the target contains regarding
 # the available storage devices.
 
@@ -12,6 +13,7 @@
 
 # -------------------- CREATE LIST OF EMPTY DISKS ------------ #
 
+# DESCRIPTION:
 # We are using set_fact module to create the empty_disks list.
 
 - name: Create empty_disks list
@@ -30,6 +32,7 @@
 
 # -------------------- CHECK LIST OF EMPTY DISKS ------------- #
 
+# DESCRIPTION:
 # We are using debug module to list the contents of the
 # 'empty_disks' list.
 
@@ -39,31 +42,9 @@
 
 # ------------------------------------------------------------ #
 
-## -------------------- CREATE LIST OF EMPTY DISKS WITH SIZES -- #
-#
-#- name: Create 'empty_disks_sizes' list
-#  ansible.builtin.set_fact:
-#    empty_disks_sizes: "{{ empty_disks_sizes | default([]) + [ {
-#      'name': item,
-#      'size': ansible_facts.devices[item].size
-#    } ] }}"
-#  loop: "{{ empty_disks }}"
-#
-## ------------------------------------------------------------ #
-#
-## -------------------- CHECK LIST OF EMPTY DISKS WITH SIZES -- #
-#
-## We are using debug module to list the contents of the
-## 'empty_disks_sizes' list.
-#
-#- name: List the 'empty_disks_sizes' list
-#  ansible.builtin.debug:
-#    var: empty_disks_sizes
-#
-## ------------------------------------------------------------ #
-
 # -------------------- CREATE XFS PARTITIONS FOR EACH DISK---- #
 
+# DESCRIPTION:
 # We are using import_role module to use the create_partition
 # task of the storage_management role.
 
@@ -84,6 +65,7 @@
 
 # -------------------- CHECK THE NEW PARTITION --------------- #
 
+# DESCRIPTION:
 # The variable new_partition is a variable resulted from the
 # create_partition task file execution.
 
@@ -98,6 +80,7 @@
 
 # -------------------- CREATE PHYSICAL VOLUMES ---------------- #
 
+# DESCRIPTION:
 # Related to the description above, the usage of the import_role
 # here will not grant us the access to the new_partition variable.
 # It is good that we already created another variable named
@@ -152,7 +135,12 @@
 - name: Get the output of the vgdisplay
   ansible.builtin.command: vgdisplay vg_postgres
   register: vgdisplay_output
-  when: empty_disks is defined and empty_disks | length > 0
+
+- name: Debug 'vgdisplay_output' variable output
+  ansible.builtin.debug:
+    var: vgdisplay_output
+
+# need a new condition for the following tasks
 
 - name: Set fact that contains Total PE
   ansible.builtin.set_fact:
@@ -160,7 +148,6 @@
   vars:
     search_string: 'Total PE'
     result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
-  when: empty_disks is defined and empty_disks | length > 0
 
 - name: Set fact that contains Free PE
   ansible.builtin.set_fact:
@@ -210,21 +197,10 @@
   loop: '{{ postgresql_lvms }}'
   when: empty_disks is defined and empty_disks | length > 0
 
-
-#- name: Create Logical Volumes
-#  ansible.builtin.include_role:
-#    name: storage_management
-#    tasks_from: create_logical_volumes
-#  vars:
-#    lvm_PE_size: '{{ lvm_size }}'
-#    vg_name: vg_postgres
-#  when: empty_disks is defined and empty_disks | length > 0
-
 # needed checks:
 # if LV exists
 # if already formatted
 # if already mounted
-
 
 - name: Create XFS file systems on the LVMs
   ansible.builtin.command: "mkfs.xfs /dev/vg_postgres/{{ item }}"
