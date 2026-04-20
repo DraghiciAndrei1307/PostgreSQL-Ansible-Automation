@@ -122,6 +122,12 @@
 
 # -------------------- CONFIGURE VOLUME GROUP --------------- #
 
+- name: Debug 'create_pvs_status' fact
+  ansible.builtin.debug:
+    var: create_pvs_status
+  when:
+    - create_pvs_status is defined
+
 - name: Configure Volume Group
   ansible.builtin.include_role:
     name: storage_management
