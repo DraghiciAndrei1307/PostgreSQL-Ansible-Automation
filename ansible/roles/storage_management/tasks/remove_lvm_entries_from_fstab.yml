@@ -4,7 +4,7 @@
   register: fstab_check
 
 - name: Check the contents of fstab
-  ansible.builtin.command: cat /etc/fstab --reportformat json
+  ansible.builtin.command: cat /etc/fstab
   register: fstab_contents
   when: fstab_check.stat.exists
 
