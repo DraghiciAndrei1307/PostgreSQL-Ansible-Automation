@@ -10,5 +10,8 @@
 
 - name: Output the contents of /etc/fstab
   ansible.builtin.debug:
-    var: fstab_contents
+    var: fstab_contents.stdout_lines
   when: fstab_check.stat.exists
+
+
+
