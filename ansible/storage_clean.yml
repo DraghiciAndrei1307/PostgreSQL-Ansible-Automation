@@ -1,0 +1,10 @@
+---
+- name: Storage Clean
+  hosts: postgresql-node1
+  gather_facts: true
+  become: true
+  tasks:
+    - name: Storage Clean
+      ansible.builtin.import_role:
+        name: storage_management
+        tasks_from: storage_clean

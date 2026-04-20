@@ -275,44 +275,44 @@
 
 
 
-- name: Unmount filesystems
-  ansible.posix.mount:
-    path: "{{ item }}"
-    state: unmounted
-  loop: "{{ postgresql_dirs }}"
-  when:
-    - empty_disks is defined
-    - empty_disks | length == 0
+#- name: Unmount filesystems
+#  ansible.posix.mount:
+#    path: "{{ item }}"
+#    state: unmounted
+#  loop: "{{ postgresql_dirs }}"
+#  when:
+#    - empty_disks is defined
+#    - empty_disks | length == 0
 
 # ----------------------------------------------------------- #
 
 # -------------------- REMOVE THE LVMS ---------------------- #
 
-- name: Sync
-  ansible.builtin.command: sync
+#- name: Sync
+#  ansible.builtin.command: sync
 
 # lvremove the lvms
 
 #lvremove /dev/main/lvol0
 
-- name: Remove Logical Volumes
-  community.general.lvol:
-    vg: vg_postgres
-    lv: "{{ item }}"
-    state: absent
-    force: true
-  loop: "{{ postgresql_lvms }}"
-  when:
-    - empty_disks is defined
-    - empty_disks | length == 0
+#- name: Remove Logical Volumes
+#  community.general.lvol:
+#    vg: vg_postgres
+#    lv: "{{ item }}"
+#    state: absent
+#    force: true
+#  loop: "{{ postgresql_lvms }}"
+#  when:
+#    - empty_disks is defined
+#    - empty_disks | length == 0
 
 # ----------------------------------------------------------- #
 
 # -------------------- CHECK VOLUME GROUPS --------------- #
 
-- name: Check Volume Groups
-  ansible.builtin.command: vgs
-  register: vgs_output
+#- name: Check Volume Groups
+#  ansible.builtin.command: vgs
+#  register: vgs_output
 
 # ----------------------------------------------------------- #
 
@@ -321,24 +321,24 @@
 # This task will be later updated...we use it at the moment
 # to speed up the development process.
 
-- name: Remove 'vg_postgres' Volume Group (VG)
-  ansible.builtin.command: vgremove vg_postgres
-  when:
-    - empty_disks is defined
-    - empty_disks | length == 0
-    - "'vg_postgres' in vgs_output.stdout"
+#- name: Remove 'vg_postgres' Volume Group (VG)
+#  ansible.builtin.command: vgremove vg_postgres
+#  when:
+#    - empty_disks is defined
+#    - empty_disks | length == 0
+#    - "'vg_postgres' in vgs_output.stdout"
 
 # ----------------------------------------------------------- #
 
 # -------------------- CHECK PHYSICAL VOLUMES --------------- #
 
-- name: Check the Physical Volumes
-  ansible.builtin.command: pvs
-  register: pvs_output
-
-- name: Debug pvs_output variable
-  ansible.builtin.debug:
-    var: pvs_output["stdout"]
+#- name: Check the Physical Volumes
+#  ansible.builtin.command: pvs
+#  register: pvs_output
+#
+#- name: Debug pvs_output variable
+#  ansible.builtin.debug:
+#    var: pvs_output["stdout"]
 
 # ----------------------------------------------------------- #
 
@@ -346,31 +346,31 @@
 
 # The condition is not perfect, but we will work on that later.
 
-- name: Remove the Physical Volume (if exists)
-  ansible.builtin.command: 'pvremove /dev/{{ item }}'
-  loop:
-    - sdb1
-    - sdb2
-    - sdc1
-    - sdc2
-  when:
-    - empty_disks is defined
-    - empty_disks | length == 0
-    - "'/dev/sdb1' in pvs_output.stdout"
+#- name: Remove the Physical Volume (if exists)
+#  ansible.builtin.command: 'pvremove /dev/{{ item }}'
+#  loop:
+#    - sdb1
+#    - sdb2
+#    - sdc1
+#    - sdc2
+#  when:
+#    - empty_disks is defined
+#    - empty_disks | length == 0
+#    - "'/dev/sdb1' in pvs_output.stdout"
 
 # ----------------------------------------------------------- #
 
 # -------------------- DELETE PARTITIONS -------------------- #
 
-- name: Delete XFS partitions
-  ansible.builtin.include_role:
-    name: storage_management
-    tasks_from: delete_partitions
-  vars:
-    disk: '/dev/{{ item }}'
-  loop:
-    - sdb
-    - sdc
-  when: empty_disks is defined and empty_disks | length == 0
+#- name: Delete XFS partitions
+#  ansible.builtin.include_role:
+#    name: storage_management
+#    tasks_from: delete_partitions
+#  vars:
+#    disk: '/dev/{{ item }}'
+#  loop:
+#    - sdb
+#    - sdc
+#  when: empty_disks is defined and empty_disks | length == 0
 
 # ----------------------------------------------------------- #

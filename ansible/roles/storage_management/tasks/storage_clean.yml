@@ -1,0 +1,4 @@
+- name: Remove entries from /etc/fstab
+  ansible.builtin.include_role:
+    name: storage_management
+    tasks_from: remove_lvm_entries_from_fstab
