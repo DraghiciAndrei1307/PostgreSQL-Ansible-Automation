@@ -39,6 +39,14 @@
 
 # -------------------- REMOVE LVMs -------------------------- #
 
+- name: Create PostgreSQL LVM name list
+  ansible.builtin.set_fact:
+    postgresql_lvms:
+      - lvm_pg_data
+      - lvm_pg_wal
+      - lvm_pg_logs
+      - lvm_pg_backups
+
 - name: Remove Logical Volumes
   community.general.lvol:
     vg: vg_postgres
