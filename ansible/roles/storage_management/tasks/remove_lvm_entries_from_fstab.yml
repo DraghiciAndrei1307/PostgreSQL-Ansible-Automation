@@ -16,5 +16,4 @@
 - name: Get the lines that contain specific substrings
   ansible.builtin.debug:
     msg: '{{ item }}'
-  when: "'lvm_pg_data' in item"
-  loop: '{{ fstab_contents.stdout_lines }}'
+  loop: "{{ fstab_contents.stdout_lines | select('search', ['lvm_pg_data', 'lvm_pg_logs', 'lvm_pg_wal', 'lvm_pg_backups'] | join('|')) | list }}"
