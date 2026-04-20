@@ -6,9 +6,9 @@
 - name: Check the contents of fstab
   ansible.builtin.command: cat /etc/fstab --reportformat json
   register: fstab_contents
-  when: fstab_exists.stat.exists
+  when: fstab_check.stat.exists
 
 - name: Output the contents of /etc/fstab
   ansible.builtin.debug:
     var: fstab_contents
-  when: fstab_exists.stat.exists
+  when: fstab_check.stat.exists
