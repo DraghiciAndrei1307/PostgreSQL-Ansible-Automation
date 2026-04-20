@@ -1,3 +1,11 @@
+# Future upgrades:
+# The user should be able to provide (or we can automate that):
+# The PostgreSQL dirs where to mount
+# The VG name
+# The LVMs names
+# The PVs names
+# The disk names
+
 # -------------------- REMOVE AUTO-MOUNT LINES FROM fstab --- #
 
 - name: Remove entries from /etc/fstab
@@ -6,6 +14,14 @@
     tasks_from: remove_lvm_entries_from_fstab
 
 # ----------------------------------------------------------- #
+
+# -------------------- DIRS TO UMOUNT ----------------------- #
+
+# DOCS:
+# https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/set_fact_module.html
+
+# DESCRIPTION:
+# We create a list with the PostgreSQL dirs we want to umount.
 
 - name: Create list with PostgreSQL dir to umount
   ansible.builtin.set_fact:
@@ -19,6 +35,12 @@
 
 # -------------------- UMOUNT THE LVMs FILE SYSTEMS---------- #
 
+# DOCS: https://docs.ansible.com/projects/ansible/latest/collections/ansible/posix/mount_module.html
+
+# DESCRIPTION:
+# We use 'ansible.posix.mount' module to umount the File Systems from
+# the directories above. The use of this module ensures idempotency state.
+
 - name: Umount LVMs File Systems
   ansible.posix.mount:
     path: "{{ item }}"
@@ -29,6 +51,12 @@
 
 # -------------------- REMOVE POSTGRESQL FOLDERS ------------ #
 
+# DOCS: https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/file_module.html
+
+# DESCRIPTION:
+# We use the file module to remove the folders where we mounted the FileSystems attached to the
+# LVMs we want to remove.
+
 - name: Remove PostgreSQL directories
   ansible.builtin.file:
     path: '{{ item }}'
@@ -38,6 +66,14 @@
 # ----------------------------------------------------------- #
 
 # -------------------- REMOVE LVMs -------------------------- #
+
+# DOCS:
+# https://docs.ansible.com/projects/ansible/latest/collections/community/general/lvol_module.html
+# https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/set_fact_module.html
+
+# DESCRIPTION:
+# We use the 'community.general.lvol' module to remove the LVMs contained by the 'postgresql_lvms'.
+# The use of this module ensures idempotency.
 
 - name: Create PostgreSQL LVM name list
   ansible.builtin.set_fact:
@@ -59,6 +95,12 @@
 
 # -------------------- REMOVE VG ---------------------------- #
 
+# DOCS: https://docs.ansible.com/projects/ansible/latest/collections/community/general/lvg_module.html
+
+# DESCRIPTION:
+# We use the lvg module to remove the Volume Group named 'vg_postgres'.
+# The use of this module ensures idempotency.
+
 - name: Remove a VG named 'vg_postgres'
   community.general.lvg:
     vg: vg_postgres
@@ -67,6 +109,14 @@
 # ----------------------------------------------------------- #
 
 # -------------------- REMOVE PHYSICAL VOLUMES -------------- #
+
+# DOCS:
+# https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/set_fact_module.html
+# https://docs.ansible.com/projects/ansible/latest/collections/community/general/lvm_pv_module.html
+
+# DESCRIPTION:
+# We use the lvm_pv module to remove the Physical Volumes contained by the 'pvs_to_remove' list.
+# The use of this module enures idempotency.
 
 - name: List of PVs to remove
   ansible.builtin.set_fact:
@@ -85,6 +135,9 @@
 # ----------------------------------------------------------- #
 
 # -------------------- DELETE PARTITIONS -------------------- #
+
+# DESCRIPTION:
+# We use a role self-developed that deletes the partitions from sdb and sdc disks.
 
 - name: Delete XFS partitions
   ansible.builtin.include_role:
