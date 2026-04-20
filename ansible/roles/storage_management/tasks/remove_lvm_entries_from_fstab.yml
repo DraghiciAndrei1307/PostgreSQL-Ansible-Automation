@@ -13,7 +13,19 @@
     var: fstab_contents.stdout_lines
   when: fstab_check.stat.exists
 
+- name: Create list of lines to remove
+  ansible.builtin.set_fact:
+    lines_to_remove: "{{ fstab_contents.stdout_lines | select('search', ['lvm_pg_data', 'lvm_pg_logs', 'lvm_pg_wal', 'lvm_pg_backups'] | join('|')) | list }}"
+
 - name: Get the lines that contain specific substrings
   ansible.builtin.debug:
     msg: '{{ item }}'
-  loop: "{{ fstab_contents.stdout_lines | select('search', ['lvm_pg_data', 'lvm_pg_logs', 'lvm_pg_wal', 'lvm_pg_backups'] | join('|')) | list }}"
+  loop: "{{ lines_to_remove }}"
+
+- name: Remove automount lines from fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "{{ item }}"
+    state: absent
+  loop: "{{ lines_to_remove }}"
+
