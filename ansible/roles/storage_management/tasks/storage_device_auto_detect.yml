@@ -137,7 +137,7 @@
     vg_name: vg_postgres
   when:
     - create_pvs_status is defined
-    - create_pvs_status | map(attribute='rc') | sum == 0
+    - "{{ (create_pvs_status | map(attribute='failed') | list) is not containing(true) }}"
 
 # ----------------------------------------------------------- #
 
