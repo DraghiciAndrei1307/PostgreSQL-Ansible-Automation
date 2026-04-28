@@ -1,6 +1,6 @@
 ---
 - name: "Configure the Storage"
-  hosts: dbs
+  hosts: test
   become: yes
   gather_facts: true
   vars_files:
@@ -14,7 +14,7 @@
         tasks_from: storage_device_auto_detect
 
 - name: "Install and Configure PostgreSQL"
-  hosts: dbs
+  hosts: test
   become: yes
   vars_files:
     - group_vars/vault.yml
@@ -46,7 +46,7 @@
     - pgbackrest_build
 
 - name: "Copy the compiled file to the slave nodes"
-  hosts: dbs
+  hosts: test
   become: yes
   vars_files:
     - group_vars/vault.yml
