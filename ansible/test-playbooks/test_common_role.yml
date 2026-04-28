@@ -4,7 +4,7 @@
   hosts: test
   become: yes
   vars_files:
-    - group_vars/vault.yml
+    - ../group_vars/vault.yml
   roles:
     - role: ../roles/common
     - role: ../roles/postgresql_config_and_install
