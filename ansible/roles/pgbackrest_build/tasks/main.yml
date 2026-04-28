@@ -13,15 +13,13 @@
 
 - name: "Download into /pgBackRest_build"
   ansible.builtin.shell: "wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.55.1.tar.gz | tar zx -C /pgBackRest_build"
-#  args:
-#    creates:
+  args:
+    creates: /pgBackRest_build/pgbackrest-release-2.55.1
 # ------------------------------------------------------------- #
 
 # ------------------- INSTALL BUILD DEPENDENCIES -------------- #
 
 - name: "Install build dependencies"
-  #debug:
-  #  msg: "Installing package {{ item }}"
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: present
@@ -31,14 +29,24 @@
 
 # ------------------- CONFIGURE pgBackRest -------------------- #
 
+# The PKG_CONFIG_PATH=... line creates a temporary env variable
+# for the command that follows. Basically here we tell the
+# pkg-config to look for the installed libraries inside the
+# path stored inside the PKG_CONFIG_PATH
+
 - name: "Configure pgBackRest"
   ansible.builtin.shell: >
     PKG_CONFIG_PATH=/usr/pgsql-{{ pg_version }}/lib/pkgconfig
     meson setup /pgBackRest_build/pgbackrest /pgBackRest_build/pgbackrest-release-2.55.1
+  register: configure_result
   args:
     creates: "/pgBackRest_build/pgbackrest/build.ninja"
 
 # ------------------------------------------------------------- #
+
+- name: Debug 'configure_result' variable
+  ansible.builtin.debug:
+    var: configure_result
 
 # ------------------- BUILD pgBackRest ------------------------ #
 
