@@ -52,5 +52,7 @@
 
 - name: "Build pgBackRest"
   ansible.builtin.shell: "ninja -C /pgBackRest_build/pgbackrest"
-
+  args:
+    creates: /pgBackRest_build/pgbackrest/src/pgbackrest
+  when: configure_result.rc == 0
 # ------------------------------------------------------------- #
