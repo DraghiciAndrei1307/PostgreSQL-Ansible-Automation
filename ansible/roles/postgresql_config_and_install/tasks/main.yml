@@ -18,6 +18,39 @@
     name: postgresql-{{ pg_version }}
     state: started
 
+- name: "Start the PostgreSQL service"
+  ansible.builtin.service:
+    name: postgresql-{{ pg_version }}
+    state: stopped
+
+- name: "Rsync the data from old to new location"
+  ansible.builtin.command: rsync -av /var/lib/pgsql/{{ pg_version }}/data/ /opt/postgresql/data
+
+- name: "Create postgresql-14.service.d folder"
+  ansible.builtin.file:
+    path: /etc/systemd/system/postgresql-{{ pg_version }}.service.d
+    state: directory
+
+- name: "Update the postgresql-{{ pg_version }} conf"
+  ansible.builtin.template:
+    src: postgresql.service.conf.j2
+    dest: /etc/systemd/system/postgresql-{{ pg_version }}.service.d/postgresql.service.conf
+
+- name: "Set SELINUX on permissive mode"
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
+- name: "Apply same context to the new data location"
+  ansible.builtin.command:
+    - semanage fcontext --add --equal /var/lib/pgsql /opt/postgresql
+    - restorecon -rv /opt/postgresql
+
+- name: "Set SELINUX on permissive mode"
+  ansible.posix.selinux:
+    policy: targeted
+    state: enforcing
+
 - name: "Upload postgresql.conf config file from template"
   ansible.builtin.template:
     src: postgresql.conf.j2
@@ -25,7 +58,11 @@
     owner: postgres
     group: postgres
     mode: '0644'
-  notify: "Restart PostgreSQL"
+
+- name: "Start the PostgreSQL service"
+  ansible.builtin.service:
+    name: postgresql-{{ pg_version }}
+    state: started
 
 
 

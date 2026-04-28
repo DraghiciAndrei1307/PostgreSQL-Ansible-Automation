@@ -1,4 +1,18 @@
 ---
+- name: "Configure the Storage"
+  hosts: dbs
+  become: yes
+  gather_facts: true
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    - pg_version: 14
+  tasks:
+    - name: Storage Auto-Detect
+      ansible.builtin.import_role:
+        name: storage_management
+        tasks_from: storage_device_auto_detect
+
 - name: "Install and Configure PostgreSQL"
   hosts: dbs
   become: yes
