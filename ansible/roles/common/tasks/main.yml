@@ -29,9 +29,9 @@
 
 # ---------------- DEBUG THE REGISTRATION -------------------- #
 
-- name: System Register Debug
-  ansible.builtin.debug:
-    var: register_output
+#- name: System Register Debug
+#  ansible.builtin.debug:
+#    var: register_output
 
 # ---------------- ATTACH SUBSCRIPTION ------------------------ #
 
