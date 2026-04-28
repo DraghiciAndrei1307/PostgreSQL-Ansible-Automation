@@ -9,7 +9,6 @@
     src: /pgBackRest_build/pgbackrest/src/pgbackrest
     dest: /usr/bin/pgbackrest
     mode: '0755'
-    remote_src: true
 
 # ------------------------------------------------------------- #
 

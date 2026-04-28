@@ -1,0 +1,9 @@
+- name: "Copy the compiled file to the slave nodes"
+  hosts: test
+  become: yes
+  vars_files:
+    - ../group_vars/vault.yml
+  vars:
+    - pg_version: 14
+  roles:
+    - role: ../roles/pgbackrest_config_and_install
