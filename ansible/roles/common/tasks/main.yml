@@ -20,6 +20,9 @@
     chdir: /etc/pki/consumer
     creates: cert.pem
   register: register_output
+  retries: 5
+  delay: 60
+  until: register_output.rc == 0
   failed_when: "'Invalid username or password' in register_output.stderr"
 
 # ------------------------------------------------------------- #
