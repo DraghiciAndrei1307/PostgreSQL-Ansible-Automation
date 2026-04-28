@@ -44,10 +44,6 @@
 
 # ------------------------------------------------------------- #
 
-- name: Debug 'configure_result' variable
-  ansible.builtin.debug:
-    var: configure_result
-
 # ------------------- BUILD pgBackRest ------------------------ #
 
 - name: "Build pgBackRest"
