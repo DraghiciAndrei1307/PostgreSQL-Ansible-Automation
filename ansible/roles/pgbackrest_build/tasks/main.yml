@@ -33,7 +33,7 @@
 
 - name: "Configure pgBackRest"
   ansible.builtin.shell: >
-    PKG_CONFIG_PATH=/usr/pgsql-14/lib/pkgconfig
+    PKG_CONFIG_PATH=/usr/pgsql-{{ pg_version }}/lib/pkgconfig
     meson setup /pgBackRest_build/pgbackrest /pgBackRest_build/pgbackrest-release-2.55.1
   args:
     creates: "/pgBackRest_build/pgbackrest/build.ninja"

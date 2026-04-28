@@ -1,0 +1,12 @@
+---
+- name: Test 'pgbackrest_build' role
+  gather_facts: no
+  hosts: test
+  become: yes
+  vars_files:
+    - ../group_vars/vault.yml
+  vars:
+    - pg_version: 14
+  roles:
+    - role: ../roles/pgbackrest_build
+
