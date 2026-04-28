@@ -42,9 +42,9 @@
     state: permissive
 
 - name: "Apply same context to the new data location"
-  ansible.builtin.command:
-    - semanage fcontext --add --equal /var/lib/pgsql /opt/postgresql
-    - restorecon -rv /opt/postgresql
+  ansible.builtin.shell: | 
+    semanage fcontext --add --equal /var/lib/pgsql /opt/postgresql
+    restorecon -rv /opt/postgresql
 
 - name: "Set SELINUX on permissive mode"
   ansible.posix.selinux:
