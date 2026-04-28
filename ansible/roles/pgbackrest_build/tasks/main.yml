@@ -1,24 +1,23 @@
+
+# ------------------- CREATE BUILD DIRECTORY ---------------- #
+
 - name: "Create build directory"
-  command: mkdir -p /pgBackRest_build
+  ansible.builtin.file:
+    path: /pgBackRest_build
+    state: directory
+    mode: '0755'
+
+# ------------------------------------------------------------- #
+
+# ------------------- DOWNLOAD INTO /pgBackRest_build --------- #
 
 - name: "Download into /pgBackRest_build"
   ansible.builtin.shell: "wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.55.1.tar.gz | tar zx -C /pgBackRest_build"
+#  args:
+#    creates:
+# ------------------------------------------------------------- #
 
-- name: "Run the common role"
-  import_role:
-    name: common
-
-  #  - name: "Add PostgreSQL YUM repository"
-  #    ansible.builtin.get_url:
-  #      url: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-  #      dest: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
-  #      mode: '0664'
-
-  # - name: "Install PostgreSQL repo"
-  #   ansible.builtin.dnf:
-  #     name: "/tmp/pgdg-redhat-repo-latest.noarch.rpm"
-  #     state: present
-  #     disable_gpg_check: yes
+# ------------------- INSTALL BUILD DEPENDENCIES -------------- #
 
 - name: "Install build dependencies"
   #debug:
@@ -28,6 +27,10 @@
     state: present
   loop: "{{ dependencies }}"
 
+# ------------------------------------------------------------- #
+
+# ------------------- CONFIGURE pgBackRest -------------------- #
+
 - name: "Configure pgBackRest"
   ansible.builtin.shell: >
     PKG_CONFIG_PATH=/usr/pgsql-14/lib/pkgconfig
@@ -35,6 +38,11 @@
   args:
     creates: "/pgBackRest_build/pgbackrest/build.ninja"
 
+# ------------------------------------------------------------- #
+
+# ------------------- BUILD pgBackRest ------------------------ #
 
 - name: "Build pgBackRest"
   ansible.builtin.shell: "ninja -C /pgBackRest_build/pgbackrest"
+
+# ------------------------------------------------------------- #
