@@ -27,6 +27,7 @@
         - bzip2-devel
         - libyaml-devel
         - libssh2-devel
+      pg_version: 14
     roles:
       - pgbackrest_build
 
