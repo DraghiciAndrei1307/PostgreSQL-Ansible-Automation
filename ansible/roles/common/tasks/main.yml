@@ -1,17 +1,43 @@
-# Configure the subscription-manager
 
-- name: "Configure the subscription-manager"
+# ------------------- SYSTEM REGISTER ---------------- #
+# We use the shell module to register the system.
+
+# In order to use the shell module and also check the idempotency,
+# I added the creates option. Basically, when you register a system,
+# inside the /etc/pki/consumer path, 2 files are created: cert.pem
+# and key.pem
+
+# These files are used to identify the RedHat account
+
+
+- name: "Register the system"
   ansible.builtin.shell: >
     subscription-manager register
     --username={{ redhat_username }}
     --password={{ redhat_password }}
     --auto-attach
+  args:
+    chdir: /etc/pki/consumer
+    creates: cert.pem
   register: register_output
   failed_when: "'Invalid username or password' in register_output.stderr"
 
-- ansible.builtin.shell: "subscription-manager attach --auto"
+# ------------------------------------------------------------- #
 
-# UPDATE DNF
+# ---------------- DEBUG THE REGISTRATION -------------------- #
+
+- name: System Register Debug
+  ansible.builtin.debug:
+    var: register_output
+
+# ---------------- ATTACH SUBSCRIPTION ------------------------ #
+
+- name: Auto-Attach Subscription (after registration)
+  ansible.builtin.shell: "subscription-manager attach --auto"
+
+# ------------------------------------------------------------- #
+
+# ---------------- UPDATE DNF --------------------------------- #
 
 - name: "Update DNF"
   ansible.builtin.dnf:
@@ -21,6 +47,10 @@
     update_cache: true
     nobest: yes
 
+# ------------------------------------------------------------- #
+
+# ---------------- INSTALL THE POSTGRESQL REPO ---------------- #
+
 # Install the official PostgreSQL Repo - we will use it later to install PostgreSQL on the slave nodes
 
 - name: "Install the repository RPM"
@@ -29,22 +59,24 @@
     state: present
     disable_gpg_check: yes
 
-# enable the codeready repo
+# ------------------------------------------------------------- #
 
-- name: "Enable codeready-builder(CRB) repo"
-  ansible.builtin.command: >
-    subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
-  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "9"
-
-- name: "Install EPEL repository (RHEL 9)"
-  block:
-    - name: "Download and install EPEL release RPM"
-      ansible.builtin.dnf:
-        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
-        state: present
-        disable_gpg_check: yes
-
-    - name: "Import EPEL GPG key"
-      ansible.builtin.rpm_key:
-        key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"
-        state: present
+## enable the codeready repo
+#
+#- name: "Enable codeready-builder(CRB) repo"
+#  ansible.builtin.command: >
+#    subscription-manager repos --enable codeready-builder-for-rhel-9-x86_64-rpms
+#  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "9"
+#
+#- name: "Install EPEL repository (RHEL 9)"
+#  block:
+#    - name: "Download and install EPEL release RPM"
+#      ansible.builtin.dnf:
+#        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+#        state: present
+#        disable_gpg_check: yes
+#
+#    - name: "Import EPEL GPG key"
+#      ansible.builtin.rpm_key:
+#        key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"
+#        state: present
