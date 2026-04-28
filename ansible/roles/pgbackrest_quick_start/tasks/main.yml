@@ -1,15 +1,18 @@
-# no need to create a demo cluster
-# we have to change the postgresql.conf
+# ---------------- CREATE pgBackRest FILES and DIRS ----------- #
 
-# Configure the PostgreSQL cluster data directory task
+# We use the template module to create the pgbackrest.conf file.
 
-- name: "Configure the PostgreSQL data directory"
+- name: "Configure PostgreSQL Cluster Stanza"
   ansible.builtin.template:
     src: pgbackrest.conf.j2
     dest: /etc/pgbackrest/pgbackrest.conf
     owner: postgres
     group: postgres
     mode: '0640'
+
+# ------------------------------------------------------------- #
+
+# ---------------- CREATE pgBackRest FILES and DIRS ----------- #
 
 # CONFIGURE THE LOGGING - if you want other path than the default one
 
@@ -21,12 +24,19 @@
     group: postgres
     mode: '0640'
 
+# ------------------------------------------------------------- #
+
+# ---------------- CONFIGURE LOG-PATH ------------------------- #
+
 - name: "Configure log-path using the environment"
   ansible.builtin.command: >
     sudo -u postgres bash -c ' \
-         export PGBACKREST_LOG_PATH=/var/lib/pgsql/14/pgbackrest_logs && \
+         export PGBACKREST_LOG_PATH=/var/lib/pgsql/{{ pg_version }}/pgbackrest_logs && \
          pgbackrest --log-level-console=error help backup log-path'
     
+# ------------------------------------------------------------- #
+
+# ---------------- CONFIGURE pgBackRest REPO ------------------ #
 
 # CONFIGURE THE PGBACKREST REPOSITORY
 
@@ -38,12 +48,20 @@
     group: postgres
     mode: '0750'
 
+# ------------------------------------------------------------- #
+
+# ---------------- CREATE STANZA ------------------------------ #
+
 - name: "Create the Stanza"
   ansible.builtin.command: >
     sudo -u postgres pgbackrest 
     --stanza=demo
     --log-level-console=info
     stanza-create
+
+# ------------------------------------------------------------- #
+
+# ---------------- CHECK CONFIGURATION------------------------- #
 
 - name: "Check Configuration"
   ansible.builtin.command: >
@@ -57,3 +75,5 @@
 - name: "Print pgbackrest configuration"
   ansible.builtin.debug:
     var: check_pgbackrest_config.stdout
+
+# ------------------------------------------------------------- #
