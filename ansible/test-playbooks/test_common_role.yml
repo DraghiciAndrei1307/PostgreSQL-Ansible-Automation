@@ -1,0 +1,10 @@
+---
+- name: Test 'common' role
+  gather_facts: no
+  hosts: test
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  roles:
+    - common
+    - postgresql_config_and_install
