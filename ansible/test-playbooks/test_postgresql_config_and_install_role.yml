@@ -8,5 +8,5 @@
   vars:
     - pg_version: 14
   roles:
-    - role: ../roles/common
+    - role: ../roles/postgresql_config_and_install
 
