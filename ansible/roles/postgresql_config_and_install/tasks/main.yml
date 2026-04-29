@@ -89,7 +89,7 @@
     mode: '0700'
 
 - name: "Rsync old log folder into the new one"
-  ansible.builtin.command: rsync -av /opt/postgresql/data/log /opt/postgresql/logs/pg_log
+  ansible.builtin.command: rsync -av /opt/postgresql/data/log /opt/postgresql/logs/pg_logs
 
 # ----------- UPLOAD postgresql.conf FILE --------------------- #
 
