@@ -80,21 +80,16 @@
 
 # ------------ CREATE NEW LOG FOLDER -------------------------- #
 
-#- name: "Create /opt/postgresql/logs/pg_log folder"
-#  ansible.builtin.file:
-#    path: /opt/postgresql/logs/pg_log
-#    state: directory
-#    owner: postgres
-#    group: postgres
-#    mode: '0700'
-#
-#- name: "Rsync old log folder into the new one"
-#  ansible.builtin.command: rsync -av /opt/postgresql/data/log /opt/postgresql/logs/pg_log
-#
-#- name: "Remove the old log path"
-#  ansible.builtin.file:
-#    path: /opt/postgresql/data/log
-#    state: absent
+- name: "Create /opt/postgresql/logs/pg_log folder"
+  ansible.builtin.file:
+    path: /opt/postgresql/logs/pg_logs
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+
+- name: "Rsync old log folder into the new one"
+  ansible.builtin.command: rsync -av /opt/postgresql/data/log /opt/postgresql/logs/pg_log
 
 # ----------- UPLOAD postgresql.conf FILE --------------------- #
 
