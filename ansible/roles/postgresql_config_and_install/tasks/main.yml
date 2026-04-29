@@ -39,6 +39,8 @@
   ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/initdb -D /opt/postgresql/data"
   args:
     creates: /opt/postgresql/data/PG_VERSION
+  become: true
+  become_user: postgres
 
 # ------------------------------------------------------------- #
 
