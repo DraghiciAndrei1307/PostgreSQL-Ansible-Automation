@@ -1,22 +1,22 @@
+# ---------------- INSTALL POSTGRESQL ------------------------- #
+
 - name: "Install PostgreSQL version {{ pg_version }}"
   ansible.builtin.dnf:
     name: postgresql{{ pg_version }}-server
     state: present
+
+# ------------------------------------------------------------- #
+
+# ---------------- INITIALIZE DATABASE ------------------------ #
 
 - name: "Initialize the database"
   ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
   args:
     creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
 
-#- name: "Start the PostgreSQL service"
-#  ansible.builtin.service:
-#    name: postgresql-{{ pg_version }}
-#    state: started
-#
-#- name: "Start the PostgreSQL service"
-#  ansible.builtin.service:
-#    name: postgresql-{{ pg_version }}
-#    state: stopped
+# ------------------------------------------------------------- #
+
+# ---------------- CONFIGURE NEW PGDATA ----------------------- #
 
 - name: Ensure /opt is accessible
   ansible.builtin.file:
@@ -40,23 +40,45 @@
     path: /opt/postgresql/data
     mode: '0700'
 
+# ------------------------------------------------------------- #
+
+# ---------------- RSYNC DATA FROM OLD TO NEW PGDATA ---------- #
+
 - name: "Rsync the data from old to new location"
   ansible.builtin.command: rsync -av /var/lib/pgsql/{{ pg_version }}/data/ /opt/postgresql/data
+
+# ------------------------------------------------------------- #
+
+# ---------------- REMOVE THE OLD PGDATA ---------------------- #
 
 - name: Recursively remove /var/lib/pgsql
   ansible.builtin.file:
     path: /var/lib/pgsql
     state: absent
 
+# ------------------------------------------------------------- #
+
+# ---------------- CREATE POSTGRESQL service.d FOLDER --------- #
+
 - name: "Create postgresql-14.service.d folder"
   ansible.builtin.file:
     path: /etc/systemd/system/postgresql-{{ pg_version }}.service.d
     state: directory
 
-- name: "Update the postgresql-{{ pg_version }} conf"
+# ------------------------------------------------------------- #
+
+# ---------------- UPDATE THE POSTGRESQL SERVICE CONF --------- #
+
+# This operation will require to update the selinux context
+
+- name: "Update the postgresql-{{ pg_version }} service conf"
   ansible.builtin.template:
     src: postgresql-service.conf.j2
     dest: /etc/systemd/system/postgresql-{{ pg_version }}.service.d/postgresql-service.conf
+
+# ------------------------------------------------------------- #
+
+# ----------- APPLY SAME SELINUX CONTEXT TO THE NEW PGDATA ---- #
 
 - name: "Set SELINUX on permissive mode"
   ansible.posix.selinux:
@@ -73,23 +95,54 @@
     policy: targeted
     state: enforcing
 
+# ------------------------------------------------------------- #
+
+# ------------ CREATE NEW LOG FOLDER -------------------------- #
+
+- name: "Create /opt/postgresql/logs/pg_log folder"
+  ansible.builtin.file:
+    path: /opt/postgresql/logs/pg_log
+    owner: postgres
+    group: postgres
+    mode: '0700'
+
+- name: "Rsync old log folder into the new one"
+  ansible.builtin.command: rsync -av /opt/postgresql/data/log /opt/postgresql/logs/pg_log
+
+- name: "Remove the old log path"
+  ansible.builtin.file:
+    path: /opt/postgresql/data/log
+    state: absent
+
+# ----------- UPLOAD postgresql.conf FILE --------------------- #
+
 - name: "Upload postgresql.conf config file from template"
   ansible.builtin.template:
     src: postgresql.conf.j2
-    dest: /var/lib/pgsql/{{ pg_version }}/data/postgresql.conf
+    dest: /opt/postgresql/data/postgresql.conf
     owner: postgres
     group: postgres
     mode: '0644'
+
+# ------------------------------------------------------------- #
+
+# ----------- ENABLE AUTOMATIC START -------------------------- #
 
 - name: "Enable automatic start"
   ansible.builtin.service:
     name: postgresql-{{ pg_version }}
     enabled: yes
 
+# ------------------------------------------------------------- #
+
+# ----------- START POSTGRESQL SERVICE ------------------------ #
+
 - name: "Start the PostgreSQL service"
   ansible.builtin.service:
     name: postgresql-{{ pg_version }}
     state: started
+
+# ------------------------------------------------------------- #
 
 
 
