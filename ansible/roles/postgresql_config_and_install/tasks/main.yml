@@ -88,9 +88,6 @@
     group: postgres
     mode: '0700'
 
-- name: "Rsync old log folder into the new one"
-  ansible.builtin.command: rsync -av /opt/postgresql/data/log /opt/postgresql/logs/pg_logs
-
 # ----------- UPLOAD postgresql.conf FILE --------------------- #
 
 - name: "Upload postgresql.conf config file from template"
@@ -100,6 +97,29 @@
     owner: postgres
     group: postgres
     mode: '0644'
+
+# ------------------------------------------------------------- #
+
+# ------------ CONFIGURE WAL ON DESIGNATED LVM ---------------- #
+
+- name: Ensure WAL target directory exists
+  ansible.builtin.file:
+    path: /opt/postgresql/wal
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+
+- name: "Move the files from pg_wal into dedicated WAL LVM"
+  ansible.builtin.command: mv /opt/postgresql/data/pg_wal /opt/postgresql/wal/
+  args:
+    creates: /opt/postgresql/wal
+
+- name: "Create symlink for pg_wal"
+  ansible.builtin.file:
+    src: /opt/postgresql/wal
+    dest: /opt/postgresql/data/pg_wal
+    state: link
 
 # ------------------------------------------------------------- #
 
