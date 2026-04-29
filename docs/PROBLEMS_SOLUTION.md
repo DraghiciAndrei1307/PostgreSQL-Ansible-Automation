@@ -149,3 +149,50 @@ to explain the solution.
 
 Try to solve similar boot problems. 
 
+
+## Unit postgresql-14.service has a bad unit file setting.
+
+### Context 
+
+Date: 29.04.2026
+
+Yesterday I was trying to change the `default location` of the `PGDATA` by following these steps: 
+https://fitodic.github.io/how-to-change-postgresql-data-directory-on-linux.
+
+The interesting situation came when I was trying to change the `systemd` configuration for the `postgresql-14.service`, 
+by creating a configuration file (.conf) under the `/etc/systemd/system/postgresql-14.service.d/` path.  
+
+The file I created had a bad configuration which resulted in the following problem: 
+`Unit postgresql-14.service has a bad unit file setting.` which means that the `systemd` cannot start the 
+`postgresql-14.service` using the updated configurations of the service unit file.
+
+To have a better understanding of the situation, this is the output of the 
+`sudo systemctl status postgresql-14.service`:
+
+```commandline
+[student@localhost ~]$ sudo systemctl status postgresql-14
+Warning: The unit file, source configuration file or drop-ins of postgresql-14.service changed on disk. Run 'systemctl daemon-reload' to reload units.
+○ postgresql-14.service - PostgreSQL 14 database server
+     Loaded: bad-setting (Reason: Unit postgresql-14.service has a bad unit file setting.)
+    Drop-In: /etc/systemd/system/postgresql-14.service.d
+             └─postgresql-service.conf
+     Active: inactive (dead)
+       Docs: https://www.postgresql.org/docs/14/static/
+             https://www.postgresql.org/docs/14/static/
+```
+
+In order to solve this problem, fix the `.conf` file from the `/etc/systemd/system/postgresql-14.service.d/` path and 
+run these commands (): 
+
+```commandline
+[student@localhost postgresql-14.service.d]$ sudo systemctl daemon-reexec
+[student@localhost postgresql-14.service.d]$ sudo systemctl daemon-reload
+```
+
+`systemctl daemon-reload`:
+- reloads the unit files of the systemd(service, socket, etc.)
+- re-reads the `/etc/systemd/system`, `/usr/lib/systemd/system/` and all the `.d` directories 
+
+`systemctl daemon-reexec`
+- restarts the systemd process (PID 1), but keeps the running services active
+- does not stop the system
