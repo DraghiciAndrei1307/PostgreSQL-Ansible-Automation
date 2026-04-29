@@ -102,6 +102,7 @@
 - name: "Create /opt/postgresql/logs/pg_log folder"
   ansible.builtin.file:
     path: /opt/postgresql/logs/pg_log
+    state: directory
     owner: postgres
     group: postgres
     mode: '0700'
