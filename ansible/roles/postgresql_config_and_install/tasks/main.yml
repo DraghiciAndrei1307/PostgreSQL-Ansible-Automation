@@ -7,16 +7,7 @@
 
 # ------------------------------------------------------------- #
 
-# ---------------- INITIALIZE DATABASE ------------------------ #
-
-- name: "Initialize the database"
-  ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/postgresql-{{ pg_version }}-setup initdb"
-  args:
-    creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
-
-# ------------------------------------------------------------- #
-
-# ---------------- CONFIGURE NEW PGDATA ----------------------- #
+# ---------------- CONFIGURE PGDATA --------------------------- #
 
 - name: Ensure /opt is accessible
   ansible.builtin.file:
@@ -42,19 +33,12 @@
 
 # ------------------------------------------------------------- #
 
-# ---------------- RSYNC DATA FROM OLD TO NEW PGDATA ---------- #
+# ---------------- INITIALIZE DATABASE ------------------------ #
 
-- name: "Rsync the data from old to new location"
-  ansible.builtin.command: rsync -av /var/lib/pgsql/{{ pg_version }}/data/ /opt/postgresql/data
-
-# ------------------------------------------------------------- #
-
-# ---------------- REMOVE THE OLD PGDATA ---------------------- #
-
-- name: Recursively remove /var/lib/pgsql
-  ansible.builtin.file:
-    path: /var/lib/pgsql/{{ pg_version }}
-    state: absent
+- name: "Initialize the database"
+  ansible.builtin.command: "/usr/pgsql-{{ pg_version }}/bin/initdb -D /opt/postgresql/data"
+  args:
+    creates: /opt/postgresql/data/PG_VERSION
 
 # ------------------------------------------------------------- #
 
