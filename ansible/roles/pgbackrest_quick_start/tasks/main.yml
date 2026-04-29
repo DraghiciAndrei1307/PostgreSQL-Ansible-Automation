@@ -81,7 +81,6 @@
     check
   register: check_pgbackrest_config
 
-
 - name: "Print pgbackrest configuration"
   ansible.builtin.debug:
     var: check_pgbackrest_config.stdout
