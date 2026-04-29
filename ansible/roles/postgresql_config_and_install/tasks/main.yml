@@ -53,7 +53,7 @@
 
 - name: Recursively remove /var/lib/pgsql
   ansible.builtin.file:
-    path: /var/lib/pgsql
+    path: /var/lib/pgsql/{{ pg_version }}
     state: absent
 
 # ------------------------------------------------------------- #
