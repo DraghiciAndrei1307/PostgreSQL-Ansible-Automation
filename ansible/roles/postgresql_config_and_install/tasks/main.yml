@@ -8,20 +8,37 @@
   args:
     creates: /var/lib/pgsql/{{ pg_version }}/data/PG_VERSION
 
-- name: "Enable automatic start"
-  ansible.builtin.service:
-    name: postgresql-{{ pg_version }}
-    enabled: yes
+#- name: "Start the PostgreSQL service"
+#  ansible.builtin.service:
+#    name: postgresql-{{ pg_version }}
+#    state: started
+#
+#- name: "Start the PostgreSQL service"
+#  ansible.builtin.service:
+#    name: postgresql-{{ pg_version }}
+#    state: stopped
 
-- name: "Start the PostgreSQL service"
-  ansible.builtin.service:
-    name: postgresql-{{ pg_version }}
-    state: started
+- name: Ensure /opt is accessible
+  ansible.builtin.file:
+    path: /opt
+    mode: '0755'
 
-- name: "Start the PostgreSQL service"
-  ansible.builtin.service:
-    name: postgresql-{{ pg_version }}
-    state: stopped
+- name: Ensure /opt/postgresql is accessible
+  ansible.builtin.file:
+    path: /opt/postgresql
+    mode: '0755'
+
+- name: Ensure ownership recursively
+  ansible.builtin.file:
+    path: /opt/postgresql
+    owner: postgres
+    group: postgres
+    recurse: yes
+
+- name: Set Strict permissions on PGDATA
+  ansible.builtin.file:
+    path: /opt/postgresql/data
+    mode: '0700'
 
 - name: "Rsync the data from old to new location"
   ansible.builtin.command: rsync -av /var/lib/pgsql/{{ pg_version }}/data/ /opt/postgresql/data
@@ -58,6 +75,11 @@
     owner: postgres
     group: postgres
     mode: '0644'
+
+- name: "Enable automatic start"
+  ansible.builtin.service:
+    name: postgresql-{{ pg_version }}
+    enabled: yes
 
 - name: "Start the PostgreSQL service"
   ansible.builtin.service:
