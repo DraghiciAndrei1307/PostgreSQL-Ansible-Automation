@@ -66,20 +66,15 @@
 
 # ----------- APPLY SAME SELINUX CONTEXT TO THE NEW PGDATA ---- #
 
-- name: "Set SELINUX on permissive mode"
-  ansible.posix.selinux:
-    policy: targeted
-    state: permissive
-
-- name: "Apply same context to the new data location"
-  ansible.builtin.shell: | 
-    semanage fcontext --add --equal /var/lib/pgsql /opt/postgresql
-    restorecon -rv /opt/postgresql
-
-- name: "Set SELINUX on permissive mode"
+- name: "Set SELINUX on enforcing mode"
   ansible.posix.selinux:
     policy: targeted
     state: enforcing
+
+- name: "Apply same context to the new data location"
+  ansible.builtin.shell: | 
+    semanage fcontext -a -t postgresql_db_t "/opt/postgresql(/.*)?"
+    restorecon -Rv /opt/postgresql
 
 # ------------------------------------------------------------- #
 
