@@ -63,3 +63,28 @@
     disable_gpg_check: yes
 
 # ------------------------------------------------------------- #
+
+# ---------------- INSTALL EPEL REPO -------------------------- #
+
+# In order to install libssh2 package (needed by pgBackRest), I
+# followed this topic:
+# https://support.yumaworks.com/support/solutions/articles/1000288702-i-can-t-find-libssh2-in-red-hat-and-centos-stream
+
+# Here it says that you need EPEL enabled in order to install
+# libssh2, because libssh2 is no loger available on RHEL 8 and above
+# versions.
+
+- name: "Install EPEL repository (RHEL 9)"
+  block:
+    - name: "Download and install EPEL release RPM"
+      ansible.builtin.dnf:
+        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+        state: present
+        disable_gpg_check: yes
+
+    - name: "Import EPEL GPG key"
+      ansible.builtin.rpm_key:
+        key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"
+        state: present
+
+# ------------------------------------------------------------- #
