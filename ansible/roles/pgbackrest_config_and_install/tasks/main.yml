@@ -83,6 +83,6 @@
 
 - name: "Print pgBackRest version"
   ansible.builtin.debug:
-    msg: version_output.stdout
+    var: version_output.stdout
 
 # ------------------------------------------------------------- #
