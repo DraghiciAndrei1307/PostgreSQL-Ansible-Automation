@@ -43,6 +43,11 @@
 - name: "Rsync the data from old to new location"
   ansible.builtin.command: rsync -av /var/lib/pgsql/{{ pg_version }}/data/ /opt/postgresql/data
 
+- name: Recursively remove /var/lib/pgsql
+  ansible.builtin.file:
+    path: /var/lib/pgsql
+    state: absent
+
 - name: "Create postgresql-14.service.d folder"
   ansible.builtin.file:
     path: /etc/systemd/system/postgresql-{{ pg_version }}.service.d

@@ -16,13 +16,18 @@
 
 # CONFIGURE THE LOGGING - if you want other path than the default one
 
+- name: Ensure /opt/postgresql/logs strict permissions
+  ansible.builtin.file:
+    path: /opt/postgresql/logs
+    mode: '0700'
+
 - name: "Create custom path for logging"
   ansible.builtin.file:
-    path: /var/lib/pgsql/{{ pg_version }}/pgbackrest_logs
+    path: /opt/postgresql/logs/pgbackrest_logs
     state: directory
     owner: postgres
     group: postgres
-    mode: '0640'
+    mode: '0700'
 
 # ------------------------------------------------------------- #
 
@@ -31,18 +36,23 @@
 - name: "Configure log-path using the environment"
   ansible.builtin.command: >
     sudo -u postgres bash -c ' \
-         export PGBACKREST_LOG_PATH=/var/lib/pgsql/{{ pg_version }}/pgbackrest_logs && \
+         export PGBACKREST_LOG_PATH=/opt/postgresql/logs/pgbackrest_logs && \
          pgbackrest --log-level-console=error help backup log-path'
     
 # ------------------------------------------------------------- #
 
 # ---------------- CONFIGURE pgBackRest REPO ------------------ #
 
+- name: Set strict access permissions for /opt/postgresql/backups
+  ansible.builtin.file:
+    path: /opt/postgresql/backups
+    mode: '0700'
+
 # CONFIGURE THE PGBACKREST REPOSITORY
 
 - name: "Create the pgBackRest repository"
   ansible.builtin.file:
-    path: /var/lib/pgbackrest
+    path: /opt/postgresql/backups/pgbackrest
     state: directory
     owner: postgres
     group: postgres
