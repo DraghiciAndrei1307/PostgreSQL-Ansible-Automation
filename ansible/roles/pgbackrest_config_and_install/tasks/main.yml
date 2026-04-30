@@ -65,13 +65,13 @@
 # sudo chmod 640 /etc/pgbackrest/pgbackrest.conf.j2
 # sudo chown postgres:postgres /etc/pgbackrest/pgbackrest.conf.j2
 
-- name: "Configure PostgreSQL Cluster Stanza"
-  ansible.builtin.template:
-    src: pgbackrest.conf.j2
-    dest: /etc/pgbackrest/pgbackrest.conf
+- name: "Create pgbackrest.conf.j2 file"
+  ansible.builtin.file:
+    path: /etc/pgbackrest/pgbackrest.conf.j2
+    state: touch
+    mode: '0640'
     owner: postgres
     group: postgres
-    mode: '0640'
 
 # ------------------------------------------------------------- #
 
