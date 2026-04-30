@@ -109,13 +109,13 @@
 
 - name: "Sync pg_wal contents to LVM"
   ansible.builtin.command: cp -a /opt/postgresql/data/pg_wal/. /opt/postgresql/wal/
-  when: pg_wal_stat.stat.isdir is defined and pg_wal_stat.stat.isdir and not pg_wal_stat.stat.islink
+  when: pg_wal_stat.stat.isdir is defined and pg_wal_stat.stat.isdir and not pg_wal_stat.stat.islnk
 
 - name: "Remove original pg_wal directory"
   ansible.builtin.file:
     path: /opt/postgresql/data/pg_wal
     state: absent
-  when: pg_wal_stat.stat.isdir is defined and pg_wal_stat.stat.isdir and not pg_wal_stat.stat.islink
+  when: pg_wal_stat.stat.isdir is defined and pg_wal_stat.stat.isdir and not pg_wal_stat.stat.islnk
 
 - name: "Create symlink for pg_wal"
   ansible.builtin.file:
