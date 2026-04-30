@@ -102,18 +102,20 @@
 
 # ------------ CONFIGURE WAL ON DESIGNATED LVM ---------------- #
 
-- name: Ensure WAL target directory exists
-  ansible.builtin.file:
-    path: /opt/postgresql/wal
-    state: directory
-    owner: postgres
-    group: postgres
-    mode: '0700'
+- name: Check if pg_wal is already a symlink
+  ansible.builtin.stat:
+    path: /opt/postgresql/data/pg_wal
+  register: pg_wal_stat
 
-- name: "Move the files from pg_wal into dedicated WAL LVM"
-  ansible.builtin.command: mv /opt/postgresql/data/pg_wal /opt/postgresql/wal/
-  args:
-    creates: /opt/postgresql/wal
+- name: "Sync pg_wal contents to LVM"
+  ansible.builtin.command: cp -a /opt/postgresql/data/pg_wal/. /opt/postgresql/wal/
+  when: pg_wal_stat.stat.isdir is defined and pg_wal_stat.stat.isdir and not pg_wal_stat.stat.islink
+
+- name: "Remove original pg_wal directory"
+  ansible.builtin.file:
+    path: /opt/postgresql/data/pg_wal
+    state: absent
+  when: pg_wal_stat.stat.isdir is defined and pg_wal_stat.stat.isdir and not pg_wal_stat.stat.islink
 
 - name: "Create symlink for pg_wal"
   ansible.builtin.file:
