@@ -67,7 +67,7 @@
     msg: "SUCCESS: The data, logs, wal and backups LVMs already exist."
   when:
     - number_of_non_existing_lvms is defined
-    - number_of_non_existing_lvms == 0
+    - number_of_non_existing_lvms | int == 0
 
 - name: "Debug the fact that NOT ALL LVMs already exist"
   ansible.builtin.debug:
@@ -76,8 +76,8 @@
       - "TO DO: Please check which LVMs are missing and proceed with caution!"
   when:
     - number_of_non_existing_lvms is defined
-    - "{{ postgresql_lvms | length | int != number_of_non_existing_lvms }}"
-    - number_of_non_existing_lvms != 0
+    - postgresql_lvms | length | int != number_of_non_existing_lvms | int
+    - number_of_non_existing_lvms | int != 0
 
 # IF THERE ARE NO LVMs, BUT NEW EMPTY DISKS:
 # 1) Create the LVMs
@@ -87,7 +87,7 @@
 - name: "Create LVMs if they do not exist"
   when:
     - number_of_non_existing_lvms is defined
-    - "{{ postgresql_lvms | length | int == number_of_non_existing_lvms }}"
+    - postgresql_lvms | length | int == number_of_non_existing_lvms | int
   block:
     - name: "1.1) Get the output of the vgdisplay"
       ansible.builtin.command: vgdisplay vg_postgres
