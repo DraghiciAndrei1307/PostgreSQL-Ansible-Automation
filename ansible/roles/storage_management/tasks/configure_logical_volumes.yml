@@ -32,6 +32,15 @@
     var: lvs_output.stdout_lines[2:]
   when: lvs_output is defined
 
+# If we do not initialize the 'existing_lvms' list,
+# if the 'lvs_output.stdout_lines[2:]' list is empty,
+# then the 'Create list with existing non-standard LVMs'
+# will not execute, and we will have existing_lvms undefined
+
+- name: "Initialize 'existing_lvms' list"
+  ansible.builtin.set_fact:
+    existing_lvms: []
+
 - name: "Create list with existing non-standard LVMs"
   ansible.builtin.set_fact:
     existing_lvms: "{{ existing_lvms | default([]) + [
