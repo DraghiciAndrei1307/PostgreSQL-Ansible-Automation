@@ -8,5 +8,5 @@
   tasks:
     - name: "Test the config of the LVMs"
       ansible.builtin.import_role:
-        name: storage_management
+        name: ../../roles/storage_management
         tasks_from: configure_logical_volumes
