@@ -43,7 +43,7 @@
 
 - name: "Check if the 'postgresql_lvms' and 'existing_lvms' are the same"
   ansible.builtin.set_fact:
-    lvms_exist: "{{ existing_lvms | difference(postgresql_lvms) | len == 0 }}"
+    lvms_exist: "{{ existing_lvms | difference(postgresql_lvms) | length == 0 }}"
 
 - name: "Debug the 'lvm_exist' variable"
   ansible.builtin.debug:
