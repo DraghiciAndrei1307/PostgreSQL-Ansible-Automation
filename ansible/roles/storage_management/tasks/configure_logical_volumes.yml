@@ -47,15 +47,15 @@
 
 - name: "Check if the 'postgresql_lvms' and 'existing_lvms' are the same"
   ansible.builtin.set_fact:
-    number_of_existing_lvms: "{{ postgresql_lvms | difference(existing_lvms) | length | int }}"
+    number_of_non_existing_lvms: "{{ postgresql_lvms | difference(existing_lvms) | length | int }}"
   when:
     - existing_lvms is defined
     - postgresql_lvms is defined
 
-- name: "Debug the 'number_of_existing_lvms' variable"
+- name: "Debug the 'number_of_non_existing_lvms' variable"
   ansible.builtin.debug:
-    var: number_of_existing_lvms
-  when: number_of_existing_lvms is defined
+    var: number_of_non_existing_lvms
+  when: number_of_non_existing_lvms is defined
 
 # IF THERE ARE ALREADY LVMS
 # The VG should already have the size increased (need to check)
@@ -66,8 +66,8 @@
   ansible.builtin.debug:
     msg: "SUCCESS: The data, logs, wal and backups LVMs already exist."
   when:
-    - number_of_existing_lvms is defined
-    - "{{ postgresql_lvms | length | int == number_of_existing_lvms }}"
+    - number_of_non_existing_lvms is defined
+    - number_of_non_existing_lvms == 0
 
 - name: "Debug the fact that NOT ALL LVMs already exist"
   ansible.builtin.debug:
@@ -75,9 +75,9 @@
       - "ERROR: Some of the data, logs, wal and backups LVMs DO NOT exist. "
       - "TO DO: Please check which LVMs are missing and proceed with caution!"
   when:
-    - number_of_existing_lvms is defined
-    - "{{ postgresql_lvms | length | int != number_of_existing_lvms }}"
-    - number_of_existing_lvms != 0
+    - number_of_non_existing_lvms is defined
+    - "{{ postgresql_lvms | length | int != number_of_non_existing_lvms }}"
+    - number_of_non_existing_lvms != 0
 
 # IF THERE ARE NO LVMs, BUT NEW EMPTY DISKS:
 # 1) Create the LVMs
@@ -86,8 +86,8 @@
 
 - name: "Create LVMs if they do not exist"
   when:
-    - number_of_existing_lvms is defined
-    - number_of_existing_lvms == 0
+    - number_of_non_existing_lvms is defined
+    - "{{ postgresql_lvms | length | int == number_of_non_existing_lvms }}"
   block:
     - name: "1.1) Get the output of the vgdisplay"
       ansible.builtin.command: vgdisplay vg_postgres
