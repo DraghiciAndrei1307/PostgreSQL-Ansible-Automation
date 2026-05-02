@@ -28,7 +28,18 @@
   ansible.builtin.debug:
     var: lvs_output.stdout_lines[2:]
 
+- name: "Create list with existing non-standard LVMs"
+  ansible.builtin.set_fact:
+    existing_lvms: |-
+      [
+      {% for line in lvs_output.stdout_lines[2:]%}
+        {{ line | split[1] }}
+      {% endfor %}
+      ]
 
+- name: "Debug the 'existing_lvms' list"
+  ansible.builtin.debug:
+    var: existing_lvms
 
 
 # IF THERE ARE ALREADY LVMS
