@@ -27,6 +27,7 @@
 - name: "Debug the 'lvs_output' variable"
   ansible.builtin.debug:
     var: lvs_output.stdout_lines[2:]
+  when: lvs_output is defined
 
 - name: "Create list with existing non-standard LVMs"
   ansible.builtin.set_fact:
@@ -40,14 +41,19 @@
 - name: "Debug the 'existing_lvms' list"
   ansible.builtin.debug:
     var: existing_lvms
+  when: existing_lvms is defined
 
 - name: "Check if the 'postgresql_lvms' and 'existing_lvms' are the same"
   ansible.builtin.set_fact:
     lvms_exist: "{{ existing_lvms | difference(postgresql_lvms) | length == 0 }}"
+  when:
+    - existing_lvms is defined
+    - postgresql_lvms is defined
 
 - name: "Debug the 'lvm_exist' variable"
   ansible.builtin.debug:
     var: lvms_exist
+  when: lvms_exist is defined
 
 
 # IF THERE ARE ALREADY LVMS
