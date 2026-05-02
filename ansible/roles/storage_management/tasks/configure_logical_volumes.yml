@@ -45,8 +45,6 @@
     var: existing_lvms
   when: existing_lvms is defined
 
-- name: "Create fact with the LVMs that are missing"
-
 - name: "Check if the 'postgresql_lvms' and 'existing_lvms' are the same"
   ansible.builtin.set_fact:
     number_of_existing_lvms: "{{ postgresql_lvms | difference(existing_lvms) | length }}"
