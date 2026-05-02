@@ -1,6 +1,6 @@
 ---
 - name: Storage Auto-Detect
-  hosts: postgresql-node1
+  hosts: test
   gather_facts: true
   become: true
   tasks:
