@@ -26,7 +26,9 @@
 
 - name: "Debug the 'lvs_output' variable"
   ansible.builtin.debug:
-    var: lvs_output
+    var: {% lvs_output.stdout_lines[2:] %}
+
+
 
 
 # IF THERE ARE ALREADY LVMS
