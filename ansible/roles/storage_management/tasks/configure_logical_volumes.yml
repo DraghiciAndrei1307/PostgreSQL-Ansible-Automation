@@ -30,12 +30,13 @@
 
 - name: "Create list with existing non-standard LVMs"
   ansible.builtin.set_fact:
-    existing_lvms: |-
-      [
-      {% for line in lvs_output.stdout_lines[2:]%}
-        {{ line | split[1] }}
-      {% endfor %}
-      ]
+    existing_lvms: >-
+      {{ lvs_output.stdout_lines[2:] 
+      | map('split')
+      | map('nth', 1)
+      | list
+      }}
+
 
 - name: "Debug the 'existing_lvms' list"
   ansible.builtin.debug:
