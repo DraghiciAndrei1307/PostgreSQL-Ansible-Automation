@@ -47,7 +47,7 @@
 
 - name: "Check if the 'postgresql_lvms' and 'existing_lvms' are the same"
   ansible.builtin.set_fact:
-    number_of_existing_lvms: "{{ postgresql_lvms | difference(existing_lvms) | length }}"
+    number_of_existing_lvms: "{{ postgresql_lvms | difference(existing_lvms) | length | int }}"
   when:
     - existing_lvms is defined
     - postgresql_lvms is defined
@@ -67,7 +67,7 @@
     msg: "SUCCESS: The data, logs, wal and backups LVMs already exist."
   when:
     - number_of_existing_lvms is defined
-    - "{ postgresql_lvms | length == number_of_existing_lvms}"
+    - "{{ postgresql_lvms | length | int == number_of_existing_lvms }}"
 
 - name: "Debug the fact that NOT ALL LVMs already exist"
   ansible.builtin.debug:
@@ -76,7 +76,7 @@
       - "TO DO: Please check which LVMs are missing and proceed with caution!"
   when:
     - number_of_existing_lvms is defined
-    - "{ postgresql_lvms | length != number_of_existing_lvms}"
+    - "{{ postgresql_lvms | length | int != number_of_existing_lvms }}"
     - number_of_existing_lvms != 0
 
 # IF THERE ARE NO LVMs, BUT NEW EMPTY DISKS:
