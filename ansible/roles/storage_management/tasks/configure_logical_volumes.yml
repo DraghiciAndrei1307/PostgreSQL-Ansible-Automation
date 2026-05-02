@@ -26,7 +26,7 @@
 
 - name: "Debug the 'lvs_output' variable"
   ansible.builtin.debug:
-    var: {% lvs_output.stdout_lines[2:] %}
+    var: lvs_output.stdout_lines[2:]
 
 
 
