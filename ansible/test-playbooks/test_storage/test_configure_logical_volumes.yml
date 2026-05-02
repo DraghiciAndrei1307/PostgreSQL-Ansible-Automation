@@ -4,7 +4,7 @@
   gather_facts: no
   become: yes
   vars_files:
-    - ../../ansible/group_vars/vault.yml
+    - ../../group_vars/vault.yml
   tasks:
     - name: "Test the config of the LVMs"
       ansible.builtin.import_role:
