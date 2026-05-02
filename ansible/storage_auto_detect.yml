@@ -3,6 +3,8 @@
   hosts: test
   gather_facts: true
   become: true
+  vars_files:
+    - group_vars/vault.yml
   tasks:
     - name: Storage Auto-Detect
       ansible.builtin.import_role:
