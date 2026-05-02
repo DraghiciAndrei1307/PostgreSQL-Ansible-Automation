@@ -31,7 +31,7 @@
 - name: "Create list with existing non-standard LVMs"
   ansible.builtin.set_fact:
     existing_lvms: "{{ existing_lvms | default([]) + [
-      item.split()[1]
+      item.split()[0]
     ] }}"
   loop: "{{ lvs_output.stdout_lines[2:] }}"
   when: lvs_output is defined
