@@ -1,0 +1,12 @@
+---
+- name: "Test the config of the LVMs"
+  hosts: test
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Test the config of the LVMs"
+      ansible.builtin.import_role:
+        name: storage_management
+        tasks_from: configure_logical_volumes
