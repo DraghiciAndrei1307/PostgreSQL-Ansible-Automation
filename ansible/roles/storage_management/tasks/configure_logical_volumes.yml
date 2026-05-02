@@ -1,4 +1,7 @@
-# -------------------- CREATE LOGICAL VOLUMES --------------- #
+# -------------------- CONFIGURE LOGICAL VOLUMES --------------- #
+
+# DOCS:
+# https://docs.ansible.com/projects/ansible/latest/collections/ansible/posix/mount_module.html
 
 # DESCRIPTION:
 # Calculate the space needed for each LVM:
@@ -37,128 +40,130 @@
   loop: "{{ lvs_output.stdout_lines[2:] }}"
   when: lvs_output is defined
 
-
 - name: "Debug the 'existing_lvms' list"
   ansible.builtin.debug:
     var: existing_lvms
   when: existing_lvms is defined
 
+- name: "Create fact with the LVMs that are missing"
+
 - name: "Check if the 'postgresql_lvms' and 'existing_lvms' are the same"
   ansible.builtin.set_fact:
-    lvms_exist: "{{ existing_lvms | difference(postgresql_lvms) | length == 0 }}"
+    number_of_existing_lvms: "{{ postgresql_lvms | difference(existing_lvms) | length }}"
   when:
     - existing_lvms is defined
     - postgresql_lvms is defined
 
-- name: "Debug the 'lvm_exist' variable"
+- name: "Debug the 'number_of_existing_lvms' variable"
   ansible.builtin.debug:
-    var: lvms_exist
-  when: lvms_exist is defined
-
+    var: number_of_existing_lvms
+  when: number_of_existing_lvms is defined
 
 # IF THERE ARE ALREADY LVMS
+# The VG should already have the size increased (need to check)
+# We do not extend/shrink the LVMs here.
+# The extend/shrink should be separate procedure(s).
 
-# IF THERE ARE NO LVMs
+- name: "Debug the fact that ALL LVMs already exist"
+  ansible.builtin.debug:
+    msg: "SUCCESS: The data, logs, wal and backups LVMs already exist."
+  when:
+    - number_of_existing_lvms is defined
+    - "{ postgresql_lvms | length == number_of_existing_lvms}"
 
-#- name: Get the output of the vgdisplay
-#  ansible.builtin.command: vgdisplay vg_postgres
-#  register: vgdisplay_output
+- name: "Debug the fact that NOT ALL LVMs already exist"
+  ansible.builtin.debug:
+    msg:
+      - "ERROR: Some of the data, logs, wal and backups LVMs DO NOT exist. "
+      - "TO DO: Please check which LVMs are missing and proceed with caution!"
+  when:
+    - number_of_existing_lvms is defined
+    - "{ postgresql_lvms | length != number_of_existing_lvms}"
+    - number_of_existing_lvms != 0
 
-#- name: Debug 'vgdisplay_output' variable output
-#  ansible.builtin.debug:
-#    var: vgdisplay_output
+# IF THERE ARE NO LVMs, BUT NEW EMPTY DISKS:
+# 1) Create the LVMs
+# 2) Create XFS file systems on LVMs
+# 3) Mount the File Systems
 
-#- name: Set fact that contains Total PE
-#  ansible.builtin.set_fact:
-#    total_PE: '{{ (result[0] | split)[2] }}'
-#  vars:
-#    search_string: 'Total PE'
-#    result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
-#  when: vgdisplay_output.rc == 0
-#
-#- name: Set fact that contains Free PE
-#  ansible.builtin.set_fact:
-#    free_PE: '{{ (result[0] | split)[4] }}'
-#  vars:
-#    search_string: 'Free  PE / Size'
-#    result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
-#  when: vgdisplay_output.rc == 0
+- name: "Create LVMs if they do not exist"
+  when:
+    - number_of_existing_lvms is defined
+    - number_of_existing_lvms == 0
+  block:
+    - name: "1.1) Get the output of the vgdisplay"
+      ansible.builtin.command: vgdisplay vg_postgres
+      register: vgdisplay_output
 
-# We will use the Free PE later when we will develop the extend LVM logic
-# For now, we will divide the total free space into 8 LVMS: 4 LVMS and 4 snapshots for the LVMs
+    - name: "1.2) Set fact that contains Total PE"
+      ansible.builtin.set_fact:
+        total_PE: '{{ (result[0] | split)[2] }}'
+      vars:
+        search_string: 'Total PE'
+        result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
+      when: vgdisplay_output.rc == 0
 
-#- name: Debug Total PE and Free PE
-#  ansible.builtin.debug:
-#    msg:
-#      - "Total PE: {{ total_PE }}"
-#      - "Free PE: {{ free_PE }}"
-#  when: vgdisplay_output.rc == 0
-#
-#- name: Calculate the size for one LVM (the PE approach)
-#  ansible.builtin.set_fact:
-#    lvm_size_mb: "{{ (free_PE | int * 4) // 8 }}"
-#  when: vgdisplay_output.rc == 0
-#
-#- name: Debug LVM PE size
-#  ansible.builtin.debug:
-#    msg:
-#      - "The LVM size is: {{ lvm_size_mb }}"
-#  when: vgdisplay_output.rc == 0
-#
-#
-#
-#- name: Create Logical Volumes (LVMs)
-#  community.general.lvol:
-#    vg: vg_postgres
-#    lv: "{{ item }}"
-#    size: "{{ lvm_size_mb }}M"
-#    state: present
-#  loop: '{{ postgresql_lvms }}'
-#  when: vgdisplay_output.rc == 0
-#
-## needed checks:
-## if LV exists
-## if already formatted
-## if already mounted
-#
-#- name: Create XFS file systems on the LVMs
-#  ansible.builtin.command: "mkfs.xfs /dev/vg_postgres/{{ item }}"
-#  loop: '{{ postgresql_lvms }}'
-#  when: vgdisplay_output.rc == 0
+    - name: "1.3) Set fact that contains Free PE"
+      ansible.builtin.set_fact:
+        free_PE: '{{ (result[0] | split)[4] }}'
+      vars:
+        search_string: 'Free  PE / Size'
+        result: "{{ vgdisplay_output.stdout_lines | select('search', search_string) | list }}"
+      when: vgdisplay_output.rc == 0
 
-# ----------------------------------------------------------- #
+    - name: "1.4) Debug Total PE and Free PE"
+      ansible.builtin.debug:
+        msg:
+          - "Total PE: {{ total_PE }}"
+          - "Free PE: {{ free_PE }}"
+      when: vgdisplay_output.rc == 0
 
-# -------------------- MOUNT LVM FS ------------------------- #
+    - name: "1.5) Calculate the size for one LVM (the PE approach)"
+      ansible.builtin.set_fact:
+        lvm_size_mb: "{{ (free_PE | int * 4) // 8 }}"
+      when: vgdisplay_output.rc == 0
 
-# DOCS:
-# https://docs.ansible.com/projects/ansible/latest/collections/ansible/posix/mount_module.html
+    - name: "1.6) Debug LVM PE size"
+      ansible.builtin.debug:
+        msg:
+          - "The LVM size is: {{ lvm_size_mb }}"
+      when: vgdisplay_output.rc == 0
 
-# DESCRIPTION:
-# After we created the LVMs, we have to mount the File Systems
-# contained by the LVMs on a specific location on the main
-# File System.
+    - name: "1.7) Create Logical Volumes (LVMs)"
+      community.general.lvol:
+        vg: vg_postgres
+        lv: "{{ item }}"
+        size: "{{ lvm_size_mb }}M"
+        state: present
+      loop: '{{ postgresql_lvms }}'
+      when: vgdisplay_output.rc == 0
 
-#- name: Create PostgreSQL dir list
-#  ansible.builtin.set_fact:
-#    postgresql_dirs:
-#      - /opt/postgresql/data
-#      - /opt/postgresql/wal
-#      - /opt/postgresql/logs
-#      - /opt/postgresql/backups
-#
-#- name: Create PostgreSQL directories if it does not exist
-#  ansible.builtin.file:
-#    path: '{{ item }}'
-#    state: directory
-#    mode: '0755'
-#  loop: '{{ postgresql_dirs }}'
-#
-#- name: Mount LVM File Systems
-#  ansible.posix.mount:
-#    path: "{{ item.1 }}"
-#    src: "/dev/vg_postgres/{{ item.0 }}"
-#    fstype: xfs
-#    state: mounted
-#  loop: "{{ postgresql_lvms | zip(postgresql_dirs) | list }}"
+    - name: "1.8) Create XFS file systems on the LVMs"
+      ansible.builtin.command: "mkfs.xfs /dev/vg_postgres/{{ item }}"
+      loop: '{{ postgresql_lvms }}'
+      when: vgdisplay_output.rc == 0
+      
+    - name: "1.9) Create PostgreSQL mount dir list"
+      ansible.builtin.set_fact:
+        postgresql_dirs:
+          - /opt/postgresql/data
+          - /opt/postgresql/wal
+          - /opt/postgresql/logs
+          - /opt/postgresql/backups
 
+    - name: "1.10) Create PostgreSQL directories if it does not exist"
+      ansible.builtin.file:
+        path: '{{ item }}'
+        state: directory
+        mode: '0755'
+      loop: '{{ postgresql_dirs }}'
+
+    - name: "1.11) Mount LVM File Systems"
+      ansible.posix.mount:
+        path: "{{ item.1 }}"
+        src: "/dev/vg_postgres/{{ item.0 }}"
+        fstype: xfs
+        state: mounted
+      loop: "{{ postgresql_lvms | zip(postgresql_dirs) | list }}"  
+    
 # ----------------------------------------------------------- #
