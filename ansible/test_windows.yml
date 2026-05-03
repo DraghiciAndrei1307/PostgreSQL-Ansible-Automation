@@ -3,6 +3,6 @@
   hosts: hypervisor
   tasks:
     - name: "Test"
-      ansible.builin.import_role:
+      ansible.builtin.import_role:
         name: host_hypervisor_management
         tasks_from: test
