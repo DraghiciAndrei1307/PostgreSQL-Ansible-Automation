@@ -1,3 +1,6 @@
+# needed to use the following:
+# pip install pywinrm
+
 - name: "List the virtual machines on the Hypervisor Host"
   ansible.windows.win_command: vboxmanage list vms
   register: vms_list
