@@ -130,3 +130,18 @@ $content = Get-Content C:\ProgramData\ssh\administrators_authorized_keys
 ```commandline
 Restart-Service sshd
 ```
+
+MENTION:
+
+Once we established the connection via SSH keys, it is important to restrict the SSH connection using password. To do 
+that, go to `C:\ProgramData\ssh\sshd_config` and make sure you have this line:
+
+```commandline
+PasswordAuthentication no
+```
+
+Then restart the service:
+
+```commandline
+Restart-Service sshd
+```
