@@ -41,6 +41,7 @@ An example of the `inventory` file can be observed below:
 postgresql-node1 ansible_host=xxx.xxx.xxx.xxx
 postgresql-node2 ansible_host=xxx.xxx.xxx.xxx
 postgresql-node3 ansible_host=xxx.xxx.xxx.xxx
+hypervisor ansible_connection=ssh ansible_host=192.168.XXX.XXX ansible_user=<your_windwows_user> ansible_remote_tmp=C:/Users/<your_windwows_user/AppData/Local/Temp/.ansible ansible_shell_type=powershell
 
 [dbs]
 postgresql-node1
