@@ -1,6 +1,7 @@
 ---
 - name: "Test Windows"
   hosts: hypervisor
+  gather_facts: no
   become: yes
   become_user: andrei
   tasks:
