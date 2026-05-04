@@ -6,17 +6,29 @@
   ansible.builtin.debug:
     var: vms_list
 
+- name: "Set new VM info"
+  ansible.builtin.set_fact:
+    vm_data:
+      vm_base: "RedHat-Base"
+      vm_name: "RedHat-Test"
+      base_folder: "D:\\VMs"
+
 - name: Create a new VM using a designated base
-  vars:
-    vm_base: "RedHat-Base"
-    vm_name: "RedHat_Test"
-    base_folder: "D:\\VMs"
   ansible.builtin.win_command: >
-    vboxmanage clonevm {{ vm_base }} --name {{ vm_name }} --basefolder={{ base_folder }} --register
+    vboxmanage clonevm {{ vm_data.vm_base }} --name {{ vm_data.vm_name }} --basefolder={{ vm_data.base_folder }} --register
   args:
-    creates: "{{ base_folder }}{{ vm_name }}"
+    creates: "{{ base_folder }}\\{{ vm_name }}\\{{ vm_name }}.vbox"
   register: clonevm_output
 
 - name: "Debug the 'clonevm_output' variable"
   ansible.builtin.debug:
     var: clonevm_output
+
+- name: "Get the MAC address of the newly created VM"
+  ansible.builtin.win_command: >
+    vboxmanage showvminfo {{ vm_data.vm_name }}
+  register: showvminfo_output
+
+- name: "Debug the 'showvminfo_output' variable"
+  ansible.builtin.debug:
+    var: showvminfo_output
