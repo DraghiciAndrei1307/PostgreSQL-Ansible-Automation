@@ -7,7 +7,7 @@
     var: vms_list
 
 - name: "Create a new VM using a designated base"
-  ansible.builtin.command: vboxmanage clonevm "RedHat-Base" --name "RedHat-Test" --basefolder=D:\VMs\RedHat-Test --register
+  ansible.builtin.shell: "vboxmanage clonevm RedHat-Base --name RedHat-Test --basefolder=D:\VMs\RedHat-Test --register"
   register: clonevm_output
 
 - name: "Debug the 'clonevm_output' variable"
