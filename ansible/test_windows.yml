@@ -47,3 +47,10 @@
       ansible.builtin.debug:
         var: arp_scan_output
 
+    - name: "Get the IP address"
+      ansible.builtin.set_fact:
+        new_vm_ip_address: "{{ ((arp_scan_output.stdout_lines | select('search', hostvars['hypervisor'].formatted_mac_address) | list | first) | split('\t'))[1] }}"
+
+    - name: "Debug the 'new_vm_ip_address' variable"
+      ansible.builtin.debug:
+        var: new_vm_ip_address
