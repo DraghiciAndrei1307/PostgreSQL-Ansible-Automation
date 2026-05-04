@@ -46,3 +46,11 @@
 - name: "Debug the 'mac_address' variable"
   ansible.builtin.debug:
     var: mac_address
+
+- name: "Get the IP address of the newly created VM"
+  ansible.builtin.win_command: arp -a
+  register: arp_output
+
+- name: "Debug the 'arp_output' variable"
+  ansible.builtin.debug:
+    var: arp_output
