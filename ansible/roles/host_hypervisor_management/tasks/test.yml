@@ -10,7 +10,7 @@
   ansible.builtin.set_fact:
     vm_data:
       vm_base: "RedHat-Base"
-      vm_name: "RedHat-Test"
+      vm_name: "RedHat-Test-1"
       base_folder: "D:\\VMs"
 
 - name: Create a new VM using a designated base
