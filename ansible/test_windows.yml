@@ -11,6 +11,7 @@
 - name: "Get the IP address of the newly created VM"
   hosts: localhost
   gather_facts: no
+  become: yes
   tasks:
     # In order to detect the newly created VM, you need to install arp-scan
     # The arp-scan cen be downloaded from the EPEL repo...
