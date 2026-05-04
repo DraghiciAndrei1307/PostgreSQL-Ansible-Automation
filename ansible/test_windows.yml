@@ -7,3 +7,36 @@
       ansible.builtin.import_role:
         name: host_hypervisor_management
         tasks_from: test
+
+- name: "Get the IP address of the newly created VM"
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    # In order to detect the newly created VM, you need to install arp-scan
+    # The arp-scan cen be downloaded from the EPEL repo...
+
+    # REFERENCES for the actions below:
+    # https://oneuptime.com/blog/post/2026-03-04-how-to-enable-the-epel-repository-on-rhel-9/view
+
+    # You need to:
+    # - register the master node:
+    # sudo subscription-manager register --force
+    # sudo subscription-manager attach --auto
+
+    # - enable the codeready-builder:
+    # sudo subscription-manager repos --enable=codeready-builder-for-rhel-9-x86_64-rpms
+
+    # - install EPEL:
+    # sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+    # - install the arp-scan:
+    # sudo dnf install arp-scan -y
+
+    - name: "Get IPs on the localhost"
+      ansible.builtin.command: arp-scan -l
+      register: arp_scan_output
+
+    - name: "Debug the 'arp_scan_output' variable"
+      ansible.builtin.debug:
+        var: arp_scan_output
+
