@@ -18,4 +18,4 @@ Today I am thinking:
 - create the connection between the master node and the windows host 
 (where the VirtualBox hypervisor runs): [CON_WINDOWS_VIA_SSH_KEY.md](../docs/CON_WINDOWS_VIA_SSH_KEY.md)
 
-
+- execute Ansible role which lists the VMs that exist on the Windows host
