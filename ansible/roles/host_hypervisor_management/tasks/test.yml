@@ -1,5 +1,5 @@
 - name: "List the virtual machines on the Hypervisor Host"
-  ansible.builtin.command: vboxmanage list vms
+  ansible.builtin.win_command: vboxmanage list vms
   register: vms_list
 
 - name: "Debug the 'vms_list' variable"
