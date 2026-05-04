@@ -41,7 +41,7 @@
 
 - name: "Get the MAC address"
   ansible.builtin.set_fact:
-    mac_address: {{ showvminfo_output.stdout_lines | select('NIC 1:', search_string) | list }}
+    mac_address: "{{ showvminfo_output.stdout_lines | select('search', 'MAC') | list }}"
 
 - name: "Debug the 'mac_address' variable"
   ansible.builtin.debug:
