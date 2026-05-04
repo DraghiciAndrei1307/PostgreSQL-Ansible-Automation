@@ -17,12 +17,16 @@
   ansible.builtin.win_command: >
     vboxmanage clonevm {{ vm_data.vm_base }} --name {{ vm_data.vm_name }} --basefolder={{ vm_data.base_folder }} --register
   args:
-    creates: "{{ base_folder }}\\{{ vm_name }}\\{{ vm_name }}.vbox"
+    creates: "{{ vm_data.base_folder }}\\{{ vm_data.vm_name }}\\{{ vm_data.vm_name }}.vbox"
   register: clonevm_output
 
 - name: "Debug the 'clonevm_output' variable"
   ansible.builtin.debug:
     var: clonevm_output
+
+- name: "Start the {{ vm_data.vm_name }} VM"
+  ansible.builtin.win_command: >
+    vboxmanage startvm {{ vm_data.vm_name }}
 
 - name: "Get the MAC address of the newly created VM"
   ansible.builtin.win_command: >
