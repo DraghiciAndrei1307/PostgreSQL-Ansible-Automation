@@ -7,8 +7,14 @@
     var: vms_list
 
 - name: Create a new VM using a designated base
+  vars:
+    vm_base: "RedHat-Base"
+    vm_name: "RedHat_Test"
+    base_folder: "D:\VMs"
   ansible.builtin.win_command: >
-    vboxmanage clonevm "RedHat-Base" --name "RedHat-Test" --basefolder="D:\VMs" --register
+    vboxmanage clonevm {{ vm_base }} --name {{ vm_name }} --basefolder={{ base_folder }} --register
+  args:
+    creates: "{{ base_folder }}{{ vm_name }}"
   register: clonevm_output
 
 - name: "Debug the 'clonevm_output' variable"
