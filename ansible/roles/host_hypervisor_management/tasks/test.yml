@@ -10,7 +10,7 @@
   vars:
     vm_base: "RedHat-Base"
     vm_name: "RedHat_Test"
-    base_folder: "D:\VMs"
+    base_folder: "D:\\VMs"
   ansible.builtin.win_command: >
     vboxmanage clonevm {{ vm_base }} --name {{ vm_name }} --basefolder={{ base_folder }} --register
   args:
