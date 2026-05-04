@@ -28,7 +28,7 @@
   ansible.builtin.win_command: >
     vboxmanage startvm {{ vm_data.vm_name }}
 
-- name: "Get the MAC address of the newly created VM"
+- name: "Get info of the newly created VM"
   ansible.builtin.win_command: >
     vboxmanage showvminfo {{ vm_data.vm_name }}
   register: showvminfo_output
@@ -36,3 +36,11 @@
 - name: "Debug the 'showvminfo_output' variable"
   ansible.builtin.debug:
     var: showvminfo_output
+
+- name: "Get the MAC address"
+  ansible.builtin.set_fact:
+    mac_address: "{{ showvminfo_output.stdout_lines | select('MAC', search_string) | list }}"
+
+- name: "Debug the 'mac_address' variable"
+  ansible.builtin.debug:
+    var: mac_address
