@@ -47,7 +47,7 @@
 
 - name: "Format the MAC address"
   ansible.builtin.set_fact:
-    formatted_mac_address: "{{ mac_address | regex_replace('..(?!$)', '\\0:') | lower }}"
+    formatted_mac_address: "{{ mac_address | regex_replace('([0-9A-Fa-f]{2})(?!$)', '\\1:') | lower }}"
 
 - name: "Debug the 'formatted_mac_address' variable"
   ansible.builtin.debug:
