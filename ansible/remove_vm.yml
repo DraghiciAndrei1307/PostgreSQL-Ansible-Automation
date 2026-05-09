@@ -9,10 +9,10 @@
           vm_name: RedHat-Test-1
 
     - name: "Stop VM"
-      ansible.builtin.win_command: vboxmanage controlvm vm_data.vm_name poweroff
+      ansible.builtin.win_command: "vboxmanage controlvm {{ vm_data.vm_name }} poweroff"
 
     - name: "Unregister VM"
-      ansible.builtin.win_command: vboxmanage unregistervm vm_data.vm_name --delete
+      ansible.builtin.win_command: "vboxmanage unregistervm {{ vm_data.vm_name }} --delete"
 
 - name: "Remove line from inventory"
   hosts: localhost
