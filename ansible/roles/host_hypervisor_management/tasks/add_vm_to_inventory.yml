@@ -47,12 +47,12 @@
   ansible.builtin.debug:
     var: inventory_file_status
 
-- name: "Create the './inventories/slave_nodes_inventories' if does not exist"
+- name: "Create the './inventories/slave_nodes_inventories' path if does not exist"
   when:
     - inventory_file_status is defined
     - not inventory_file_status.stat.exists
   block:
-    - name: "Create the path './inventories' folder if does not exist"
+    - name: "Create the './inventories' folder if does not exist"
       ansible.builtin.file:
         path: ./inventories
         state: directory
@@ -60,7 +60,7 @@
         group: student
         mode: '0755'
 
-    - name: "Create the ./inventories/slave_nodes_inventory"
+    - name: "Create the './inventories/slave_nodes_inventory' file if does not exist"
       ansible.builtin.file:
         path: ./inventories/slave_nodes_inventory
         state: touch
