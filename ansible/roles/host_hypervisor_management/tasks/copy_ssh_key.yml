@@ -1,0 +1,5 @@
+- name: "Set authorized SSH key taken from file"
+  ansible.posix.authorized_key:
+    user: student
+    state: present
+    key: "{{ lookup('file', '/home/student/.ssh/id_rsa.pub') }}"

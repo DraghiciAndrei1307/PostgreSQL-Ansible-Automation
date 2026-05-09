@@ -20,6 +20,18 @@
         name: host_hypervisor_management
         tasks_from: add_vm_to_inventory
 
+- name: "Copy the public SSH key from master to the new slave"
+  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Copy key"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: copy_ssh_key
+
 - name: "Configure the Storage"
   hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
   become: yes

@@ -77,9 +77,3 @@
   ansible.builtin.lineinfile:
     path: ./inventories/slave_nodes_inventory
     line: "{{ hostvars['hypervisor'].vm_data.vm_name }} ansible_host={{ new_vm_ip_address }}"
-
-- name: "Set authorized SSH key taken from file"
-  ansible.posix.authorized_key:
-    user: student
-    state: present
-    key: "{{ lookup('file', '/home/student/.ssh/id_rsa.pub') }}"
