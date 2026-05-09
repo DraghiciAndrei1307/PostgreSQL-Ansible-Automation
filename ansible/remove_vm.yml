@@ -3,8 +3,23 @@
   hosts: hypervisor
   gather_facts: no
   tasks:
+    - name: "Facts of the VM to remove"
+      ansible.builtin.set_fact:
+        vm_data:
+          vm_name: RedHat-Test-1
+
     - name: "Stop VM"
-      ansible.builtin.win_command: vboxmanage controlvm RedHat-Test-1 poweroff
+      ansible.builtin.win_command: vboxmanage controlvm vm_data.vm_name poweroff
 
     - name: "Unregister VM"
-      ansible.builtin.win_command: vboxmanage unregistervm "RedHat-Test-1" --delete
+      ansible.builtin.win_command: vboxmanage unregistervm vm_data.vm_name --delete
+
+- name: "Remove line from inventory"
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: "Remove entry from './inventories/slave_nodes_inventory' file"
+      ansible.builtin.lineinfile:
+        path: ./inventories/slave_nodes_inventory
+        regexp: "hostvars['hypervisor'].vm_data.vm_name"
+        state: absent
