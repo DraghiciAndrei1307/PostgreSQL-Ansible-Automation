@@ -67,7 +67,7 @@
     - name: "Create the './inventories/slave_nodes_inventories' if does not exist"
       when:
         - inventory_file_status is defined
-        - not inventory_file_status.exists
+        - not inventory_file_status.stat.exists
       block:
         - name: "Create the path './inventories' folder if does not exist"
           ansible.builtin.file:
