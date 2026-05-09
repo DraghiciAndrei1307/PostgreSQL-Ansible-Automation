@@ -78,7 +78,7 @@
         - name: "Create the ./inventories/slave_nodes_inventory"
           ansible.builtin.file:
             path: ./inventories/slave_nodes_inventory
-            state: file
+            state: touch
             mode: '0644'
 
     - name: "Add the new ip address to the inventory"
