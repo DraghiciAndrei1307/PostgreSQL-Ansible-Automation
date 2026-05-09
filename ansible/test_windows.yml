@@ -58,7 +58,7 @@
     - name: "Check if the inventory exists"
       ansible.builtin.stat:
         path: ./inventories/slave_nodes_inventory
-        register: inventory_file_status
+      register: inventory_file_status
 
     - name: "Debug the 'inventory_file_status' variable"
       ansible.builtin.debug:
