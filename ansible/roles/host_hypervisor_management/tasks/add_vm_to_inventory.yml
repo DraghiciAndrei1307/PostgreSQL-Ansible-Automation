@@ -1,0 +1,79 @@
+# In order to detect the newly created VM, you need to install arp-scan
+# The arp-scan cen be downloaded from the EPEL repo...
+
+# REFERENCES for the actions below:
+# https://oneuptime.com/blog/post/2026-03-04-how-to-enable-the-epel-repository-on-rhel-9/view
+
+# You need to:
+# - register the master node:
+# sudo subscription-manager register --force
+# sudo subscription-manager attach --auto
+
+# - enable the codeready-builder:
+# sudo subscription-manager repos --enable=codeready-builder-for-rhel-9-x86_64-rpms
+
+# - install EPEL:
+# sudo dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+
+# - install the arp-scan:
+# sudo dnf install arp-scan -y
+
+- name: Pause for 1 minute
+  ansible.builtin.pause:
+    minutes: 1
+
+- name: "Get IPs on the localhost"
+  ansible.builtin.command: arp-scan -l
+  register: arp_scan_output
+
+- name: "Debug the 'arp_scan_output' variable"
+  ansible.builtin.debug:
+    var: arp_scan_output
+
+- name: "Get the IP address"
+  ansible.builtin.set_fact:
+    new_vm_ip_address: "{{ ((arp_scan_output.stdout_lines | select('search', hostvars['hypervisor'].formatted_mac_address) | list | first) | split('\t'))[0] }}"
+
+- name: "Debug the 'new_vm_ip_address' variable"
+  ansible.builtin.debug:
+    var: new_vm_ip_address
+
+- name: "Check if the inventory exists"
+  ansible.builtin.stat:
+    path: ./inventories/slave_nodes_inventory
+  register: inventory_file_status
+
+- name: "Debug the 'inventory_file_status' variable"
+  ansible.builtin.debug:
+    var: inventory_file_status
+
+- name: "Create the './inventories/slave_nodes_inventories' if does not exist"
+  when:
+    - inventory_file_status is defined
+    - not inventory_file_status.stat.exists
+  block:
+    - name: "Create the path './inventories' folder if does not exist"
+      ansible.builtin.file:
+        path: ./inventories
+        state: directory
+        owner: student
+        group: student
+        mode: '0755'
+
+    - name: "Create the ./inventories/slave_nodes_inventory"
+      ansible.builtin.file:
+        path: ./inventories/slave_nodes_inventory
+        state: touch
+        owner: student
+        group: student
+        mode: '0644'
+
+    - name: "Add the first line inside './inventories/slave_nodes_inventory' file"
+      ansible.builtin.lineinfile:
+        path: ./inventories/slave_nodes_inventory
+        line: "[slaves]"
+
+- name: "Add the new ip address to the inventory"
+  ansible.builtin.lineinfile:
+    path: ./inventories/slave_nodes_inventory
+    line: "{{ hostvars['hypervisor'].vm_data.vm_name }} ansible_host={{ new_vm_ip_address }}"

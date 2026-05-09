@@ -1,6 +1,27 @@
 ---
+- name: "Create new VM"
+  hosts: hypervisor
+  gather_facts: no
+  tasks:
+    - name: "Create New VM"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: create_new_vm
+
+- name: "Add the New VM to inventory"
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Add the New VM to inventory"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: add_vm_to_inventory
+
 - name: "Configure the Storage"
-  hosts: test
+  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
   become: yes
   gather_facts: true
   vars_files:
@@ -14,7 +35,7 @@
         tasks_from: storage_device_auto_detect
 
 - name: "Install and Configure PostgreSQL"
-  hosts: test
+  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
   become: yes
   vars_files:
     - group_vars/vault.yml
@@ -46,7 +67,7 @@
     - pgbackrest_build
 
 - name: "Copy the compiled file to the slave nodes"
-  hosts: test
+  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
   become: yes
   vars_files:
     - group_vars/vault.yml
