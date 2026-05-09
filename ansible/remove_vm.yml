@@ -1,0 +1,10 @@
+---
+- name: "Remove VM"
+  hosts: hypervisor
+  gather_facts: no
+  tasks:
+    - name: "Stop VM"
+      ansible.builtin.shell: "vboxmanage controlvm RedHat-Test-1 poweroff"
+
+    - name: "Unregister VM"
+      ansible.builtin.shell: "vboxmanage unregistervm RedHat-Test-1 --delete"
