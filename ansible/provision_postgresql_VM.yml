@@ -8,13 +8,6 @@
         name: host_hypervisor_management
         tasks_from: create_new_vm
 
-    - name: "Add the new VM dynamically (runtime inventory)"
-      ansible.builtin.add_host:
-        name: "{{ vm_data.vm_name }}"
-        groups: new_slaves
-        ansible_host: "{{ new_vm_ip_address }}"
-        ansible_user: student
-
 - name: "Add the New VM to static inventory"
   hosts: localhost
   gather_facts: no
@@ -22,10 +15,17 @@
   vars_files:
     - group_vars/vault.yml
   tasks:
-    - name: "Add the New VM to inventory"
+    - name: "Add the New VM to static inventory"
       ansible.builtin.import_role:
         name: host_hypervisor_management
         tasks_from: add_vm_to_inventory
+
+    - name: "Add the new VM dynamically (runtime inventory)"
+      ansible.builtin.add_host:
+        name: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+        groups: new_slaves
+        ansible_host: "{{ new_vm_ip_address }}"
+        ansible_user: student
 
 - name: "Copy the public SSH key from master to the new slave"
   hosts: new_slaves
