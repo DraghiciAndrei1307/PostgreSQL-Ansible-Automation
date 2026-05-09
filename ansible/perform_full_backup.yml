@@ -1,6 +1,6 @@
 ---
 - name: "Perform full backup"
-  hosts: dbs
+  hosts: slaves
   become: yes
   vars_files:
     - group_vars/vault.yml
