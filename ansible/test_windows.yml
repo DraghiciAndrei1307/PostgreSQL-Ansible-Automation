@@ -1,9 +1,4 @@
 ---
-- name: "New VM data"
-  ansible.builtin.set_fact:
-    new_vm_data:
-      name: "Test"
-
 - name: "Test Windows"
   hosts: hypervisor
   gather_facts: no
@@ -89,4 +84,4 @@
     - name: "Add the new ip address to the inventory"
       ansible.builtin.lineinfile:
         path: ./inventories/slave_nodes_inventory
-        line: "{{ new_vm_data.name}} ansible_host={{ new_vm_ip_address }}"
+        line: "{{ hostvars['hypervisor'].vm_data.vm_name }} ansible_host={{ new_vm_ip_address }}"
