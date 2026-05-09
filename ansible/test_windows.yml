@@ -1,5 +1,4 @@
 ---
-
 - name: "New VM data"
   ansible.builtin.set_fact:
     new_vm_data:
