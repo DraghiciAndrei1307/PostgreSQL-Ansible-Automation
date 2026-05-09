@@ -1,6 +1,6 @@
 ---
 - name: "Stop PostgreSQL service"
-  hosts: dbs
+  hosts: slaves
   vars_files: 
     - group_vars/vault.yml
   vars:
