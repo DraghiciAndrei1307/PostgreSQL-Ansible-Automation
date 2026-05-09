@@ -18,6 +18,8 @@
   hosts: localhost
   gather_facts: no
   become: true
+  vars_files:
+    - group_vars/vault.yml
   tasks:
     - name: "Remove entry from './inventories/slave_nodes_inventory' file"
       ansible.builtin.lineinfile:
