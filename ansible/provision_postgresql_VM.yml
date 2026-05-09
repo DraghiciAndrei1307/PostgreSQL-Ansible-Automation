@@ -8,7 +8,14 @@
         name: host_hypervisor_management
         tasks_from: create_new_vm
 
-- name: "Add the New VM to inventory"
+    - name: "Add the new VM dynamically (runtime inventory)"
+      ansible.builtin.add_host:
+        name: "{{ vm_data.vm_name }}"
+        groups: new_slaves
+        ansible_host: "{{ new_vm_ip_address }}"
+        ansible_user: student
+
+- name: "Add the New VM to static inventory"
   hosts: localhost
   gather_facts: no
   become: yes
@@ -21,7 +28,7 @@
         tasks_from: add_vm_to_inventory
 
 - name: "Copy the public SSH key from master to the new slave"
-  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+  hosts: new_slaves
   gather_facts: no
   become: yes
   vars_files:
@@ -33,7 +40,7 @@
         tasks_from: copy_ssh_key
 
 - name: "Configure the Storage"
-  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+  hosts: new_slaves
   become: yes
   gather_facts: true
   vars_files:
@@ -47,7 +54,7 @@
         tasks_from: storage_device_auto_detect
 
 - name: "Install and Configure PostgreSQL"
-  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+  hosts: new_slaves
   become: yes
   vars_files:
     - group_vars/vault.yml
@@ -79,7 +86,7 @@
     - pgbackrest_build
 
 - name: "Copy the compiled file to the slave nodes"
-  hosts: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+  hosts: new_slaves
   become: yes
   vars_files:
     - group_vars/vault.yml
