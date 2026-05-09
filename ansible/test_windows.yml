@@ -64,24 +64,25 @@
       ansible.builtin.debug:
         var: inventory_file_status
 
-    - name: "Create the './inventories/slave_nodes_inventories' if does not exist"
-      when:
-        - inventory_file_status is defined
-        - not inventory_file_status.stat.exists
-      block:
-        - name: "Create the path './inventories' folder if does not exist"
-          ansible.builtin.file:
-            path: ./inventories
-            state: directory
-            mode: '0755'
-
-        - name: "Create the ./inventories/slave_nodes_inventory"
-          ansible.builtin.file:
-            path: ./inventories/slave_nodes_inventory
-            state: touch
-            mode: '0644'
+#    - name: "Create the './inventories/slave_nodes_inventories' if does not exist"
+#      when:
+#        - inventory_file_status is defined
+#        - not inventory_file_status.stat.exists
+#      block:
+#        - name: "Create the path './inventories' folder if does not exist"
+#          ansible.builtin.file:
+#            path: ./inventories
+#            state: directory
+#            mode: '0755'
+#
+#        - name: "Create the ./inventories/slave_nodes_inventory"
+#          ansible.builtin.file:
+#            path: ./inventories/slave_nodes_inventory
+#            state: touch
+#            mode: '0644'
 
     - name: "Add the new ip address to the inventory"
       ansible.builtin.lineinfile:
         path: ./inventories/slave_nodes_inventory
         line: "{{ hostvars['hypervisor'].vm_data.vm_name }} ansible_host={{ new_vm_ip_address }}"
+        create: yes
