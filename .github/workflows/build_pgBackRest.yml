@@ -35,7 +35,7 @@ jobs:
         with:
           files: |
             pgbackrest.tar.gz
-          tag_name: pgBackRest v2.58.0
+          tag_name: pgBackRest-v2.58.0
           name: Release of 'pgBackRest' v2.58.0
           body: "My release of the pgBackRest build."
 
