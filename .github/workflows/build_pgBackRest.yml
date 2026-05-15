@@ -12,6 +12,7 @@ jobs:
 
       - name: Download version 2.58.0 of pgBackRest to /build path
         run: |
+          dnf install wget
           wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.58.0.tar.gz | tar zx -C /build
       - name: Install build dependencies
         run: | 
