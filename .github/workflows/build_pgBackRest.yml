@@ -21,17 +21,7 @@ jobs:
           dnf install -y epel-release
           dnf install -y --nogpgcheck https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
           dnf -qy module disable postgresql
-          dnf install -y --nogpgcheck \
-          meson \
-          gcc \
-          postgresql14-devel \
-          openssl-devel \ 
-          libxml2-devel \
-          lz4-devel \ 
-          libzstd-devel \
-          bzip2-devel \
-          libyaml-devel \
-          libssh2-devel
+          dnf install -y --nogpgcheck meson gcc postgresql14-devel openssl-devel libxml2-devel lz4-devel libzstd-devel bzip2-devel libyaml-devel libssh2-devel
       - name: Configure and Compile pgBackRest
         run: | 
           meson setup /build/pgbackrest /build/pgbackrest-release-2.58.0
