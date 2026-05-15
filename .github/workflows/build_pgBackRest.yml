@@ -3,6 +3,8 @@ on: workflow_dispatch
 jobs:
   run-build-process:
     runs-on: ubuntu-latest
+    container:
+      image: rockylinux:9
     steps:
       - name: Create build directory
         run: |
@@ -13,8 +15,7 @@ jobs:
           wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.58.0.tar.gz | tar zx -C /build
       - name: Install build dependencies
         run: | 
-          sudo apt-get install python3-distutils meson gcc libpq-dev libssl-dev libxml2-dev \
-          pkg-config liblz4-dev libzstd-dev libbz2-dev libz-dev libyaml-dev libssh2-1-dev
+          sudo dnf install meson gcc postgresql14-devel openssl-devel libxml2-devel lz4-devel libzstd-devel bzip2-devel libyaml-devel libssh2-devel
       - name: Configure and Compile pgBackRest
         run: | 
           meson setup /build/pgbackrest /build/pgbackrest-release-2.58.0
