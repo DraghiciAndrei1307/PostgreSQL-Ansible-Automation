@@ -3,6 +3,8 @@ on: workflow_dispatch
 jobs:
   run-build-process:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Create build directory
         run: |
