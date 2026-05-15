@@ -15,3 +15,19 @@ process will be rapid.
 
 Before I start creating such architecture...I need to do one thing. I need to create some CI/CD where the compile and 
 build process of the pgBackRest is performed and results in the creation of a release. 
+
+UPDATE 1: I managed to create a workflow that creates a release containing the pgBackRest build. Check 
+[build_pgBackRest](../.github/workflows/build_pgBackRest.yml)
+
+Now I can move on to creating the base VM from which I will clone bronze, silver and gold bases.
+
+I need to use the VBoxManage tool to create a VM with the following options: 
+- name
+- basefolder (where to save its data on the hypervisor's host disk)
+- user and password
+- disabled root access
+- image (use --medium)
+
+
+UPDATE 2: After careful consideration, I decided that VBoxManage is not worth it. I will move to Vagrant as it seems 
+that is easier to use. 
