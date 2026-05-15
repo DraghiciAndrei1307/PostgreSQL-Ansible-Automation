@@ -1,0 +1,32 @@
+name: Build pgBackRest
+on: workflow_dispatch
+jobs:
+  run-build-process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create build directory
+        run: |
+          mkdir -p /build
+      - name: Download version 2.58.0 of pgBackRest to /build path
+        run: |
+          wget -q -O - https://github.com/pgbackrest/pgbackrest/archive/release/2.58.0.tar.gz | tar zx -C /build
+      - name: Install build dependencies
+        run: | 
+          sudo apt-get install python3-distutils meson gcc libpq-dev libssl-dev libxml2-dev \
+          pkg-config liblz4-dev libzstd-dev libbz2-dev libz-dev libyaml-dev libssh2-1-dev
+      - name: Configure and Compile pgBackRest
+        run: | 
+          meson setup /build/pgbackrest /build/pgbackrest-release-2.58.0
+          ninja -C /build/pgbackrest
+      - name: Archive the pgBackRest build
+        run: | 
+          tar -czvf pgbackrest.tar.gz /build/pgbackrest/src/pgbackrest
+      - name: Create GitHub Release for pgbackrest build
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            pgbackrest.tar.gz
+          tag_name: pgBackRest v2.58.0
+          name: Release of 'pgBackRest' v2.58.0
+          body: "My release of the pgBackRest build."
+
