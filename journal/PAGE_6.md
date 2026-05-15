@@ -31,3 +31,12 @@ I need to use the VBoxManage tool to create a VM with the following options:
 
 UPDATE 2: After careful consideration, I decided that VBoxManage is not worth it. I will move to Vagrant as it seems 
 that is easier to use. 
+
+UPDATE 3:
+
+Managed to configure the Vagrant wrapper on the hypervisor host.
+
+This is the article used to understand Vagrant: https://medium.com/tech-with-x/vagrant-quick-start-14e86761a517
+
+Edited the VagrantFile so that the VM is set on Bridged and not NAT Network Adapter. Check this resource: https://stackoverflow.com/questions/33250304/how-to-automatically-select-bridged-network-interfaces-in-vagrant
+
