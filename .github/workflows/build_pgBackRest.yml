@@ -19,9 +19,9 @@ jobs:
           dnf install -y dnf-plugins-core
           dnf config-manager --set-enabled crb || dnf config-manager --set-enabled powertools
           dnf install -y epel-release
-          dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+          dnf install -y --nogpgcheck https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
           dnf -qy module disable postgresql
-          dnf install -y \
+          dnf install -y --nogpgcheck \
           meson \
           gcc \
           postgresql14-devel \
