@@ -16,6 +16,7 @@ jobs:
 
       - name: Config repos and install dependencies
         run: | 
+          dnf install -y config-manager
           dnf config-manager --set-enabled crb || dnf config-manager --set-enabled powertools
           dnf install -y epel-release
           dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
