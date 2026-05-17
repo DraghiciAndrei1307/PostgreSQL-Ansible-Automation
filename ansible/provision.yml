@@ -28,45 +28,63 @@
 # ---------------------------------------- UPDATE STATIC INV --------------------------------- #
 # -------------------------------------------------------------------------------------------- #
 
-#- name: "Add the New VM to static inventory"
-#  hosts: localhost
-#  gather_facts: no
-#  become: yes
-#  vars_files:
-#    - group_vars/vault.yml
-#  vars:
-#    formatted_mac_address: "{{ hostvars['hypervisor'].formatted_mac_address }}"
-#    inventory_name: "slave_nodes_inventory"
-#    vm_name: "hostvars['hypervisor'].vm_data.vm_name"
-#  tasks:
-#    - name: "Add the New VM to static inventory"
-#      ansible.builtin.import_role:
-#        name: host_hypervisor_management
-#        tasks_from: add_vm_to_inventory
-#
-#    - name: "Add the new VM dynamically (runtime inventory)"
-#      ansible.builtin.add_host:
-#        name: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
-#        groups: new_slaves
-#        ansible_host: "{{ new_vm_ip_address }}"
-#        ansible_user: student
-#
-## -------------------------------------------------------------------------------------------- #
-## ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
-## -------------------------------------------------------------------------------------------- #
-#
-#- name: "Copy the public SSH key from master to the new slave"
-#  hosts: new_slaves
-#  gather_facts: no
-#  become: yes
-#  vars_files:
-#    - group_vars/vault.yml
-#  tasks:
-#    - name: "Copy key"
-#      ansible.builtin.import_role:
-#        name: host_hypervisor_management
-#        tasks_from: copy_ssh_key
-#
+- name: "Add Base VMs to a specific inventory"
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Add the Base VM to static inventory"
+      vars:
+        formatted_mac_address: "{{ hostvars['hypervisor'][item ~ '_formatted_mac_address'] }}"
+        inventory_name: "base_nodes_inventory"
+        vm_name: "{{ item }}"
+        dinamic_group_name: base_vms_group
+        static_group_name: base_vms_group
+      ansible.builtin.include_role:
+        name: host_hypervisor_management
+        tasks_from: add_vm_to_inventory
+      loop: "{{ hostvars['hypervisor'].base_vm_names }}"
+
+
+
+- name: "Add the New VM to static inventory"
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  vars:
+    formatted_mac_address: "{{ hostvars['hypervisor'].vm_data.vm_name }}_formatted_mac_address"
+    inventory_name: "slave_nodes_inventory"
+    vm_name: "hostvars['hypervisor'].vm_data.vm_name"
+    dinamic_group_name: new_slaves
+    static_group_name: slaves
+  tasks:
+    - name: "Add the New VM to static inventory"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: add_vm_to_inventory
+
+# -------------------------------------------------------------------------------------------- #
+# ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
+# -------------------------------------------------------------------------------------------- #
+
+- name: "Copy the public SSH key from master to the new slave"
+  hosts:
+    - new_slaves
+    - base_vms_group
+  gather_facts: no
+  become: yes
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Copy key"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: copy_ssh_key
+
 ## -------------------------------------------------------------------------------------------- #
 ## ---------------------------------------- CONFIGURE STORAGE --------------------------------- #
 ## -------------------------------------------------------------------------------------------- #

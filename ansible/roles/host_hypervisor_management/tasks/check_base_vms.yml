@@ -63,15 +63,19 @@
 
 # ------------------ OBTAIN MAC ADDRESSES --------------------- #
 
+    - name: "Set fact with the Base VMs names"
+      ansible.builtin.set_fact:
+        base_vm_names:
+          - bronze
+          - silver
+          - gold
+
     - name: "Get MAC addresses of the 3 base VMs"
       ansible.builtin.include_role:
         name: host_hypervisor_management
         tasks_from: get_MAC_address
       vars:
         vm_name: "{{ item }}"
-      loop:
-        - bronze
-        - silver
-        - gold
+      loop: "{{ base_vm_names }}"
 
 # ------------------------------------------------------------- #
