@@ -21,6 +21,10 @@
   become: yes
   vars_files:
     - group_vars/vault.yml
+  vars:
+    formatted_mac_address: "{{ hostvars['hypervisor'].formatted_mac_address }}"
+    inventory_name: "slave_nodes_inventory"
+    vm_name: "hostvars['hypervisor'].vm_data.vm_name"
   tasks:
     - name: "Add the New VM to static inventory"
       ansible.builtin.import_role:

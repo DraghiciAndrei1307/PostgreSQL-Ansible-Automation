@@ -44,3 +44,16 @@
       ansible.builtin.win_command: vagrant up
       args:
         chdir: C:\Users\Andrei\Desktop
+
+    # Create separate roles for these tasks
+
+    - name: "Get MAC addresses of the 3 base VMs"
+      ansible.builtin.import_role:
+        name: host_hypervisor_inventory
+        tasks_from: get_MAC_address
+      vars:
+        vm_name: "{{ item }}"
+      loop:
+        - bronze-base
+        - silver-base
+        - gold-base
