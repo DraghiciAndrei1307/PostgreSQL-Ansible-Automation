@@ -47,9 +47,9 @@
   ansible.builtin.debug:
     var: clonevm_output
 
-- name: Change the Network from NAT to Bridged
-  ansible.builtin.win_command: >
-    vboxmanage modifyvm {{ vm_data.vm_name }} --nic1 bridged --bridgeadapter1 "Intel(R) Wi-Fi 6 AX200 160MHz"  
+#- name: Change the Network from NAT to Bridged
+#  ansible.builtin.win_command: >
+#    vboxmanage modifyvm {{ vm_data.vm_name }} --nic1 bridged --bridgeadapter1 "Intel(R) Wi-Fi 6 AX200 160MHz"
 
 # ------------------------------------------------------------- #
 
