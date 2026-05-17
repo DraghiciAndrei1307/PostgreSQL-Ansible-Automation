@@ -29,7 +29,7 @@
   ansible.builtin.set_fact:
     vm_data:
       vm_base: "bronze"
-      vm_name: "bronze-1"
+      vm_name: "bronze_1"
       base_folder: "D:\\VMs"
 
 # ------------------------------------------------------------- #
