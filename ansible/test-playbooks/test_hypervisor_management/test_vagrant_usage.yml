@@ -7,5 +7,5 @@
   tasks:
     - name: "Check Base VMs"
       ansible.builtin.import_role:
-        name: host_hypervisor_management
+        name: ../roles/host_hypervisor_management
         tasks_from: check_base_vms.yml
