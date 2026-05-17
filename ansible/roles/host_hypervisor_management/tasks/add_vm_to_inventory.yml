@@ -30,9 +30,25 @@
   ansible.builtin.debug:
     var: arp_scan_output
 
+- name: "Which MAC I am looking for?"
+  ansible.builtin.debug:
+    msg: "I want to find the MAC {{ formatted_mac_address }} for the {{ vm_name }} VM."
+
+- name: "Get lines which contain the MAC address"
+  ansible.builtin.set_fact:
+    matched_arp_lines: "{{ arp_scan_output.stdout_lines | select('search', formatted_mac_address) | list }}"
+
+- name: "Debug the 'matched_arp_lines' variable"
+  ansible.builtin.debug:
+    var: matched_arp_lines
+
+- name: "Stop the execution if the VM does not have an IP address"
+  ansible.builtin.fail:
+    msg: "MAC address {{ formatted_mac_address }} not found! Check if the VM {{ vm_name }} started and has an IP assigned."
+
 - name: "Get the IP address"
   ansible.builtin.set_fact:
-    new_vm_ip_address: "{{ ((arp_scan_output.stdout_lines | select('search', formatted_mac_address) | list | first) | split('\t'))[0] }}"
+    new_vm_ip_address: "{{ (matched_arp_lines | first | split('\t'))[0] }}"
 
 - name: "Debug the 'new_vm_ip_address' variable"
   ansible.builtin.debug:
