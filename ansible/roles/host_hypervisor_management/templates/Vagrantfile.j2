@@ -105,8 +105,8 @@ Vagrant.configure("2") do |config|
     bb.vm.network "public_network", bridge: "Intel(R) Wi-Fi 6 AX200 160MHz"
 
     bb_commands = [
-      "sudo nmcli connection modify 'Wired connection 2' connection.autoconnect yes || sudo nmcli connection modify 'eth1' connection.autoconnect yes",
-      "sudo nmcli connection up 'Wired connection 2' || sudo nmcli connection up 'eth1'"
+      "sudo nmcli connection reload",
+      "sudo nmcli device connect eth1 || sudo nmcli device connect enp0s8 || true"
     ]
 
     bb.vm.provision "shell", inline: bb_commands.join("\n")
@@ -126,8 +126,8 @@ Vagrant.configure("2") do |config|
     sb.vm.network "public_network", bridge: "Intel(R) Wi-Fi 6 AX200 160MHz"
 
     sb_commands = [
-      "sudo nmcli connection modify 'Wired connection 2' connection.autoconnect yes || sudo nmcli connection modify 'eth1' connection.autoconnect yes",
-      "sudo nmcli connection up 'Wired connection 2' || sudo nmcli connection up 'eth1'"
+      "sudo nmcli connection reload",
+      "sudo nmcli device connect eth1 || sudo nmcli device connect enp0s8 || true"
     ]
 
     sb.vm.provision "shell", inline: sb_commands.join("\n")
@@ -148,8 +148,8 @@ Vagrant.configure("2") do |config|
     gb.vm.network "public_network", bridge: "Intel(R) Wi-Fi 6 AX200 160MHz"
 
     gb_commands = [
-      "sudo nmcli connection modify 'Wired connection 2' connection.autoconnect yes || sudo nmcli connection modify 'eth1' connection.autoconnect yes",
-      "sudo nmcli connection up 'Wired connection 2' || sudo nmcli connection up 'eth1'"
+      "sudo nmcli connection reload",
+      "sudo nmcli device connect eth1 || sudo nmcli device connect enp0s8 || true"
     ]
 
     gb.vm.provision "shell", inline: gb_commands.join("\n")
