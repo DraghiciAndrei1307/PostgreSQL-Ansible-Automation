@@ -20,7 +20,7 @@
 
 - name: Pause for 1 minute
   ansible.builtin.pause:
-    minutes: 1
+    minutes: 2
 
 - name: "Get IPs on the localhost"
   ansible.builtin.command: arp-scan -l

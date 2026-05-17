@@ -47,8 +47,6 @@
         tasks_from: add_vm_to_inventory
       loop: "{{ hostvars['hypervisor'].base_vm_names }}"
 
-
-
 - name: "Add the New VM to static inventory"
   hosts: localhost
   gather_facts: no
