@@ -28,8 +28,8 @@
 - name: "Set new VM info"
   ansible.builtin.set_fact:
     vm_data:
-      vm_base: "RedHat-Base"
-      vm_name: "RedHat-Test-1"
+      vm_base: "bronze-base"
+      vm_name: "bronze-1"
       base_folder: "D:\\VMs"
 
 # ------------------------------------------------------------- #

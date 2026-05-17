@@ -1,0 +1,132 @@
+# -------------------------------------------------------------------------------------------- #
+# ---------------------------------------- CREATE NEW VM ------------------------------------- #
+# -------------------------------------------------------------------------------------------- #
+---
+- name: "Create new VM"
+  hosts: hypervisor
+  gather_facts: no
+  tasks:
+    - name: "Create New VM"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: create_new_vm
+
+# -------------------------------------------------------------------------------------------- #
+# ---------------------------------------- UPDATE STATIC INV --------------------------------- #
+# -------------------------------------------------------------------------------------------- #
+
+#- name: "Add the New VM to static inventory"
+#  hosts: localhost
+#  gather_facts: no
+#  become: yes
+#  vars_files:
+#    - group_vars/vault.yml
+#  vars:
+#    formatted_mac_address: "{{ hostvars['hypervisor'].formatted_mac_address }}"
+#    inventory_name: "slave_nodes_inventory"
+#    vm_name: "hostvars['hypervisor'].vm_data.vm_name"
+#  tasks:
+#    - name: "Add the New VM to static inventory"
+#      ansible.builtin.import_role:
+#        name: host_hypervisor_management
+#        tasks_from: add_vm_to_inventory
+#
+#    - name: "Add the new VM dynamically (runtime inventory)"
+#      ansible.builtin.add_host:
+#        name: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+#        groups: new_slaves
+#        ansible_host: "{{ new_vm_ip_address }}"
+#        ansible_user: student
+#
+## -------------------------------------------------------------------------------------------- #
+## ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
+## -------------------------------------------------------------------------------------------- #
+#
+#- name: "Copy the public SSH key from master to the new slave"
+#  hosts: new_slaves
+#  gather_facts: no
+#  become: yes
+#  vars_files:
+#    - group_vars/vault.yml
+#  tasks:
+#    - name: "Copy key"
+#      ansible.builtin.import_role:
+#        name: host_hypervisor_management
+#        tasks_from: copy_ssh_key
+#
+## -------------------------------------------------------------------------------------------- #
+## ---------------------------------------- CONFIGURE STORAGE --------------------------------- #
+## -------------------------------------------------------------------------------------------- #
+#
+#- name: "Configure the Storage"
+#  hosts: new_slaves
+#  become: yes
+#  gather_facts: true
+#  vars_files:
+#    - group_vars/vault.yml
+#  vars:
+#    - pg_version: 14
+#  tasks:
+#    - name: Storage Auto-Detect
+#      ansible.builtin.import_role:
+#        name: storage_management
+#        tasks_from: storage_device_auto_detect
+#
+## -------------------------------------------------------------------------------------------- #
+## ---------------------------------------- POSTGRESQL CONFIG --------------------------------- #
+## -------------------------------------------------------------------------------------------- #
+#
+#- name: "Install and Configure PostgreSQL"
+#  hosts: new_slaves
+#  become: yes
+#  vars_files:
+#    - group_vars/vault.yml
+#  vars:
+#    - pg_version: 14
+#  roles:
+#    - common # run all the tasks from common/tasks/main.yml
+#    - postgresql_config_and_install
+#
+## -------------------------------------------------------------------------------------------- #
+## ---------------------------------------- BUILD PGBACKREST ---------------------------------- #
+## -------------------------------------------------------------------------------------------- #
+#
+#- name: "Build and Compile pgBackRest"
+#  hosts: localhost
+#  become: yes
+#  vars_files:
+#      - group_vars/vault.yml
+#  vars:
+#    dependencies:
+#      - meson
+#      - gcc
+#      - postgresql14-devel
+#      - openssl-devel
+#      - libxml2-devel
+#      - lz4-devel
+#      - libzstd-devel
+#      - bzip2-devel
+#      - libyaml-devel
+#      - libssh2-devel
+#    pg_version: 14
+#  roles:
+#    - pgbackrest_build
+#
+## -------------------------------------------------------------------------------------------- #
+## ---------------------------------------- DISTRIBUTE PGBACKREST ----------------------------- #
+## -------------------------------------------------------------------------------------------- #
+#
+#- name: "Copy the compiled file to the slave nodes"
+#  hosts: new_slaves
+#  become: yes
+#  vars_files:
+#    - group_vars/vault.yml
+#  vars:
+#    - pg_version: 14
+#  roles:
+#    - pgbackrest_config_and_install
+#    - pgbackrest_quick_start
+#
+## -------------------------------------------------------------------------------------------- #
+## -------------------------------------------------------------------------------------------- #
+## -------------------------------------------------------------------------------------------- #

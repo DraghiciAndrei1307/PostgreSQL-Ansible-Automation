@@ -1,22 +1,22 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Page-1" id="q3FWDZwTTtGMYWxMdJIb">
-    <mxGraphModel dx="1201" dy="764" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1488" dy="818" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-20" edge="1" parent="1" source="TZtHWPE-Zhyq9nkOFlbp-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TZtHWPE-Zhyq9nkOFlbp-3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Create-New-VM&amp;nbsp;" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#FFFF00);" value="Create-New-VM&amp;nbsp;" vertex="1">
           <mxGeometry height="60" width="120" x="250" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="hypervisor" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=light-dark(#000000,#FFFF00);fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="hypervisor" vertex="1">
           <mxGeometry height="30" width="60" x="250" as="geometry" />
         </mxCell>
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-7" edge="1" parent="1" source="TZtHWPE-Zhyq9nkOFlbp-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="TZtHWPE-Zhyq9nkOFlbp-6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Check Base VMs" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#FFFF00);" value="Check Base VMs" vertex="1">
           <mxGeometry height="60" width="120" x="250" y="160" as="geometry" />
         </mxCell>
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-10" edge="1" parent="1" source="TZtHWPE-Zhyq9nkOFlbp-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TZtHWPE-Zhyq9nkOFlbp-8">
@@ -35,13 +35,13 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-6" parent="1" style="rhombus;whiteSpace=wrap;html=1;" value="Base VMs exist?" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-6" parent="1" style="rhombus;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#FFFF00);" value="Base VMs exist?" vertex="1">
           <mxGeometry height="80" width="80" x="270" y="300" as="geometry" />
         </mxCell>
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-17" edge="1" parent="1" source="TZtHWPE-Zhyq9nkOFlbp-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="TZtHWPE-Zhyq9nkOFlbp-16">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Clones the selected base&amp;nbsp;" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#FFFF00);" value="Clones the selected base&amp;nbsp;" vertex="1">
           <mxGeometry height="60" width="120" x="140" y="470" as="geometry" />
         </mxCell>
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-18" edge="1" parent="1" source="TZtHWPE-Zhyq9nkOFlbp-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
@@ -49,10 +49,10 @@
             <mxPoint x="320" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Creates base VMs using Vagrant" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#FFFF00);" value="Creates base VMs using Vagrant" vertex="1">
           <mxGeometry height="60" width="120" x="370" y="470" as="geometry" />
         </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Returns the formatted MAC" vertex="1">
+        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-16" parent="1" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=light-dark(#000000,#FFFF00);" value="Returns the formatted MAC" vertex="1">
           <mxGeometry height="60" width="120" x="260" y="640" as="geometry" />
         </mxCell>
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-24" edge="1" parent="1" source="TZtHWPE-Zhyq9nkOFlbp-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="TZtHWPE-Zhyq9nkOFlbp-26">
@@ -149,9 +149,6 @@
         </mxCell>
         <mxCell id="TZtHWPE-Zhyq9nkOFlbp-46" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="master" vertex="1">
           <mxGeometry height="30" width="60" x="1670" as="geometry" />
-        </mxCell>
-        <mxCell id="TZtHWPE-Zhyq9nkOFlbp-47" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Clone BASE VMS" vertex="1">
-          <mxGeometry height="60" width="120" x="2530" y="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

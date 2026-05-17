@@ -1,4 +1,6 @@
-- name: "Check for the base VMs"
+# ------------------ LIST VMs --------------------------------- #
+
+- name: "List all VMs"
   ansible.builtin.win_command: vboxmanage list vms
   register: vms_list
 
@@ -6,7 +8,11 @@
   ansible.builtin.debug:
     var: vms_list
 
-- name: "Search for the bronze-base VMs"
+# ------------------------------------------------------------- #
+
+# ------------------ CHECK BASE VMs --------------------------- #
+
+- name: "Search for the base VMs"
   ansible.builtin.set_fact:
     bronze_base: >- 
       {{ (bronze_result | first | default('') | split('"'))[0] if bronze_result | length > 0 else 'VM_NOT_FOUND' }}
@@ -22,13 +28,17 @@
     silver_result: "{{ vms_list.stdout_lines | select('search', silver_search_string) | list}}"
     gold_result: "{{ vms_list.stdout_lines | select('search', gold_search_string) | list}}"
 
-- name: "Debug the 'bronze_base' variable"
+- name: "Debug the base VMs related variables"
   ansible.builtin.debug:
     var: "{{ item }}"
   loop:
     - bronze_base
     - silver_base
     - gold_base
+
+# ------------------------------------------------------------- #
+
+# ------------------ CREATE BASE VMs -------------------------- #
 
 - name: "Create base VMs if they do not exist"
   when:
@@ -47,6 +57,10 @@
 
     # Create separate roles for these tasks
 
+# ------------------------------------------------------------- #
+
+# ------------------ OBTAIN MAC ADDRESSES --------------------- #
+
     - name: "Get MAC addresses of the 3 base VMs"
       ansible.builtin.import_role:
         name: host_hypervisor_inventory
@@ -57,3 +71,5 @@
         - bronze-base
         - silver-base
         - gold-base
+
+# ------------------------------------------------------------- #
