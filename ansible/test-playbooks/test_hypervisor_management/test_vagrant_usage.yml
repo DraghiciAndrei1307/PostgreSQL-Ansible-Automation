@@ -1,7 +1,18 @@
 ---
+- name: "Create pass variable"
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Get the variable needed in the template"
+      ansible.builtin.set_fact:
+        ansible_become_password_local: "{{ lookup('ansible.builtin.env', 'VAULT_PASSWORD') }}"
 - name: "Test Vagrant base VMs creation"
   hosts: hypervisor
   gather_facts: no
+  vars:
+    ansible_become_password: "{{ hostvars['localhost']['ansible_become_password_local'] }}"
   tasks:
     - name: "Check Base VMs"
       ansible.builtin.import_role:
