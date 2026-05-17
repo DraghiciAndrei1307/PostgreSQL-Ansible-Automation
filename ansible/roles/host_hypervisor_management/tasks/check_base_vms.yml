@@ -25,7 +25,7 @@
 - name: "Debug the 'bronze_base' variable"
   ansible.builtin.debug:
     var: "{{ item }}"
-  with_items:
+  loop:
     - bronze_base
     - silver_base
     - gold_base
