@@ -21,9 +21,9 @@
     gold_base: >-
       {{ (gold_result | first | default('') | split('"'))[0] if gold_result | length > 0 else 'VM_NOT_FOUND' }}
   vars:
-    bronze_search_string: "bronze_base"
-    silver_search_string: "silver_base"
-    gold_search_string: "gold_base"
+    bronze_search_string: "bronze"
+    silver_search_string: "silver"
+    gold_search_string: "gold"
     bronze_result: "{{ vms_list.stdout_lines | select('search', bronze_search_string) | list}}"
     silver_result: "{{ vms_list.stdout_lines | select('search', silver_search_string) | list}}"
     gold_result: "{{ vms_list.stdout_lines | select('search', gold_search_string) | list}}"
@@ -68,8 +68,8 @@
       vars:
         vm_name: "{{ item }}"
       loop:
-        - bronze_base
-        - silver_base
-        - gold_base
+        - bronze
+        - silver
+        - gold
 
 # ------------------------------------------------------------- #
