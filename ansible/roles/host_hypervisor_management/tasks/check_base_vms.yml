@@ -9,11 +9,11 @@
 - name: "Search for the bronze-base VMs"
   ansible.builtin.set_fact:
     bronze_base: > 
-      {{ (bronze_result | first | default('') | split('"'))[0] if result | length > 0 else 'VM_NOT_FOUND' }}
+      {{ (bronze_result | first | default('') | split('"'))[0] if bronze_result | length > 0 else 'VM_NOT_FOUND' }}
     silver_base: > 
-      {{ (silver_result | first | default('') | split('"'))[0] if result | length > 0 else 'VM_NOT_FOUND' }}
+      {{ (silver_result | first | default('') | split('"'))[0] if silver_result | length > 0 else 'VM_NOT_FOUND' }}
     gold_base: >
-      {{ (gold_result | first | default('') | split('"'))[0] if result | length > 0 else 'VM_NOT_FOUND' }}
+      {{ (gold_result | first | default('') | split('"'))[0] if gold_result | length > 0 else 'VM_NOT_FOUND' }}
   vars:
     bronze_search_string: "bronze-base"
     silver_search_string: "silver-base"
