@@ -54,8 +54,10 @@
       ansible.builtin.win_command: vagrant up
       args:
         chdir: C:\Users\Andrei\Desktop
-
-    # Create separate roles for these tasks
+    - name: "Stop the VMs"
+      ansible.builtin.win_command: vagrant halt
+      args:
+        chdir: C:\Users\Andrei\Desktop
 
 # ------------------------------------------------------------- #
 
