@@ -58,7 +58,7 @@
   vars:
     formatted_mac_address: "{{ hostvars['hypervisor'].vm_data.vm_name }}_formatted_mac_address"
     inventory_name: "slave_nodes_inventory"
-    vm_name: "hostvars['hypervisor'].vm_data.vm_name"
+    vm_name: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
     dinamic_group_name: new_slaves
     static_group_name: slaves
   tasks:
