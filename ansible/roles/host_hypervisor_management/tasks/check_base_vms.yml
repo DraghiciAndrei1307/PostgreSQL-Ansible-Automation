@@ -11,7 +11,7 @@
     bronze_base: "{{ (result[0] | split('\"'))[0] }}"
   vars:
     search_string: "bronze-base"
-    result: {{ vms_list.stdout_lines | select('search', search_string) | list}}
+    result: "{{ vms_list.stdout_lines | select('search', search_string) | list}}"
 
 - name: "Debug the 'bronze_base' variable"
   ansible.builtin.debug:
