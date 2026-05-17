@@ -30,3 +30,17 @@
     - silver_base
     - gold_base
 
+- name: "Create base VMs if they do not exist"
+  when:
+    - bronze_base is defined and bronze_base == 'VM_NOT_FOUND'
+    - silver_base is defined and silver_base == 'VM_NOT_FOUND'
+    - gold_base is defined and gold_base == 'VM_NOT_FOUND'
+  block:
+    - name: "Create Vagrantfile"
+      ansible.windows.win_template:
+        src: Vagrantfile.j2
+        dest: C:\Users\Andrei\Desktop\Vagrantfile
+    - name: "Generate base VMs"
+      ansible.builtin.win_command: vagrant up
+
+
