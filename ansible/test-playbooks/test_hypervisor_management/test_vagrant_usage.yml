@@ -3,7 +3,7 @@
   hosts: hypervisor
   gather_facts: no
   vars_files:
-    - ../group_vars/vault.yml
+    - ../../group_vars/vault.yml
   tasks:
     - name: "Check Base VMs"
       ansible.builtin.import_role:
