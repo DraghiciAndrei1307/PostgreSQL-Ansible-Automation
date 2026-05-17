@@ -1,0 +1,11 @@
+---
+- name: "Test Vagrant base VMs creation"
+  hosts: hypervisor
+  gather_facts: no
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Check Base VMs"
+      ansible.builtin.import_role:
+        name: host_hypervisor_management
+        tasks_from: check_base_vms.yml
