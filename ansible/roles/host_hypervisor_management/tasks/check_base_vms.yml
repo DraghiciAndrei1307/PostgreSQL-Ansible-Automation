@@ -36,8 +36,6 @@
     - silver_base is defined and silver_base == 'VM_NOT_FOUND'
     - gold_base is defined and gold_base == 'VM_NOT_FOUND'
   block:
-    - name: "Create Vagrant Env"
-      ansible.builtin.win_command: vagrant init
     - name: "Create Vagrantfile"
       ansible.windows.win_template:
         src: Vagrantfile.j2
