@@ -36,6 +36,9 @@
     - silver_base is defined and silver_base == 'VM_NOT_FOUND'
     - gold_base is defined and gold_base == 'VM_NOT_FOUND'
   block:
+    - name: "Get the variable needed in the template"
+      ansible.builtin.set_fact:
+        ansible_become_password: "{{ lookup('ansible.builtin.env', 'VAULT_PASSWORD') }}"
     - name: "Create Vagrantfile"
       ansible.windows.win_template:
         src: Vagrantfile.j2
