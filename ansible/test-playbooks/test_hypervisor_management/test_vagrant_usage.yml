@@ -2,8 +2,6 @@
 - name: "Test Vagrant base VMs creation"
   hosts: hypervisor
   gather_facts: no
-  become: yes
-  become_user: andrei
   vars_files:
     - ../../group_vars/vault.yml
   tasks:
