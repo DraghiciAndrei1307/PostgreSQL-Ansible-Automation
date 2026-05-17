@@ -92,41 +92,41 @@ Vagrant.configure("2") do |config|
   # Vagrant will execute the commands one after another
   config.vm.provision "shell", inline: commands.join("\n")
 
-  config.vm.define "bronze-base" do |bb|
+  config.vm.define "bronze_base" do |bb|
 
     bb.vm.provider "virtualbox" do |v|
 
-      v.name = "bronze-base"
+      v.name = "bronze_base"
       v.linked_clone = true
 
     end
 
-    bb.vm.hostname = "bronze-base"
+    bb.vm.hostname = "bronze_base"
     bb.vm.disk :disk, size: "10GB", name: "bb_disk_1"
   end
 
-  config.vm.define "silver-base" do |sb|
+  config.vm.define "silver_base" do |sb|
 
     sb.vm.provider "virtualbox" do |v|
 
-      v.name = "silver-base"
+      v.name = "silver_base"
       v.linked_clone = true
     end
 
-    sb.vm.hostname = "silver-base"
+    sb.vm.hostname = "silver_base"
     sb.vm.disk :disk, size: "10GB", name: "sb_disk_1"
     sb.vm.disk :disk, size: "10GB", name: "sb_disk_2"
   end
 
-  config.vm.define "gold-base" do |gb|
+  config.vm.define "gold_base" do |gb|
 
     gb.vm.provider "virtualbox" do |v|
 
-      v.name = "gold-base"
+      v.name = "gold_base"
       v.linked_clone = true
     end
 
-    gb.vm.hostname = "gold-base"
+    gb.vm.hostname = "gold_base"
     gb.vm.disk :disk, size: "10GB", name: "gb_disk_1"
     gb.vm.disk :disk, size: "10GB", name: "gb_disk_2"
     gb.vm.disk :disk, size: "10GB", name: "gb_disk_3"
