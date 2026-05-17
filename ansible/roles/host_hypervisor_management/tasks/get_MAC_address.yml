@@ -27,8 +27,6 @@
 
 - name: "Format the MAC address"
   ansible.builtin.set_fact:
-    cacheable: no
-  vars:
     "{{ vm_name }}_formatted_mac_address": "{{ mac_address | regex_replace('([0-9A-Fa-f]{2})(?!$)', '\\1:') | lower }}"
 
 - name: "Debug the '{{ vm_name }}_formatted_mac_address' variable"
