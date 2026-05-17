@@ -39,8 +39,8 @@
     - name: "Create Vagrantfile"
       ansible.windows.win_template:
         src: Vagrantfile.j2
-        dest: C:\Users\Andrei\Vagrantfile
+        dest: C:\Users\Andrei\Desktop\Vagrantfile
     - name: "Generate base VMs"
       ansible.builtin.win_command: vagrant up
-
-
+      args:
+        chdir: C:\Users\Andrei\Desktop
