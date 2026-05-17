@@ -63,7 +63,7 @@
 
     - name: "Get MAC addresses of the 3 base VMs"
       ansible.builtin.include_role:
-        name: host_hypervisor_inventory
+        name: host_hypervisor_management
         tasks_from: get_MAC_address
       vars:
         vm_name: "{{ item }}"
