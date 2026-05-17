@@ -45,6 +45,7 @@
 - name: "Stop the execution if the VM does not have an IP address"
   ansible.builtin.fail:
     msg: "MAC address {{ formatted_mac_address }} not found! Check if the VM {{ vm_name }} started and has an IP assigned."
+  when: (formatted_mac_address | lower) not in (matched_arp_lines | join(' ') | lower)
 
 - name: "Get the IP address"
   ansible.builtin.set_fact:
