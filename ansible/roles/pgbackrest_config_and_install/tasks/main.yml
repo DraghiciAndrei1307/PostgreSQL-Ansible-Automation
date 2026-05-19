@@ -4,11 +4,19 @@
 # sudo scp build:/build/pgbackrest/src/pgbackrest /usr/bin
 # sudo chmod 755 /usr/bin/pgbackrest
 
-- name: "Copy the pgbackrest binary from the master node"
-  ansible.builtin.copy:
-    src: /pgBackRest_build/pgbackrest/src/pgbackrest
-    dest: /usr/bin/pgbackrest
-    mode: '0755'
+- name: "Try distribute pgBackRest to targets"
+  block:
+    - name: Copy pgbackrest binary to slaves
+      ansible.builtin.copy:
+        src: /tmp/pgbackrest
+        dest: /usr/bin/pgbackrest
+        mode: '0755'
+  rescue:
+    - name: "Copy the pgbackrest binary from the master node"
+      ansible.builtin.copy:
+        src: /pgBackRest_build/pgbackrest/src/pgbackrest
+        dest: /usr/bin/pgbackrest
+        mode: '0755'
 
 # ------------------------------------------------------------- #
 
