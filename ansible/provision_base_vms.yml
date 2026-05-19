@@ -24,19 +24,9 @@
         name: host_hypervisor_management
         tasks_from: check_base_vms
 
-#- name: "Create new VM"
-#  hosts: hypervisor
-#  gather_facts: no
-#  vars:
-#    ansible_become_password: "{{ hostvars['localhost']['ansible_become_password_local'] }}"
-#  tasks:
-#    - name: "Create New VM"
-#      ansible.builtin.import_role:
-#        name: host_hypervisor_management
-#        tasks_from: create_new_vm
 
 # -------------------------------------------------------------------------------------------- #
-# ---------------------------------------- UPDATE STATIC INV --------------------------------- #
+# ---------------------------------------- UPDATE  INV --------------------------------------- #
 # -------------------------------------------------------------------------------------------- #
 
 - name: "Add Base VMs to a specific inventory"
@@ -46,7 +36,7 @@
   vars_files:
     - group_vars/vault.yml
   tasks:
-    - name: "Add the Base VM to static inventory"
+    - name: "Add the Base VM to inventory"
       vars:
         formatted_mac_address: "{{ hostvars['hypervisor'][item ~ '_formatted_mac_address'] }}"
         inventory_name: "base_nodes_inventory"
@@ -58,23 +48,7 @@
         tasks_from: add_vm_to_inventory
       loop: "{{ hostvars['hypervisor'].base_vm_names }}"
 
-#- name: "Add the New VM to static inventory"
-#  hosts: localhost
-#  gather_facts: no
-#  become: yes
-#  vars_files:
-#    - group_vars/vault.yml
-#  vars:
-#    vm_name: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
-#    formatted_mac_address: "{{ hostvars['hypervisor'][(hostvars['hypervisor'].vm_data.vm_name | replace('-', '_')) ~ '_formatted_mac_address'] }}"
-#    inventory_name: "slave_nodes_inventory"
-#    dinamic_group_name: new_slaves
-#    static_group_name: slaves
-#  tasks:
-#    - name: "Add the New VM to static inventory"
-#      ansible.builtin.import_role:
-#        name: host_hypervisor_management
-#        tasks_from: add_vm_to_inventory
+
 
 # -------------------------------------------------------------------------------------------- #
 # ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
