@@ -29,7 +29,7 @@ jobs:
           ninja -C /build/pgbackrest
       - name: Archive the pgBackRest build
         run: | 
-          tar -czvf pgbackrest.tar.gz /build/pgbackrest/src/pgbackrest
+          tar -C /build/pgbackrest/src -czvf pgbackrest.tar.gz pgbackrest
       - name: Create GitHub Release for pgbackrest build
         uses: softprops/action-gh-release@v2
         with:
