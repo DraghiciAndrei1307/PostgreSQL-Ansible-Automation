@@ -32,6 +32,17 @@
       ansible.builtin.import_role:
         name: host_hypervisor_management
         tasks_from: add_vm_to_inventory
+    - name: "Send the IP Address back to Django API"
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
+        method: PATCH
+        user: "{{ django_admin }}"
+        password: "{{ django_password }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          ip_address: "{{ new_vm_ip_address }}"
+        status_code: [ 200, 204 ]
 
 # -------------------------------------------------------------------------------------------- #
 # ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
@@ -48,20 +59,3 @@
       ansible.builtin.import_role:
         name: host_hypervisor_management
         tasks_from: copy_ssh_key
-
-# -------------------------------------------------------------------------------------------- #
-# ---------------------------------------- UPDATE IP ADDRESS INTO DJANGO --------------------- #
-# -------------------------------------------------------------------------------------------- #
-
-- name: "Send the IP Address back to Django API"
-  ansible.builtin.uri:
-    url: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
-    method: PATCH
-    user: "{{ django_admin }}"
-    password: "{{ django_password }}"
-    force_basic_auth: yes
-    body_format: json
-    body:
-      ip_address: "{{ hostvars['localhost']['new_vm_ip_address'] }}"
-    status_code: [200, 204]
-
