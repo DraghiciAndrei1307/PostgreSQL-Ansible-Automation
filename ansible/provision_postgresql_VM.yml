@@ -33,6 +33,10 @@
         name: host_hypervisor_management
         tasks_from: add_vm_to_inventory
 
+    - name: "What IP address is sent to Django?"
+      ansible.builtin.debug:
+        msg: "IP-ul detectat este: {{ new_vm_ip_address }}"
+
     - name: "Send the IP Address back to Django API"
       ansible.builtin.uri:
         url: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
