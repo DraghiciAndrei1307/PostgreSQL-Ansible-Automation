@@ -22,23 +22,17 @@
   vars_files:
     - group_vars/vault.yml
   vars:
-    vm_name: "{{ hostvars['hypervisor'].vm_data.vm_name }}"
+    vm_name: "{{ vm_name_user_input | default(hostvars['hypervisor'].vm_data.vm_name) }}"
     formatted_mac_address: "{{ hostvars['hypervisor'][(hostvars['hypervisor'].vm_data.vm_name | replace('-', '_')) ~ '_formatted_mac_address'] }}"
     inventory_name: "slave_nodes_inventory"
     dinamic_group_name: new_slaves
     static_group_name: slaves
   tasks:
     - name: "Add the New VM to static inventory"
-      ansible.builtin.import_role:
+      ansible.builtin.include_role:
         name: host_hypervisor_management
         tasks_from: add_vm_to_inventory
 
-- name: "Notify Django API"
-  hosts: localhost
-  gather_facts: no
-  vars_files:
-    - group_vars/vault.yml
-  tasks:
     - name: "Send the IP Address back to Django API"
       ansible.builtin.uri:
         url: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
