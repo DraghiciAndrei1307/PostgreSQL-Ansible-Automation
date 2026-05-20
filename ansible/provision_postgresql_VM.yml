@@ -37,8 +37,8 @@
       ansible.builtin.uri:
         url: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
         method: PATCH
-        user: "{{ django_admin }}"
-        password: "{{ django_password }}"
+        user: admin
+        password: password123
         force_basic_auth: yes
         body_format: json
         body:
