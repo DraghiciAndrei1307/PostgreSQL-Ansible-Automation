@@ -61,7 +61,7 @@
           port: 5432
           version: "14.23"
           vm: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
-        status_code: [200, 204]
+        status_code: [201]
 
 - name: "Get the DBs of the PostgreSQL instance"
   hosts: new_slaves
