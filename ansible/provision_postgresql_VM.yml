@@ -113,6 +113,7 @@
         status_code: [ 201 ]
       loop: "{{ instance_databases_output.stdout_lines }}"
       delegate_to: localhost
+      become: no
 
 
 
