@@ -70,7 +70,7 @@
   vars_files:
     - group_vars/vault.yml
   tasks:
-    - name: "Perform '\l+' over the PostgreSQL instance"
+    - name: "Perform databases check over the PostgreSQL instance"
       ansible.builtin.command: psql -c "\l+"
       register: instance_databases_output
     - name: "Debug the 'instance_databases_output' variable"
