@@ -111,7 +111,7 @@
           description: "{{ current_list[7] }}"
           instance: "http://127.0.0.1:9001/api/instances/{{ vm_id }}/"
         status_code: [ 201 ]
-      loop: instance_databases_output.stdout_lines
+      loop: "{{ instance_databases_output.stdout_lines }}"
 
 
 
