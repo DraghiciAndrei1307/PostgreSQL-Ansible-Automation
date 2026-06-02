@@ -28,7 +28,7 @@
 - name: "Set new VM info"
   ansible.builtin.set_fact:
     vm_data:
-      vm_base: "bronze"
+      vm_base: "{{ base_vm_name_user_input }}"
       vm_name: "{{ vm_name_user_input }}"
       base_folder: "D:\\VMs"
 
