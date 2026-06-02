@@ -49,6 +49,34 @@
           ipv4_address: "{{ new_vm_ip_address }}"
         status_code: [ 200, 204 ]
 
+    - name: "Add the new PostgreSQL instance to the DB"
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:9001/api/instances/"
+        method: POST
+        user: "{{ django_admin }}"
+        password: "{{ django_password }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          port: 5432
+          version: 14.23
+          vm: "{{ base_vm_name_user_input }}-{{ vm_name_user_input }}"
+
+- name: "Get the DBs of the PostgreSQL instance"
+  hosts: new_slaves
+  gather_facts: no
+  become: yes
+  become_user: postgres
+  vars_files:
+    - group_vars/vault.yml
+  tasks:
+    - name: "Perform '\l+' over the PostgreSQL instance"
+      ansible.builtin.command: psql -c "\l+"
+      register: instance_databases_output
+    - name: "Debug the 'instance_databases_output' variable"
+      ansible.builtin.debug:
+        var: instance_databases_output.stdout_lines
+
 # -------------------------------------------------------------------------------------------- #
 # ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
 # -------------------------------------------------------------------------------------------- #
