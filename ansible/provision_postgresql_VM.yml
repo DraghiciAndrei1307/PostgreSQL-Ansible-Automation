@@ -72,7 +72,7 @@
     - group_vars/vault.yml
   tasks:
     - name: "Perform databases check over the PostgreSQL instance"
-      ansible.builtin.command: psql -c "\l+"
+      ansible.builtin.command: psql -c "\l+" --csv
       register: instance_databases_output
     - name: "Debug the 'instance_databases_output' variable"
       ansible.builtin.debug:
