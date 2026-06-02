@@ -90,6 +90,30 @@
     - name: "Debug the 'instance_databases_output' variable"
       ansible.builtin.debug:
         var: instance_databases_output.stdout_lines
+    - name: "Add DBs to the API database"
+      vars:
+        current_list: "{{ item.split('|') }}"
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:9001/api/dbs/"
+        method: POST
+        user: "{{ django_admin }}"
+        password: "{{ django_password }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          db_name: "{{ current_list[0] }}"
+          encoding: "{{ current_list[1] }}"
+          collate: "{{ current_list[2] }}"
+          ctype: "{{ current_list[3] }}"
+          access_privileges: "{{ current_list[4] }}"
+          size: "{{ current_list[5] }}"
+          tablespace: "{{ current_list[6] }}"
+          description: "{{ current_list[7] }}"
+          instance: "http://127.0.0.1:9001/api/instances/{{ vm_id }}/"
+        status_code: [ 201 ]
+      loop: instance_databases_output.stdout_lines
+
+
 
 # -------------------------------------------------------------------------------------------- #
 # ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
