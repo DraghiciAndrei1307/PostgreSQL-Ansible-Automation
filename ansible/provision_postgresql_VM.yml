@@ -59,8 +59,8 @@
         body_format: json
         body:
           port: 5432
-          version: 14.23
-          vm: "{{ base_vm_name_user_input }}-{{ vm_name_user_input }}"
+          version: "14.23"
+          vm: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
 
 - name: "Get the DBs of the PostgreSQL instance"
   hosts: new_slaves
