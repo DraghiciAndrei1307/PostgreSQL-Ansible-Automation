@@ -102,16 +102,17 @@
         body_format: json
         body:
           db_name: "{{ current_list[0] }}"
-          encoding: "{{ current_list[1] }}"
-          collate: "{{ current_list[2] }}"
-          ctype: "{{ current_list[3] }}"
-          access_privileges: "{{ current_list[4] }}"
-          size: "{{ current_list[5] }}"
-          tablespace: "{{ current_list[6] }}"
-          description: "{{ current_list[7] }}"
+          encoding: "{{ current_list[2] }}"
+          collate: "{{ current_list[3] }}"
+          ctype: "{{ current_list[4] }}"
+          access_privileges: "{{ current_list[5] }}"
+          size: "{{ current_list[6] }}"
+          tablespace: "{{ current_list[7] }}"
+          description: "{{ current_list[8] }}"
           instance: "http://127.0.0.1:9001/api/instances/{{ vm_id }}/"
         status_code: [ 201 ]
       loop: "{{ instance_databases_output.stdout_lines }}"
+      delegate_to: localhost
 
 
 
