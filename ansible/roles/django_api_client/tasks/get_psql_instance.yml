@@ -1,0 +1,9 @@
+- name: "Get the instance"
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:9001/api/instances/?vm_id={{ vm_id }}"
+    method: GET
+    user: "{{ django_admin }}"
+    password: "{{ django_password }}"
+    force_basic_auth: yes
+    status_code: 200
+  register: instance_get_output

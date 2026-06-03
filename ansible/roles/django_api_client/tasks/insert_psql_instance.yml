@@ -1,0 +1,13 @@
+    - name: "Add the new PostgreSQL instance to the DB"
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:9001/api/instances/"
+        method: POST
+        user: "{{ django_admin }}"
+        password: "{{ django_password }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          port: "{{ port_input }}"
+          version: "{{ version_input }}"
+          vm: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
+        status_code: [201]

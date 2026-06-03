@@ -1,0 +1,11 @@
+- name: "Add the user to the API database"
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:9001/api/psql-users/"
+    method: POST
+    user: "{{ django_admin }}"
+    password: "{{ django_password }}"
+    force_basic_auth: yes
+    body_format: json
+    body:
+      name: "{{ user_input }}"
+    status_code: [ 201, 400 ]

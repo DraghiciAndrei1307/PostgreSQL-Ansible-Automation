@@ -1,0 +1,23 @@
+- name: "Add DBs to the API database"
+  vars:
+    fetched_owner_url: "{{ owner_input }}"
+    fetched_instance_url: "{{ instance_input }}"
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:9001/api/dbs/"
+    method: POST
+    user: "{{ django_admin }}"
+    password: "{{ django_password }}"
+    force_basic_auth: yes
+    body_format: json
+    body:
+      db_name: "{{ db_name_input }}"
+      encoding: "{{ encoding_input }}"
+      collate: "{{ collate_input }}"
+      ctype: "{{ ctype_input }}"
+      access_privileges: "{{ access_privileges_input }}"
+      size: "{{ size_input }}"
+      tablespace: "{{ tablespace_input }}"
+      description: "{{ description_input }}"
+      instance: "{{ fetched_instance_url }}"
+      owner: "{{ fetched_owner_url }}"
+    status_code: [ 201 ]

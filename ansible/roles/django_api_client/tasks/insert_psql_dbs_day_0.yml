@@ -1,0 +1,35 @@
+# generate the list
+
+- name: "Create list with the current data to insert"
+  ansible.builtin.set_fact:
+    current_list: "{{ item.split('|') }}"
+
+# insert user
+
+- name: "Insert PostgreSQL user"
+  vars:
+    user_input: "{{ current_list[1] }}"
+  ansible.builtin.include_tasks: insert_psql_user.yml
+
+# get user
+
+- name: "Get PostgreSQL user recently added user"
+  vars:
+    user_input: "{{ current_list[1] }}"
+  ansible.builtin.include_tasks: get_psql_user.yml
+
+# insert PostgreSQL DBS
+
+- name: "Insert PostgreSQL database"
+  vars:
+    owner_input: "{{ owner_get_output.json[0].url }}"
+    instance_input: "{{ fetched_instance_url_global }}"
+    db_name_input: "{{ current_list[0] }}"
+    encoding_input: "{{ current_list[2] }}"
+    collate_input: "{{ current_list[3] }}"
+    ctype_input: "{{ current_list[4] }}"
+    access_privileges_input: "{{ current_list[5] | default('none', true) }}"
+    size_input: "{{ current_list[6] }}"
+    tablespace_input: "{{ current_list[7] }}"
+    description_input: "{{ current_list[8] | default('No description', true) }}"
+  ansible.builtin.include_role: insert_psql_db.yml

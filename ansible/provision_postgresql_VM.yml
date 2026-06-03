@@ -49,33 +49,16 @@
           ipv4_address: "{{ new_vm_ip_address }}"
         status_code: [ 200, 204 ]
 
-    - name: "Add the 'postgres' user to the API database"
-      ansible.builtin.uri:
-        url: "http://127.0.0.1:9001/api/psql-users/"
-        method: POST
-        user: "{{ django_admin }}"
-        password: "{{ django_password }}"
-        force_basic_auth: yes
-        body_format: json
-        body:
-          name: "postgres"
-        status_code: [200]
-
     - name: "Add the new PostgreSQL instance to the DB"
-      ansible.builtin.uri:
-        url: "http://127.0.0.1:9001/api/instances/"
-        method: POST
-        user: "{{ django_admin }}"
-        password: "{{ django_password }}"
-        force_basic_auth: yes
-        body_format: json
-        body:
-          port: 5432
-          version: "14.23"
-          vm: "http://127.0.0.1:9001/api/vms/{{ vm_id }}/"
-        status_code: [201]
+      vars:
+        vm_id: "{{ vm_id }}"
+        port_input: "5432"
+        version_input: "14.23"
+      ansible.builtin.include_role:
+        name: django_api_client
+        tasks_from: insert_psql_instance
 
-- name: "Get the DBs of the PostgreSQL instance"
+- name: "Insert the PostgreSQL instance DBS into API database (DAY 0)"
   hosts: new_slaves
   gather_facts: no
   become: yes
@@ -83,7 +66,7 @@
   vars_files:
     - group_vars/vault.yml
   tasks:
-    - name: "Get all PostgreSQL databases details"
+    - name: "Get all PostgreSQL Databases details"
       ansible.builtin.command: >
         psql -At -F '|' -c "
         SELECT d.datname, 
@@ -99,35 +82,30 @@
         JOIN pg_catalog.pg_tablespace t ON d.dattablespace = t.oid 
         ORDER BY 1;"
       register: instance_databases_output
+
     - name: "Debug the 'instance_databases_output' variable"
       ansible.builtin.debug:
         var: instance_databases_output.stdout_lines
-    - name: "Add DBs to the API database"
+
+    - name: "Get PostgreSQL instance"
       vars:
-        current_list: "{{ item.split('|') }}"
-      ansible.builtin.uri:
-        url: "http://127.0.0.1:9001/api/dbs/"
-        method: POST
-        user: "{{ django_admin }}"
-        password: "{{ django_password }}"
-        force_basic_auth: yes
-        body_format: json
-        body:
-          db_name: "{{ current_list[0] }}"
-          encoding: "{{ current_list[2] }}"
-          collate: "{{ current_list[3] }}"
-          ctype: "{{ current_list[4] }}"
-          access_privileges: "{{ current_list[5] }}"
-          size: "{{ current_list[6] }}"
-          tablespace: "{{ current_list[7] }}"
-          description: "{{ current_list[8] }}"
-          instance: "http://127.0.0.1:9001/api/instances/{{ vm_id }}/"
-        status_code: [ 201 ]
-      loop: "{{ instance_databases_output.stdout_lines }}"
+        vm_id: "{{ vm_id }}"
+      ansible.builtin.include_role:
+        name: django_api_client
+        tasks_from: get_psql_instance
       delegate_to: localhost
       become: no
 
-
+    - name: "Insert existing DBs"
+      vars:
+        vm_id: "{{ vm_id }}"
+        fetched_instance_url_global: "{{ instance_get_output.json[0].url }}"
+      ansible.builtin.include_role:
+        name: django_api_client
+        tasks_from: insert_psql_dbs_day_0
+      loop: "{{ instance_databases_output.stdout_lines }}"
+      delegate_to: localhost
+      become: no
 
 # -------------------------------------------------------------------------------------------- #
 # ---------------------------------------- COPY SSH KEY M > S -------------------------------- #

@@ -1,0 +1,9 @@
+- name: "Get user database"
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:9001/api/psql-users/?name={{ user_input }}"
+    method: GET
+    user: "{{ django_admin }}"
+    password: "{{ django_password }}"
+    force_basic_auth: yes
+    status_code: 200
+  register: owner_get_output
