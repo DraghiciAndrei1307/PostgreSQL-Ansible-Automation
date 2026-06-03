@@ -87,25 +87,25 @@
       ansible.builtin.debug:
         var: instance_databases_output.stdout_lines
 
-    - name: "Get PostgreSQL instance"
-      vars:
-        vm_id: "{{ vm_id }}"
-      ansible.builtin.include_role:
-        name: django_api_client
-        tasks_from: get_psql_instance
+    - name: "Interact with Django API on localhost"
       delegate_to: localhost
       become: no
+      block:
+        - name: "Get PostgreSQL instance"
+          vars:
+            vm_id: "{{ vm_id }}"
+          ansible.builtin.include_role:
+            name: django_api_client
+            tasks_from: get_psql_instance
 
-    - name: "Insert existing DBs"
-      vars:
-        vm_id: "{{ vm_id }}"
-        fetched_instance_url_global: "{{ instance_get_output.json[0].url }}"
-      ansible.builtin.include_role:
-        name: django_api_client
-        tasks_from: insert_psql_dbs_day_0
-      loop: "{{ instance_databases_output.stdout_lines }}"
-      delegate_to: localhost
-      become: no
+        - name: "Insert existing DBs"
+          vars:
+            vm_id: "{{ vm_id }}"
+            fetched_instance_url_global: "{{ instance_get_output.json[0].url }}"
+          ansible.builtin.include_role:
+            name: django_api_client
+            tasks_from: insert_psql_dbs_day_0
+          loop: "{{ instance_databases_output.stdout_lines }}"
 
 # -------------------------------------------------------------------------------------------- #
 # ---------------------------------------- COPY SSH KEY M > S -------------------------------- #
