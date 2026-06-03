@@ -32,4 +32,4 @@
     size_input: "{{ current_list[6] }}"
     tablespace_input: "{{ current_list[7] }}"
     description_input: "{{ current_list[8] | default('No description', true) }}"
-  ansible.builtin.include_role: insert_psql_db.yml
+  ansible.builtin.include_tasks: insert_psql_db.yml
