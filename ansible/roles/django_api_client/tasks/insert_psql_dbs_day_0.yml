@@ -22,7 +22,7 @@
 
 - name: "Insert PostgreSQL database"
   vars:
-    owner_input: "{{ owner_get_output.json[0].url }}"
+    owner_input: "{{ owner_get_output.json.results[0].url }}"
     instance_input: "{{ fetched_instance_url_global }}"
     db_name_input: "{{ current_list[0] }}"
     encoding_input: "{{ current_list[2] }}"

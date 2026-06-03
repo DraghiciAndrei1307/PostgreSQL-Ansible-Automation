@@ -101,7 +101,7 @@
         - name: "Insert existing DBs"
           vars:
             vm_id: "{{ vm_id }}"
-            fetched_instance_url_global: "{{ instance_get_output.json[0].url }}"
+            fetched_instance_url_global: "{{ instance_get_output.json.results[0].url }}"
           ansible.builtin.include_role:
             name: django_api_client
             tasks_from: insert_psql_dbs_day_0
