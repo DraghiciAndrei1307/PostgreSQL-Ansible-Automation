@@ -49,6 +49,18 @@
           ipv4_address: "{{ new_vm_ip_address }}"
         status_code: [ 200, 204 ]
 
+    - name: "Add the 'postgres' user to the API database"
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:9001/api/psql-users/"
+        method: POST
+        user: "{{ django_admin }}"
+        password: "{{ django_password }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          name: "postgres"
+        status_code: [200]
+
     - name: "Add the new PostgreSQL instance to the DB"
       ansible.builtin.uri:
         url: "http://127.0.0.1:9001/api/instances/"
