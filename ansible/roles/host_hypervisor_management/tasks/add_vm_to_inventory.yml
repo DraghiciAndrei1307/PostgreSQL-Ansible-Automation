@@ -21,7 +21,7 @@
 - name: "Get IPs on the localhost"
   ansible.builtin.command: arp-scan -l
   register: arp_scan_output
-  until: arp_scan_output.stdout | regex_search(formatted_mac_address)
+  until: arp_scan_output.stdout is search(formatted_mac_address)
   retries: 30
   delay: 10
   changed_when: false
