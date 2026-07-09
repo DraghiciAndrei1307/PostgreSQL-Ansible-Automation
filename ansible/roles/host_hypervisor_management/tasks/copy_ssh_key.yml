@@ -1,5 +1,21 @@
+- name: "Check the id_ed25519.pub status"
+  ansible.builtin.stat:
+    path: /home/student/.ssh/id_ed25519.pub
+  register: ed25519_key
+
+- name: "Check the id_rsa.pub status"
+  stat:
+    path: /home/student/.ssh/id_rsa.pub
+  register: rsa_key
+
 - name: "Set authorized SSH key taken from file"
   ansible.posix.authorized_key:
     user: student
     state: present
-    key: "{{ lookup('file', '/home/student/.ssh/id_rsa.pub') ~ '\n' ~ lookup('file', '/home/student/.ssh/id_ed25519.pub') }}"
+    key: >- 
+      {{ 
+        lookup('file', 
+          '/home/student/.ssh/id_rsa.pub' 
+          if rsa_key.stat.exists 
+          else '/home/student/.ssh/id_ed25519.pub') 
+      }}
