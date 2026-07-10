@@ -6,6 +6,7 @@
 - name: "Perform full backup for all slaves"
   hosts: slaves
   become: yes
+  become_user: postgres
   vars_files:
     - group_vars/vault.yml
   tasks:
