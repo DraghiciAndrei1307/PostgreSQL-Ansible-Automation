@@ -62,6 +62,7 @@
           backup_set_size: "{{ formatted_backup_info.repo1.backup_set_size }}"
           backup_size: "{{ formatted_backup_info.repo1.backup_size }}"
         status_code: [ 200, 204 ]
+      delegate_to: localhost
 
 
 # -------------------------------------------------------------------------------------------- #
