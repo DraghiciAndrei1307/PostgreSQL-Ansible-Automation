@@ -33,8 +33,8 @@
           db_size_mb: "{{ ((backup_info.stdout_lines[10] | split(','))[0] | split(': '))[1] }}"
           backup_size_mb: "{{ ((backup_info.stdout_lines[10] | split(','))[1] | split(': '))[1] }}"
           repo1:
-            backup_set_size: "{{ ((backup_info.stdout_lines[10] | split(': '))[2] | split(','))[0] }}"
-            backup_size: "{{ (backup_info.stdout_lines[10] | split(': '))[3] }}"
+            backup_set_size: "{{ ((backup_info.stdout_lines[11] | split(': '))[2] | split(','))[0] }}"
+            backup_size: "{{ (backup_info.stdout_lines[11] | split(': '))[3] }}"
 
 
     - name: "Debug 'formatted_backup_info' variable"
