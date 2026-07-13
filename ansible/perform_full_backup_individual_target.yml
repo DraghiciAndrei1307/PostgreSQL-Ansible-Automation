@@ -13,6 +13,9 @@
       ansible.builtin.import_role:
         name: pgbackrest_actions
         tasks_from: full_backup
+    - name: "Perform API call to update the Backup Info for {{ db_instance }}"
+      ansible.builtin.debug:
+        msg: "Backup API Call"
 
 # -------------------------------------------------------------------------------------------- #
 # -------------------------------------------------------------------------------------------- #
