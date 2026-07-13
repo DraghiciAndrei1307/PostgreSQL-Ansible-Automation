@@ -19,8 +19,20 @@
       register: backup_info
     - name: "Debug 'backup_info' variable"
       ansible.builtin.debug:
-        var: backup_info
+        var: backup_info.stdout_lines
+    - name: "Backup Info"
+      ansible.builtin.set_fact:
+        formatted_backup_info:
+          stanza: "{{ backup_info.stdout_lines[0] | split(': ')[1] }}"
+          type: "{{ backup_info.stdout_lines[7] | split(': ')[0] | regex_replace(' ','') }}"
+          backup_id: "{{ backup_info.stdout_lines[7] | split(': ')[1] }}"
+          time: "{{ backup_info.stdout_lines[8] | split(': ')[1] }}"
+          start_time: "{{ time | split(' / ')[0] }}"
+          stop_time: "{{ time | split('/')[1] }}"
 
+    - name: "Debug 'formatted_backup_info' variable"
+      ansible.builtin.debug:
+        var: formatted_backup_info
 
 # -------------------------------------------------------------------------------------------- #
 # -------------------------------------------------------------------------------------------- #
