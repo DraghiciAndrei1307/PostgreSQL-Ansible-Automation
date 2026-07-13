@@ -14,8 +14,13 @@
         name: pgbackrest_actions
         tasks_from: full_backup
     - name: "Perform API call to update the Backup Info for {{ db_instance }}"
+      ansible.builtin.command: pgbackrest info
+      become_user: postgres
+      register: backup_info
+    - name: "Debug 'backup_info' variable"
       ansible.builtin.debug:
-        msg: "Backup API Call"
+        var: backup_info
+
 
 # -------------------------------------------------------------------------------------------- #
 # -------------------------------------------------------------------------------------------- #
