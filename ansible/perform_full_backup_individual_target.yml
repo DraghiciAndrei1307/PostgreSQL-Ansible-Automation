@@ -13,7 +13,7 @@
       ansible.builtin.import_role:
         name: pgbackrest_actions
         tasks_from: full_backup
-    - name: "Perform API call to update the Backup Info for {{ db_instance }}"
+    - name: "Get the pgBackRest backup data"
       ansible.builtin.command: pgbackrest info
       become_user: postgres
       register: backup_info
@@ -40,6 +40,29 @@
     - name: "Debug 'formatted_backup_info' variable"
       ansible.builtin.debug:
         var: formatted_backup_info
+
+    - name: "Perform API call to update the Backup Info for {{ db_instance }}"
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:9001/api/backups/{{ backup_id }}/"
+        method: PATCH
+        user: "{{ django_admin }}"
+        password: "{{ django_password }}"
+        force_basic_auth: yes
+        body_format: json
+        body:
+          stanza: "{{ formatted_backup_info.stanza }}"
+          backup_type: "{{ formatted_backup_info.type }}"
+          backup_id: "{{ formatted_backup_info.backup_id }}"
+          start_time: "{{ formatted_backup_info.start_time }}"
+          stop_time: "{{ formatted_backup_info.stop_time }}"
+          wal_start: "{{ formatted_backup_info.wal_start }}"
+          wal_stop: "{{ formatted_backup_info.wal_stop }}"
+          db_size_mb: "{{ formatted_backup_info.db_size_mb }}"
+          backup_size_mb: "{{ formatted_backup_info.backup_size_mb }}"
+          backup_set_size: "{{ formatted_backup_info.repo1.backup_set_size }}"
+          backup_size: "{{ formatted_backup_info.repo1.backup_size }}"
+        status_code: [ 200, 204 ]
+
 
 # -------------------------------------------------------------------------------------------- #
 # -------------------------------------------------------------------------------------------- #
