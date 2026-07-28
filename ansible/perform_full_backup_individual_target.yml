@@ -61,21 +61,19 @@
 
     - name: Ensure backup_logs directory exists
       ansible.builtin.file:
-        path: /home/student/PostgreSQL-Ansible-Automation/ansible/backup_logs
+        path: /home/student/backup_logs
         state: directory
         owner: student
         group: student
         mode: "0755"
-      delegate_to: localhost
 
     - name: "Ensure backup log exists"
       ansible.builtin.file:
-        path: /home/student/PostgreSQL-Ansible-Automation/ansible/backup_logs/full_backup_logs.yml
+        path: /home/student/backup_logs/full_backup_logs.yml
         state: touch
         owner: student
         group: student
         mode: "0644"
-      delegate_to: localhost
 
     - name: "Write formatted_backup_info to file"
       ansible.builtin.shell: |
@@ -86,7 +84,6 @@
     
         EOF
       changed_when: true
-      delegate_to: localhost
 
     - name: "Perform API call to update the Backup Info for {{ db_instance }}"
       ansible.builtin.uri:
