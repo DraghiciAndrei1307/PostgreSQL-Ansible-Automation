@@ -61,7 +61,7 @@
 
     - name: "Ensure backup log exists"
       ansible.builtin.file:
-        path: /home/student/PostgreSQL-Ansible-Automation/backup_logs/full_backup_logs.yml
+        path: /home/student/PostgreSQL-Ansible-Automation/ansible/backup_logs/full_backup_logs.yml
         state: touch
         owner: student
         group: student
@@ -69,7 +69,7 @@
 
     - name: "Write formatted_backup_info to file"
       ansible.builtin.shell: |
-        cat >> /home/student/PostgreSQL-Ansible-Automation/backup_logs/full_backup_logs.yml <<EOF
+        cat >> /home/student/PostgreSQL-Ansible-Automation/ansible/backup_logs/full_backup_logs.yml <<EOF
         # -----------BACKUP: {{ formatted_backup_info.backup_id }}--------------- #
         {{ formatted_backup_info | to_nice_yaml(indent=2) }}
         # ------------------------------------------------- #
