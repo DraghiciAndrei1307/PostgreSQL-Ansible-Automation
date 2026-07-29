@@ -81,9 +81,31 @@
         # -----------BACKUP: {{ formatted_backup_info.backup_id }}--------------- #
         {{ formatted_backup_info | to_nice_yaml(indent=2) }}
         # ------------------------------------------------- #
-    
+
         EOF
       changed_when: true
+
+    - name: "Check if CSV log exists"
+      ansible.builtin.stat:
+        path: /home/student/backup_logs/full_backup_logs.csv
+      register: csv_log
+
+    - name: "Create CSV file with header"
+      ansible.builtin.copy:
+        dest: /home/student/backup_logs/full_backup_logs.csv
+        owner: student
+        group: student
+        mode: "0644"
+        content: |
+          stanza,backup_type,backup_id,start_time,stop_time,wal_start,wal_stop,db_size_mb,backup_size_mb,backup_set_size,backup_size
+      when: not csv_log.stat.exists
+
+    - name: "Append backup information to CSV"
+      ansible.builtin.lineinfile:
+        path: /home/student/backup_logs/full_backup_logs.csv
+        line: "{{ formatted_backup_info.stanza }},{{ formatted_backup_info.type }},{{ formatted_backup_info.backup_id }},{{ formatted_backup_info.start_time }},{{ formatted_backup_info.stop_time }},{{ formatted_backup_info.wal_start }},{{ formatted_backup_info.wal_stop }},{{ formatted_backup_info.db_size_mb }},{{ formatted_backup_info.backup_size_mb }},{{ formatted_backup_info.repo1.backup_set_size }},{{ formatted_backup_info.repo1.backup_size }}"
+        insertafter: EOF
+        create: yes
 
     - name: "Perform API call to update the Backup Info for {{ db_instance }}"
       ansible.builtin.uri:
