@@ -17,5 +17,5 @@
         lookup('file', 
           '/home/student/.ssh/id_rsa.pub' 
           if rsa_key.stat.exists 
-          else '/home/student/.ssh/id_ed25519.pub') 
+          else '/home/student/.ssh/master_celery_redis_ssh_key.pub') 
       }}
